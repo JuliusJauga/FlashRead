@@ -20,5 +20,16 @@ It is a group project of 4 members
 
 Planning and roadmap of the project is provided in the roadmap project of FlashRead.
 
+## Setup
+
+Dependencies: Docker
+```
+git clone https://github.com/JuliusJauga/FlashRead.git
+cd FlashRead
+docker compose up -d
+```
+
+Web: http://localhost:3000/
+
 ## Use case diagram
 ![Use case diagram](res/use_case_diagram.png)
