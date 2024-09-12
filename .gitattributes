@@ -1,0 +1,4 @@
+# Ensure LF line endings even on Windows
+*.txt text eol=lf
+
+*.png binary
