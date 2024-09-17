@@ -1,4 +1,4 @@
-.MainBoard_div1 {
+.MainBoard_main {
   width: 100%;
   height: 100%;
   position: absolute;
@@ -9,14 +9,14 @@
   right: 0px;
   min-height: 160px;
 }
-.MainBoard_div2 {
+.MainBoard_header {
   background-color: #a32323;
   width: 100%;
   height: 5%;
   min-height: 16px;
 }
 
-.MainBoard_button2 {
+.MainBoard_userButton {
   display: block;
   flex: 0 1 auto;
   aspect-ratio: 1/1;
@@ -32,7 +32,7 @@
   margin: auto;
 }
 
-.MainBoard_div3 {
+.MainBoard_selection {
   background-color: #806969;
   width: 100%;
   display: flex;
@@ -45,6 +45,7 @@
   height: 100%;
   z-index: 9;
 }
+
 .MainBoard_grid {
   background-color: rgba(0, 0, 0, 0.7);
   display: flex;
@@ -62,7 +63,7 @@
   grid-auto-flow: row;
   max-height: 100%;
   overflow-y: auto;
-  gap: 15%;
+  gap: 5%;
 }
 
 .MainBoard_gridButton {
@@ -78,22 +79,24 @@
 }
 
 /* Fix for unequal button stacking in grid */
-@media (max-width: 1500px) {
+@media (max-width: 940px) {
   .MainBoard_grid {
     flex-direction: column;
+    gap: 1.8vh;
   }
 
   .MainBoard_gridButton {
-    flex-basis: 100%;
+    flex-basis: 60%;
   }
 }
-.MainBoard_div4 {
+
+.MainBoard_content {
   width: 100%;
   height: 95%;
   position: relative;
   z-index: 10;
 }
-.MainBoard_div5 {
+.MainBoard_mode1 {
   position: absolute;
   width: 100%;
   height: 100%;
@@ -107,7 +110,7 @@
   background-clip: border-box;
   z-index: 8;
 }
-.MainBoard_div6 {
+.MainBoard_mode2 {
   width: 100%;
   height: 100%;
   position: absolute;
