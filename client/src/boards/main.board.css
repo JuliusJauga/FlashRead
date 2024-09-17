@@ -123,3 +123,15 @@
   height: 100%;
   position: absolute;
 }
+
+.MainBoard_returnButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  width: 100%;
+  max-width: 30vh;
+  flex-grow: 1;
+  box-sizing: border-box;  
+}
