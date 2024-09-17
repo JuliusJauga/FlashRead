@@ -1,17 +1,28 @@
 import "./main.board.css";
 import React, {useState} from "react";
-import ModeButton1 from "../components/buttons/modeButton1";
-import ReturnButton from "../components/buttons/returnButton";
+import CustomButton from "../components/buttons/customButton";
 import { createBoard } from "@wixc3/react-board";
 
-
+function returnFunction(id1Name: string, id2Name: string){
+  console.log("Return clicked")
+  const page1 = document.getElementById(id1Name) as HTMLDivElement;
+  const page2 = document.getElementById(id2Name) as HTMLDivElement;
+  page1.style.display = "none";
+  page2.style.display = "flex";  
+}
 
 export default createBoard({
   name: "Main", 
   Board: () => (
     <div className="MainBoard_main" id="mainDiv">
       <div className="MainBoard_header" id="headerDiv">
-        <button className="MainBoard_userButton" id="userButton"></button>
+        <CustomButton label="" className="MainBoard_userButton" onClick={()=>{
+          console.log("User button clicked");
+          const loginPage = document.getElementById("loginPage") as HTMLDivElement;
+          const selection = document.getElementById("selectionDiv") as HTMLDivElement;
+          loginPage.style.display = "flex";
+          selection.style.display = "none";
+        }}/>
       </div>
       <div className="MainBoard_content" id="contentDiv">
         <div className="MainBoard_mode1" id="mode1Div">
@@ -22,19 +33,13 @@ export default createBoard({
             <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam neque commodi porro nisi sit fugiat. Odio voluptas recusandae, ea nesciunt repellendus doloremque dolorum quos veniam assumenda quia, facere dolores harum!</p>
           </div>
           <div className="mode1_innerDiv" id="buttonDiv">
-            <ReturnButton label="Return" className="MainBoard_returnButton" onClick={()=>{
-              console.log("Return clicked")
-              const mode1 = document.getElementById("mode1Div") as HTMLDivElement;
-              const selection = document.getElementById("selectionDiv") as HTMLDivElement;
-              mode1.style.display = "none";
-              selection.style.display = "flex";
-            }}/>
+            <CustomButton label="Return" className="MainBoard_returnButton" onClick={() => returnFunction("mode1Div", "selectionDiv")}/>
           </div>
         </div>
         <div className="MainBoard_selection" id="selectionDiv">
           <div className="MainBoard_grid" id="selectionGrid">
-            <ModeButton1 label= "Mode 1" className= "MainBoard_gridButton" onClick={()=>{
-              console.log("Mode 1 clicked")
+            <CustomButton label= "Mode 1" className= "MainBoard_gridButton" onClick={()=>{
+              console.log("Mode 1 clicked");
               const mode1 = document.getElementById("mode1Div") as HTMLDivElement;
               const selection = document.getElementById("selectionDiv") as HTMLDivElement;
               mode1.style.display = "flex";
@@ -47,6 +52,9 @@ export default createBoard({
               Button
             </button>
           </div>
+        </div>
+        <div className="MainBoard_loginPage" id="loginPage">
+          <CustomButton label="Return" className="loginPage_returnButton" onClick={() => returnFunction("loginPage", "selectionDiv")}/>
         </div>
         <div className="MainBoard_mode2" id="mode2Div"/>
       </div>
