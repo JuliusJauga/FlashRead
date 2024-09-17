@@ -79,7 +79,7 @@
 }
 
 /* Fix for unequal button stacking in grid */
-@media (max-width: 940px) {
+@media (max-aspect-ratio: 1150/1080) {
   .MainBoard_grid {
     flex-direction: column;
     gap: 1.8vh;
