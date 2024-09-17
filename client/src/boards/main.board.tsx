@@ -15,13 +15,21 @@ export default createBoard({
       </div>
       <div className="MainBoard_content" id="contentDiv">
         <div className="MainBoard_mode1" id="mode1Div">
-          <ReturnButton label="Return" className="MainBoard_returnButton" onClick={()=>{
-            console.log("Return clicked")
-            const mode1 = document.getElementById("mode1Div") as HTMLDivElement;
-            const selection = document.getElementById("selectionDiv") as HTMLDivElement;
-            mode1.style.display = "none";
-            selection.style.display = "flex";
-          }}/>
+          <div className="mode1_innerDiv" id="timerDiv">
+            <p>01:30</p>
+          </div>
+          <div className="mode1_innerDiv" id="textAreaDiv">
+            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam neque commodi porro nisi sit fugiat. Odio voluptas recusandae, ea nesciunt repellendus doloremque dolorum quos veniam assumenda quia, facere dolores harum!</p>
+          </div>
+          <div className="mode1_innerDiv" id="buttonDiv">
+            <ReturnButton label="Return" className="MainBoard_returnButton" onClick={()=>{
+              console.log("Return clicked")
+              const mode1 = document.getElementById("mode1Div") as HTMLDivElement;
+              const selection = document.getElementById("selectionDiv") as HTMLDivElement;
+              mode1.style.display = "none";
+              selection.style.display = "flex";
+            }}/>
+          </div>
         </div>
         <div className="MainBoard_selection" id="selectionDiv">
           <div className="MainBoard_grid" id="selectionGrid">
