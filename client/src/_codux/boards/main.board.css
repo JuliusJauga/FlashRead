@@ -1,0 +1,87 @@
+.MainBoard_div1 {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  background-color: #000000;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  right: 0px;
+  min-height: 160px;
+}
+.MainBoard_div2 {
+  background-color: #a32323;
+  width: 100%;
+  height: 5%;
+  min-height: 16px;
+}
+
+.MainBoard_button2 {
+  display: block;
+  flex: 0 1 auto;
+  aspect-ratio: 1/1;
+  align-items: center;
+  float: right;
+  align-content: center;
+  justify-content: center;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  position: relative;
+  height: 100%;
+  width: fit-content;
+  margin: auto;
+}
+
+.MainBoard_div3 {
+  background-color: #806969;
+  width: 100%;
+  height: 95%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  position: relative;
+  opacity: 1;
+}
+.MainBoard_grid {
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  flex: 0 1 auto;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  width: 95%;
+  /*height: 30vh;*/
+  flex-wrap: wrap;
+  align-self: center;
+  flex-direction: row;
+  overflow: visible;
+  grid-auto-flow: row;
+  max-height: 100%;
+  overflow-y: auto;
+  gap: 15%;
+}
+
+.MainBoard_gridButton {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  aspect-ratio: 1 / 1;
+  position: relative;
+  width: 100%;
+  max-width: 30vh;
+  flex-grow: 1; 
+  box-sizing: border-box;
+}
+
+/* Fix for unequal button stacking in grid */
+@media (max-width: 1500px) {
+  .MainBoard_grid {
+    flex-direction: column; 
+  }
+
+  .MainBoard_gridButton {
+    flex-basis: 100%;
+  }
+}
