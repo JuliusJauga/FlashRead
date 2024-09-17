@@ -6,7 +6,7 @@ services:
     ports:
       - "3000:80"
     volumes:
-      - ./client:/app
+      - ../client:/app
     depends_on:
       - server
 
@@ -15,4 +15,4 @@ services:
       context: ./server
       dockerfile: Dockerfile
     ports:
-      - "8081:80"
+      - "5076:5076"
