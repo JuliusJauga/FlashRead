@@ -52,7 +52,7 @@
   justify-content: center;
   align-content: center;
   width: 95%;
-  height: 30vh;
+  /*height: 30vh;*/
   flex-wrap: wrap;
   align-self: center;
   flex-direction: row;
@@ -76,7 +76,7 @@
 }
 
 /* Fix for unequal button stacking in grid */
-@media (max-width: 700px) {
+@media (max-width: 1500px) {
   .MainBoard_grid {
     flex-direction: column; 
   }
