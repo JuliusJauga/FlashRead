@@ -1,4 +1,4 @@
-import mainBoard from './_codux/boards/main.board';
+import mainBoard from './boards/main.board';
 
 function App() {
   return (<>
