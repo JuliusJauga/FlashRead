@@ -31,6 +31,7 @@
   width: fit-content;
   margin: auto;
 }
+
 .MainBoard_div3 {
   background-color: #806969;
   width: 100%;
@@ -46,12 +47,12 @@
   background-color: rgba(0,0,0,0.7);
   display: flex;
   flex: 0 1 auto;
-  grid-template: 1fr / 1fr 1fr 1fr;
   position: relative;
   align-items: center;
   justify-content: center;
   align-content: center;
-  width: 50%;
+  width: 95%;
+  height: 30vh;
   flex-wrap: wrap;
   align-self: center;
   flex-direction: row;
@@ -59,29 +60,28 @@
   grid-auto-flow: row;
   max-height: 100%;
   overflow-y: auto;
-  gap: 5%;
+  gap: 15%;
 }
 
 .MainBoard_gridButton {
-  display: flex; /* Use flex to allow centering */
-  justify-content: center;
-  align-items: center;
-  aspect-ratio: 1 / 1; /* Maintain 1:1 aspect ratio */
-  position: relative;
-  width: 100%; /* Let the width be responsive */
-  max-width: 150px; /* Optional: set a max width for the button */
-  flex-grow: 1; /* Allow buttons to grow proportionally */
-  box-sizing: border-box;
-}
-
-/*.MainBoard_grid > button {
   display: flex;
   justify-content: center;
   align-items: center;
-  aspect-ratio: 1 / 1; 
+  aspect-ratio: 1 / 1;
+  position: relative;
+  width: 100%;
+  max-width: 30vh;
   flex-grow: 1; 
-  width: 100%; 
-  max-width: 150px; 
-  margin: 5%; 
   box-sizing: border-box;
-}*/
+}
+
+/* Fix for unequal button stacking in grid */
+@media (max-width: 700px) {
+  .MainBoard_grid {
+    flex-direction: column; 
+  }
+
+  .MainBoard_gridButton {
+    flex-basis: 100%;
+  }
+}
