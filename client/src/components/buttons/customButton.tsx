@@ -14,12 +14,12 @@ const Button: React.FC<{
     outline: 'none',
     padding: '10px 20px', // Padding inside the button
     borderRadius: '12px',
-    border: '2px solid #000000', // Border color
+    border: '4px solid #FFF8E8', // Border color
     backgroundColor: 'transparent',
-    color: '#000000', // Text color
+    color: '#FFF8E8', // Text color
     transform: isHovered ? 'scale(0.95)' : 'scale(1)', // Shrink button on hover
-    fontSize: '16px',
-    fontWeight: 'bold',
+    fontSize: '26px',
+    fontFamily: 'Georgia, serif', // Elegant and readable font
   };
 
   return (
