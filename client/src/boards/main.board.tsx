@@ -3,7 +3,9 @@ import React, {useState} from "react";
 import CustomButton from "../components/buttons/customButton";
 import { createBoard } from "@wixc3/react-board";
 
-function returnFunction(id1Name: string, id2Name: string){
+var activePage: string;
+
+function returnFunction(id1Name: string, id2Name: string) {
   console.log("Return clicked")
   const page1 = document.getElementById(id1Name) as HTMLDivElement;
   const page2 = document.getElementById(id2Name) as HTMLDivElement;
@@ -11,18 +13,29 @@ function returnFunction(id1Name: string, id2Name: string){
   page2.style.display = "flex";  
 }
 
+function openLoginPage(){
+  console.log("User button clicked");
+  const loginPage = document.getElementById("loginPage") as HTMLDivElement;
+  const selection = document.getElementById("selectionDiv") as HTMLDivElement;
+  const mode1 = document.getElementById("mode1Div") as HTMLDivElement;
+  if (loginPage.style.display === "flex") {
+    activePage = "selectionDiv";
+  } else if (selection.style.display === "flex") {
+    activePage = "selectionDiv";
+    selection.style.display = "none";
+  } else if (mode1.style.display === "flex") {
+    activePage = "mode1Div";
+    mode1.style.display = "none";
+  }
+  loginPage.style.display = "flex";
+}
+
 export default createBoard({
   name: "Main", 
   Board: () => (
     <div className="MainBoard_main" id="mainDiv">
       <div className="MainBoard_header" id="headerDiv">
-        <CustomButton label="" className="MainBoard_userButton" onClick={()=>{
-          console.log("User button clicked");
-          const loginPage = document.getElementById("loginPage") as HTMLDivElement;
-          const selection = document.getElementById("selectionDiv") as HTMLDivElement;
-          loginPage.style.display = "flex";
-          selection.style.display = "none";
-        }}/>
+        <CustomButton label="" className="MainBoard_userButton" onClick={openLoginPage}/>
       </div>
       <div className="MainBoard_content" id="contentDiv">
         <div className="MainBoard_mode1" id="mode1Div">
@@ -64,7 +77,7 @@ export default createBoard({
           </div>
         </div>
         <div className="MainBoard_loginPage" id="loginPage">
-          <CustomButton label="Return" className="loginPage_returnButton" onClick={() => returnFunction("loginPage", "selectionDiv")}/>
+          <CustomButton label="Return" className="loginPage_returnButton" onClick={() => returnFunction("loginPage", activePage)}/>
         </div>
         <div className="MainBoard_mode2" id="mode2Div"/>
       </div>
