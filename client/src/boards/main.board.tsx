@@ -1,6 +1,6 @@
 import "./main.board.css";
 import "./dropdown.css";
-import React, {useState} from "react";
+import React from "react";
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
 import { createBoard } from "@wixc3/react-board";
