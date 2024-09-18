@@ -19,7 +19,7 @@ const Button: React.FC<{
     color: '#FFF8E8', // Text color
     transform: isHovered ? 'scale(0.95)' : 'scale(1)', // Shrink button on hover
     fontSize: '26px',
-    fontFamily: 'Georgia, serif', // Elegant and readable font
+    fontFamily: 'Georgia, serif',
   };
 
   return (

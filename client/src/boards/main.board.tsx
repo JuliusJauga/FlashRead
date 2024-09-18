@@ -1,33 +1,32 @@
 import "./main.board.css";
+import "./dropdown.css";
 import React, {useState} from "react";
 import CustomButton from "../components/buttons/customButton";
+import Dropdown from "../components/dropdown";
 import { createBoard } from "@wixc3/react-board";
 
 var activePage: string;
 
-function returnFunction(id1Name: string, id2Name: string) {
-  console.log("Return clicked")
-  const page1 = document.getElementById(id1Name) as HTMLDivElement;
-  const page2 = document.getElementById(id2Name) as HTMLDivElement;
-  page1.style.display = "none";
-  page2.style.display = "flex";  
-}
-
-function openLoginPage(){
-  console.log("User button clicked");
+function handlePageChange(pageName: string) {
+  console.log("Page change clicked");
+  const selectionPage = document.getElementById("selectionDiv") as HTMLDivElement;
+  const mode1Page = document.getElementById("mode1Div") as HTMLDivElement;
   const loginPage = document.getElementById("loginPage") as HTMLDivElement;
-  const selection = document.getElementById("selectionDiv") as HTMLDivElement;
-  const mode1 = document.getElementById("mode1Div") as HTMLDivElement;
-  if (loginPage.style.display === "flex") {
-    activePage = "selectionDiv";
-  } else if (selection.style.display === "flex") {
-    activePage = "selectionDiv";
-    selection.style.display = "none";
-  } else if (mode1.style.display === "flex") {
-    activePage = "mode1Div";
-    mode1.style.display = "none";
+
+  if (pageName === "selectionPage") {
+    selectionPage.style.display = "flex";
+    mode1Page.style.display = "none";
+    loginPage.style.display = "none";
+  } else if (pageName === "mode1Page") {
+    selectionPage.style.display = "none";
+    mode1Page.style.display = "flex";
+    loginPage.style.display = "none";
+  } else if (pageName === "loginPage") {
+    selectionPage.style.display = "none";
+    mode1Page.style.display = "none";
+    loginPage.style.display = "flex";
   }
-  loginPage.style.display = "flex";
+
 }
 
 export default createBoard({
@@ -35,7 +34,11 @@ export default createBoard({
   Board: () => (
     <div className="MainBoard_main" id="mainDiv">
       <div className="MainBoard_header" id="headerDiv">
-        <CustomButton label="" className="MainBoard_userButton" onClick={openLoginPage}/>
+        <Dropdown onSelect={function (item: string): void {
+          if (item === "Login") {
+            handlePageChange("loginPage");
+          }
+        } } />
       </div>
       <div className="MainBoard_content" id="contentDiv">
         <div className="MainBoard_mode1" id="mode1Div">
@@ -48,17 +51,14 @@ export default createBoard({
             </div>
           </div>
           <div className="mode1_innerDiv" id="buttonDiv">
-            <CustomButton label="Return" className="MainBoard_returnButton" onClick={() => returnFunction("mode1Div", "selectionDiv")}/>
+            <CustomButton label="Return" className="MainBoard_returnButton" onClick={() => handlePageChange("selectionPage")}/>
           </div>
         </div>
         <div className="MainBoard_selection" id="selectionDiv">
           <div className="MainBoard_grid" id="selectionGrid">
             <CustomButton label= "Mode 1" className= "MainBoard_gridButton" onClick={()=>{
               console.log("Mode 1 clicked");
-              const mode1 = document.getElementById("mode1Div") as HTMLDivElement;
-              const selection = document.getElementById("selectionDiv") as HTMLDivElement;
-              mode1.style.display = "flex";
-              selection.style.display = "none";
+              handlePageChange("mode1Page");
             }}/>
             <CustomButton label= "Mode 2" className= "MainBoard_gridButton" onClick={()=>{
               console.log("Mode 2 clicked");
@@ -79,7 +79,7 @@ export default createBoard({
           </div>
         </div>
         <div className="MainBoard_loginPage" id="loginPage">
-          <CustomButton label="Return" className="loginPage_returnButton" onClick={() => returnFunction("loginPage", activePage)}/>
+          <CustomButton label="Return" className="loginPage_returnButton" onClick={() => handlePageChange("selectionPage")}/>
         </div>
         <div className="MainBoard_mode2" id="mode2Div"/>
       </div>
