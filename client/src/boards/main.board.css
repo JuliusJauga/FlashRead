@@ -2,7 +2,7 @@
   width: 100%;
   height: 100%;
   position: absolute;
-  background-color: #000000;
+  background-color: #806969;
   top: 0px;
   bottom: 0px;
   left: 0px;
@@ -18,7 +18,6 @@
 }
 
 .MainBoard_header {
-  background-color: #a32323;
   width: 100%;
   height: 5%;
   min-height: 16px;
@@ -40,8 +39,9 @@
   margin: auto;
 }
 
+
+
 .MainBoard_selection {
-  background-color: #806969;
   width: 100%;
   display: flex;
   justify-content: center;
@@ -55,7 +55,6 @@
 }
 
 .MainBoard_grid {
-  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   flex: 0 1 auto;
   position: relative;
@@ -96,6 +95,11 @@
   .MainBoard_gridButton {
     flex-basis: 60%;
   }
+
+  .MainBoard_gridButton:hover {
+    transform: scale(2);
+  }
+
 }
 
 .MainBoard_content {

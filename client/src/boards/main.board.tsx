@@ -45,12 +45,22 @@ export default createBoard({
               mode1.style.display = "flex";
               selection.style.display = "none";
             }}/>
-            <button className="MainBoard_mode2Button MainBoard_gridButton">
-              Button
-            </button>
-            <button className="MainBoard_mode3Button MainBoard_gridButton">
-              Button
-            </button>
+            <CustomButton label= "Mode 2" className= "MainBoard_gridButton" onClick={()=>{
+              console.log("Mode 2 clicked");
+              const mode2Button = document.querySelector(".MainBoard_gridButton:nth-child(2)") as HTMLButtonElement;
+              mode2Button.textContent = "Coming Soon";
+              setTimeout(() => {
+                mode2Button.textContent = "Mode 2";
+              }, 1000);
+            }}/>
+            <CustomButton label= "Mode 3" className= "MainBoard_gridButton" onClick={()=>{
+              console.log("Mode 2 clicked");
+              const mode3Button = document.querySelector(".MainBoard_gridButton:nth-child(3)") as HTMLButtonElement;
+              mode3Button.textContent = "Coming Soon";
+              setTimeout(() => {
+                mode3Button.textContent = "Mode 3";
+              }, 1000);
+            }}/>
           </div>
         </div>
         <div className="MainBoard_loginPage" id="loginPage">
