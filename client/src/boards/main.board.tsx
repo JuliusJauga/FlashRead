@@ -5,7 +5,6 @@ import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
 import { createBoard } from "@wixc3/react-board";
 
-var activePage: string;
 
 function handlePageChange(pageName: string) {
   console.log("Page change clicked");
@@ -81,7 +80,8 @@ export default createBoard({
         <div className="MainBoard_loginPage" id="loginPage">
           <CustomButton label="Return" className="loginPage_returnButton" onClick={() => handlePageChange("selectionPage")}/>
         </div>
-        <div className="MainBoard_mode2" id="mode2Div"/>
+        <div className="MainBoard_mode2" id="mode2Div">
+        </div>  
       </div>
     </div>
   ),

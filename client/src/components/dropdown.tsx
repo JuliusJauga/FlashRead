@@ -51,8 +51,9 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
         top: '100%',
         left: 'auto',
         right: '0',  // Align the dropdown with the button's right side
-        backgroundColor: '#FFF8E8',
         border: '4px solid #FFF8E8',
+        backgroundColor: 'transparent',
+        
         listStyle: 'none',
         padding: '0',
         margin: '0',
@@ -62,23 +63,23 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
         zIndex: 100,
         borderRadius: '12px',
         opacity: isOpen ? 1 : 0,
-        transition: 'opacity 0.4s ease',
+        transform: isOpen ? 'scale(1)' : 'scale(0)', // Scale dropdown menu on open/close
+        transformOrigin: 'top right',
+        transition: 'opacity 0.4s ease, transform 0.4s ease', // Smooth transition
         whiteSpace: 'nowrap',
     };
 
     const menuItemStyle: CSSProperties = {
         padding: '10px 20px',
-        borderBottom: '1px solid #CCC',
         cursor: 'pointer',
-        backgroundColor: '#FFF8E8',
-        color: '#333',
+        color: '#FFF8E8',
         fontSize: '20px',
         fontFamily: 'Georgia, serif',
         whiteSpace: 'nowrap',
     };
 
     const menuItemHoverStyle: CSSProperties = {
-        backgroundColor: '#F0E8D8',
+        backgroundColor: 'rgba(240,232,216,0.4)',
     };
 
     return (
@@ -97,21 +98,19 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
             >
                 {/*icon */}
             </button>
-            {isOpen && (
-                <ul style={dropdownMenuStyle}>
-                    {['Profile', 'Settings', 'Login'].map((option, index) => (
-                        <li
-                            key={index}
-                            style={menuItemStyle}
-                            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = menuItemHoverStyle.backgroundColor || '#F0E8D8')}
-                            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = '#FFF8E8')}
-                            onClick={() => selectItem(option)}
-                        >
-                            {option}
-                        </li>
-                    ))}
-                </ul>
-            )}
+            <ul style={dropdownMenuStyle}>
+                {['Profile', 'Settings', 'Login'].map((option, index) => (
+                    <li
+                        key={index}
+                        style={menuItemStyle}
+                        onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = menuItemHoverStyle.backgroundColor || 'rgba(240,232,216,0.4)')}
+                        onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+                        onClick={() => selectItem(option)}
+                    >
+                        {option}
+                    </li>
+                ))}
+            </ul>
         </div>
     );
 };

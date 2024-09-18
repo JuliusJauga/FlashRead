@@ -10,8 +10,6 @@
     width: auto;  
     height: 100%;    
     display: block;
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
     cursor: pointer;
     z-index: 100;
     box-sizing: border-box; 
@@ -21,8 +19,6 @@
     position: absolute;
     top: 100%; 
     right: 0; 
-    background-color: #ffffff;
-    border: 1px solid #ddd;
     list-style: none;
     padding: 0;
     margin: 0;
@@ -34,8 +30,4 @@
 .dropdown-menu li {
     padding: 10px;
     cursor: pointer;
-}
-
-.dropdown-menu li:hover {
-    background-color: #f0f0f0;
 }
