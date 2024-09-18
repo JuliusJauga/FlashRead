@@ -28,7 +28,7 @@ function handlePageChange(pageName: string) {
 
 }
 
-export default createBoard({
+const mainBoard = createBoard({
   name: "Main", 
   Board: () => (
     <div className="MainBoard_main" id="mainDiv">
@@ -88,3 +88,5 @@ export default createBoard({
   isSnippet: true,
   environmentProps: { windowHeight: 554, windowWidth: 621 },
 });
+
+export default mainBoard;
