@@ -40,10 +40,12 @@ export default createBoard({
       <div className="MainBoard_content" id="contentDiv">
         <div className="MainBoard_mode1" id="mode1Div">
           <div className="mode1_innerDiv" id="timerDiv">
-            <p>01:30</p>
+            <p className="timerText">01:30</p>
           </div>
           <div className="mode1_innerDiv" id="textAreaDiv">
-            <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam neque commodi porro nisi sit fugiat. Odio voluptas recusandae, ea nesciunt repellendus doloremque dolorum quos veniam assumenda quia, facere dolores harum!</p>
+            <div className="mode1TextDiv">
+              <p className="mode1Text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam neque commodi porro nisi sit fugiat. Odio voluptas recusandae, ea nesciunt repellendus doloremque dolorum quos veniam assumenda quia, facere dolores harum!</p>
+            </div>
           </div>
           <div className="mode1_innerDiv" id="buttonDiv">
             <CustomButton label="Return" className="MainBoard_returnButton" onClick={() => returnFunction("mode1Div", "selectionDiv")}/>

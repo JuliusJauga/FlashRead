@@ -175,3 +175,31 @@
   background-color: orange;
   z-index: 50;
 }
+
+.mode1TextDiv {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mode1Text {
+  font-size: 2vh;
+  color: white;
+  text-align: center;
+}
+
+.mode1TimerDiv {
+  width: 80%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.timerText {
+  font-size: 2vh;
+  color: white;
+  text-align: center;
+}
