@@ -1,9 +1,10 @@
-import "./CSS/main.board.css";
-import "./CSS/dropdown.css";
-import "./CSS/mode1.css";
+import "./css/main.board.css";
+import "./css/dropdown.css";
+import "./css/mode1.css";
+import "./css/loginPage.css";
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
-import { postTaskText } from "../components/axios"; // Ensure postTaskText returns a promise that resolves to PostData
+import { postTaskText } from "../components/axios";
 import { createBoard } from "@wixc3/react-board";
 
 function handlePageChange(pageName: string) {
@@ -90,7 +91,19 @@ const mainBoard = createBoard({
           </div>
         </div>
         <div className="MainBoard_loginPage" id="loginPage">
-          <CustomButton label="Return" className="loginPage_returnButton" onClick={() => handlePageChange("selectionPage")}/>
+            <div className="loginPage_topDiv">
+              <h1 className="loginPage_title">Login</h1>
+            </div>
+            <div className="loginPage_loginDiv">
+              <input type="text" className="signinInput" id="signinEmailInput" placeholder="Username"/>
+              <input type="password" className="signinInput" id="signinPasswordInput" placeholder="Password"/>
+              <CustomButton label="Login" className="loginPage_loginButton" onClick={() => handlePageChange("selectionPage")}/>
+            </div>
+            <div className="loginPage_bottomDiv">
+              <h1 className="loginPage_noAccountText">Don't have an account?</h1>
+
+              <CustomButton label="Return" className="loginPage_returnButton" onClick={() => handlePageChange("selectionPage")}/>
+            </div>
         </div>
         <div className="MainBoard_mode2" id="mode2Div">
         </div>  

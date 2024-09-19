@@ -1,5 +1,9 @@
 import axios from 'axios';
 
+interface mode1Response {
+    text: string;
+}  
+
 const fetchPostData = async (): Promise<string> => {
     try {
         const response = await axios.get('http://localhost:5076');
@@ -10,7 +14,7 @@ const fetchPostData = async (): Promise<string> => {
     }
 };
 
-const postTaskText = async (): Promise<string> => {
+const postTaskText = async (): Promise<mode1Response> => {
     try {
         const response = await axios.post('http://localhost:5076/postTaskText', {
             text: 'string'
@@ -21,10 +25,10 @@ const postTaskText = async (): Promise<string> => {
             }
         });
         console.log('Post response:', response.data);
-        return response.data;
+        return response.data as mode1Response;
     } catch (err) {
         console.error('Error posting task text:', err);
-        return 'Error posting task text';
+        return { text: 'Error posting task text' };
     }
 };
 
