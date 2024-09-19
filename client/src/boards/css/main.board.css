@@ -147,6 +147,7 @@
   box-sizing: border-box;  
 }
 
+/*
 .MainBoard_loginPage{
   display: none;
   position: absolute;
@@ -157,6 +158,7 @@
   height: 100%;
   z-index: 50;
 }
+*/
 
 .mode1TextDiv {
   width: 80%;

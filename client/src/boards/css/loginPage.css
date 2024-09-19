@@ -1,0 +1,48 @@
+.MainBoard_loginPage {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    height: 100%;
+    z-index: 30;
+    background-color: aquamarine;
+}
+
+.loginPage_topDiv {
+    flex: 1;
+    background-color: blue;
+}
+
+.loginPage_loginDiv {
+    flex: 1.5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: red;
+}
+
+.signinInput {
+    width: 30%;
+    height: 3em;
+    margin: 0.6em auto;
+    border-radius: 15px;
+    padding: 0.5em;
+}
+
+.loginPage_loginButton {
+    width: 30%;
+    margin: 2em auto;
+}
+
+.loginPage_noAccountText {
+    font-size: 1.5em;
+    color: white;
+    text-align: center;
+}
+
+.loginPage_bottomDiv {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: top-center;
+    background-color: greenyellow;
+}
