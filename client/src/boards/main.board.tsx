@@ -1,5 +1,6 @@
-import "./main.board.css";
-import "./dropdown.css";
+import "./CSS/main.board.css";
+import "./CSS/dropdown.css";
+import "./CSS/mode1.css";
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
 import { postTaskText } from "../components/axios"; // Ensure postTaskText returns a promise that resolves to PostData
@@ -47,19 +48,23 @@ const mainBoard = createBoard({
         } } />
       </div>
       <div className="MainBoard_content" id="contentDiv">
+
         <div className="MainBoard_mode1" id="mode1Div">
-          <div className="mode1_innerDiv" id="timerDiv">
-            <p className="timerText">01:30</p>
+          <div className="mode1_upperDiv" id="upperDiv">
+    
           </div>
           <div className="mode1_innerDiv" id="textAreaDiv">
             <div className="mode1TextDiv">
-              <p className="mode1Text">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nam neque commodi porro nisi sit fugiat. Odio voluptas recusandae, ea nesciunt repellendus doloremque dolorum quos veniam assumenda quia, facere dolores harum!</p>
+              <div className="mode1_mainBox">
+                <p className="mode1Text">Loading...</p>
+              </div>
             </div>
           </div>
-          <div className="mode1_innerDiv" id="buttonDiv">
+          <div className="mode1_lowerDiv" id="buttonDiv">
             <CustomButton label="Return" className="MainBoard_returnButton" onClick={() => handlePageChange("selectionPage")}/>
           </div>
         </div>
+
         <div className="MainBoard_selection" id="selectionDiv">
           <div className="MainBoard_grid" id="selectionGrid">
             <CustomButton label= "Mode 1" className= "MainBoard_gridButton" onClick={()=>{
