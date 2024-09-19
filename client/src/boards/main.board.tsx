@@ -4,6 +4,7 @@ import "./css/mode1.css";
 import "./css/loginPage.css";
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
+import CustomHyperlink from '../components/buttons/hyperlink';
 import { postTaskText } from "../components/axios";
 import { createBoard } from "@wixc3/react-board";
 
@@ -92,7 +93,7 @@ const mainBoard = createBoard({
         </div>
         <div className="MainBoard_loginPage" id="loginPage">
             <div className="loginPage_topDiv">
-              <h1 className="loginPage_title">Login</h1>
+              <h1 className="loginPage_title">Welcome back!</h1>
             </div>
             <div className="loginPage_loginDiv">
               <input type="text" className="signinInput" id="signinEmailInput" placeholder="Username"/>
@@ -101,8 +102,12 @@ const mainBoard = createBoard({
             </div>
             <div className="loginPage_bottomDiv">
               <h1 className="loginPage_noAccountText">Don't have an account?</h1>
-
-              <CustomButton label="Return" className="loginPage_returnButton" onClick={() => handlePageChange("selectionPage")}/>
+              <div className="loginPage_links">
+                <CustomHyperlink href="/register" label="Register " onClick={() => handlePageChange("selectionPage")} />
+                <span> or </span>
+                <CustomHyperlink href="/guest" label=" continue as guest" onClick={() => handlePageChange("selectionPage")} />
+              </div>
+              {/* <CustomButton label="Return" className="loginPage_returnButton" onClick={() => handlePageChange("selectionPage")}/> */}
             </div>
         </div>
         <div className="MainBoard_mode2" id="mode2Div">
