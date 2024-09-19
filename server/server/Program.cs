@@ -1,3 +1,6 @@
+
+// **UNCOMMENT THIS ONCE YOU HAVE CREATED THE DATABASE**
+//DatabaseManager databaseManager = new DatabaseManager("Server=localhost\\SQLEXPRESS01;Database=flash-read-db;Trusted_Connection=True;");
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -36,9 +39,40 @@ app.MapGet("/weatherforecast", () =>
 .WithName("GetWeatherForecast")
 .WithOpenApi();
 
+app.MapGet("/getTaskText", () =>
+{
+    var task =  Enumerable.Range(1, 5).Select(index =>
+        new TaskText("Task " + index))
+        .ToArray();
+    return task;
+})
+.WithName("GetTaskText")
+.WithOpenApi();
+
+app.MapPost("/postTaskText", (TaskText task) =>
+{
+    if (task.Text == "Task 1")
+    {
+        return task with { Text = "Task 1 is not allowed"};
+    }
+    // **UNCOMMENT THIS ONCE YOU HAVE CREATED THE DATABASE**
+    // string text = databaseManager.getText();
+    return task with { Text = "text"};
+})
+.WithName("PostTaskText")
+.WithOpenApi();
+
 app.Run();
 
 record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
 {
     public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+}
+record TaskText(string Text)
+{
+    public TaskText() : this("Hello, World!") { }
+}
+record User(string name, string email)
+{
+    public User() : this("John Doe", "example.com") { }
 }
