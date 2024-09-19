@@ -4,7 +4,6 @@ import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
 import { createBoard } from "@wixc3/react-board";
 
-
 function handlePageChange(pageName: string) {
   console.log("Page change clicked");
   const selectionPage = document.getElementById("selectionDiv") as HTMLDivElement;

@@ -21,6 +21,22 @@ const PostComponent: React.FC = () => {
         fetchPost();
     }, []);
 
+    const postTaskText = async () => {
+        try {
+            const response = await axios.post('http://localhost:5076/postTaskText', {
+                text: 'string'
+            }, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'accept': 'application/json'
+                }
+            });
+            console.log('Post response:', response.data);
+        } catch (err) {
+            console.error('Error posting task text', err);
+        }
+    };
+
     if (loading) {
         return <p>Loading...</p>;
     }
@@ -37,6 +53,7 @@ const PostComponent: React.FC = () => {
                     <p>{post.body}</p>
                 </>
             )}
+            <button onClick={postTaskText}>Post Task Text</button>
         </div>
     );
 };
