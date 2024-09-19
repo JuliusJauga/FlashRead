@@ -2,6 +2,7 @@ import "./main.board.css";
 import "./dropdown.css";
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
+import { postTaskText } from "../components/axios";
 import { createBoard } from "@wixc3/react-board";
 
 function handlePageChange(pageName: string) {
@@ -9,6 +10,17 @@ function handlePageChange(pageName: string) {
   const selectionPage = document.getElementById("selectionDiv") as HTMLDivElement;
   const mode1Page = document.getElementById("mode1Div") as HTMLDivElement;
   const loginPage = document.getElementById("loginPage") as HTMLDivElement;
+
+  if (pageName === "mode1Page") {
+    // fetchPostData().then(data => {
+    //   const mode1Text = document.querySelector(".mode1Text") as HTMLParagraphElement;
+    //   mode1Text.textContent = data;
+    //   console.log("Data fetched:", data);
+    // }).catch(error => {
+    //   console.error("Error fetching data:", error);
+    // });
+    postTaskText().then(data => {console.log(data);});
+  }
 
   if (pageName === "selectionPage") {
     selectionPage.style.display = "flex";
