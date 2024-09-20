@@ -10,32 +10,54 @@ import { createBoard } from "@wixc3/react-board";
 
 function handlePageChange(pageName: string) {
   console.log("Page change clicked");
-  const selectionPage = document.getElementById("selectionDiv") as HTMLDivElement;
-  const mode1Page = document.getElementById("mode1Div") as HTMLDivElement;
-  const loginPage = document.getElementById("loginPage") as HTMLDivElement;
 
-  if (pageName === "mode1Page") {
-    postTaskText().then((data) => {
-      console.log(data);
-      const mode1Text = document.querySelector(".mode1Text") as HTMLParagraphElement;
-      mode1Text.textContent = data.text;
+  const pages = {
+    selectionPage: document.getElementById("selectionDiv") as HTMLDivElement,
+    mode1Page: document.getElementById("mode1Div") as HTMLDivElement,
+    loginPage: document.getElementById("loginPage") as HTMLDivElement,
+    loginContainer: document.getElementById("loginContainer") as HTMLDivElement,
+    registerContainer: document.getElementById("registerContainer") as HTMLDivElement,
+  };
+
+  const hideAllPages = () => {
+    Object.values(pages).forEach(page => {
+      page.style.display = "none";
     });
-  }
+  };
 
-  if (pageName === "selectionPage") {
-    selectionPage.style.display = "flex";
-    mode1Page.style.display = "none";
-    loginPage.style.display = "none";
-  } else if (pageName === "mode1Page") {
-    selectionPage.style.display = "none";
-    mode1Page.style.display = "flex";
-    loginPage.style.display = "none";
-  } else if (pageName === "loginPage") {
-    selectionPage.style.display = "none";
-    mode1Page.style.display = "none";
-    loginPage.style.display = "flex";
-  }
+  hideAllPages();
 
+  switch (pageName) {
+    case "mode1Page":
+      postTaskText().then((data) => {
+        console.log(data);
+        const mode1Text = document.querySelector(".mode1Text") as HTMLParagraphElement;
+        mode1Text.textContent = data.text;
+      });
+      pages.mode1Page.style.display = "flex";
+      break;
+
+    case "selectionPage":
+      pages.selectionPage.style.display = "flex";
+      break;
+
+    case "loginPage":
+      pages.loginPage.style.display = "flex";
+      pages.loginContainer.style.display = "flex";
+      pages.loginContainer.style.zIndex = "50";
+      pages.registerContainer.style.zIndex = "0";
+      break;
+
+    case "registerPage":
+      pages.loginPage.style.display = "flex";
+      pages.registerContainer.style.display = "flex";
+      pages.registerContainer.style.zIndex = "50";
+      pages.loginContainer.style.zIndex = "0";
+      break;
+
+    default:
+      console.log("Unknown page: " + pageName);
+  }
 }
 
 const mainBoard = createBoard({
@@ -49,12 +71,15 @@ const mainBoard = createBoard({
           }
         } } />
       </div>
+
       <div className="MainBoard_content" id="contentDiv">
 
         <div className="MainBoard_mode1" id="mode1Div">
-          <div className="mode1_upperDiv" id="upperDiv">
-    
+
+          <div className="mode1_upperDiv" id="upperDiv"> 
+            {/* Spacer */}
           </div>
+
           <div className="mode1_innerDiv" id="textAreaDiv">
             <div className="mode1TextDiv">
               <div className="mode1_mainBox">
@@ -62,17 +87,22 @@ const mainBoard = createBoard({
               </div>
             </div>
           </div>
+
           <div className="mode1_lowerDiv" id="buttonDiv">
             <CustomButton label="Return" className="MainBoard_returnButton" onClick={() => handlePageChange("selectionPage")}/>
           </div>
+
         </div>
 
         <div className="MainBoard_selection" id="selectionDiv">
+
           <div className="MainBoard_grid" id="selectionGrid">
+
             <CustomButton label= "Mode 1" className= "MainBoard_gridButton" onClick={()=>{
               console.log("Mode 1 clicked");
               handlePageChange("mode1Page");
             }}/>
+
             <CustomButton label= "Mode 2" className= "MainBoard_gridButton" onClick={()=>{
               console.log("Mode 2 clicked");
               const mode2Button = document.querySelector(".MainBoard_gridButton:nth-child(2)") as HTMLButtonElement;
@@ -81,6 +111,7 @@ const mainBoard = createBoard({
                 mode2Button.textContent = "Mode 2";
               }, 1000);
             }}/>
+
             <CustomButton label= "Mode 3" className= "MainBoard_gridButton" onClick={()=>{
               console.log("Mode 2 clicked");
               const mode3Button = document.querySelector(".MainBoard_gridButton:nth-child(3)") as HTMLButtonElement;
@@ -89,30 +120,68 @@ const mainBoard = createBoard({
                 mode3Button.textContent = "Mode 3";
               }, 1000);
             }}/>
+
           </div>
+
         </div>
+
         <div className="MainBoard_loginPage" id="loginPage">
+
+          <div className="loginContainer" id="loginContainer">
+
             <div className="loginPage_topDiv">
               <h1 className="loginPage_title">Welcome back!</h1>
             </div>
+
             <div className="loginPage_loginDiv">
               <input type="text" className="signinInput" id="signinEmailInput" placeholder="Username"/>
               <input type="password" className="signinInput" id="signinPasswordInput" placeholder="Password"/>
               <CustomButton label="Login" className="loginPage_loginButton" onClick={() => handlePageChange("selectionPage")}/>
             </div>
+
             <div className="loginPage_bottomDiv">
               <h1 className="loginPage_noAccountText">Don't have an account?</h1>
+
               <div className="loginPage_links">
-                <CustomHyperlink href="/register" label="Register " onClick={() => handlePageChange("selectionPage")} />
+                <CustomHyperlink href="/register" label="Register " onClick={() => handlePageChange("registerPage")} />
                 <span> or </span>
                 <CustomHyperlink href="/guest" label=" continue as guest" onClick={() => handlePageChange("selectionPage")} />
               </div>
+
               {/* <CustomButton label="Return" className="loginPage_returnButton" onClick={() => handlePageChange("selectionPage")}/> */}
             </div>
+
+          </div>
+          <div className="registerContainer" id="registerContainer">
+
+            <div className="registerPage_topDiv">
+              <h1 className="registerPage_title">Create an account</h1>
+            </div>
+
+            <div className="registerPage_registerDiv">
+              <input type="text" className="signinInput" id="registerEmailInput" placeholder="Email"/>
+              <input type="text" className="signinInput" id="registerUsernameInput" placeholder="Username"/>
+              <input type="password" className="signinInput" id="registerPasswordInput" placeholder="Password"/>
+              <input type="password" className="signinInput" id="registerPasswordInput2" placeholder="Confirm Password"/>
+              <CustomButton label="Register" className="registerPage_registerButton" onClick={() => handlePageChange("selectionPage")}/>
+            </div>
+
+            <div className="registerPage_bottomDiv">
+              <h1 className="loginPage_noAccountText">Already have an account?</h1>
+
+              <div className="loginPage_links">
+                <CustomHyperlink href="/login" label="Login " onClick={() => handlePageChange("loginPage")} />
+                <span> or </span>
+                <CustomHyperlink href="/guest" label=" continue as guest" onClick={() => handlePageChange("selectionPage")} />
+              </div>
+            </div>
+
+          </div>
+
         </div>
-        <div className="MainBoard_mode2" id="mode2Div">
-        </div>  
+      
       </div>
+
     </div>
   ),
   isSnippet: true,
