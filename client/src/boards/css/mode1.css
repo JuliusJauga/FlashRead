@@ -64,7 +64,7 @@
     z-index: 100;
   }
   
-  .mode1_text {
+  .mode1_Text {
     font-size: 2vh;
     color: black;
     text-align: left;
@@ -74,6 +74,7 @@
     position: relative;
     display: flex;
     background-color: aqua;
+    background-color: aqua;
     align-items: center;
     height: 80%;
     justify-content: center;
@@ -81,7 +82,17 @@
   }
   .mode1_upperDiv {
     background-color: red;
+    background-color: red;
     position: relative;
+    flex: 1;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    box-sizing: border-box;
+    flex-direction: row;
+  }
+
+  .mode1_upperDiv_parts {
     flex: 1;
     display: flex;
     align-items: stretch;
@@ -107,8 +118,20 @@
     background-color: blueviolet;
     z-index: 50;
     box-sizing: border-box;
+    border: 2px solid black;
+  }
+
+  .mode1_upperDiv_box {
+    position: relative;
+    display: flex;
+    width: 65%;
+    height: 100%;
+    background-color: blueviolet;
+    z-index: 50;
+    box-sizing: border-box;
   }
   .mode1_lowerDiv {
+    background-color: blue;
     background-color: blue;
     position: relative;
     flex: 1;
@@ -119,13 +142,18 @@
   }
   .mode1_mainBox {
     background-color: green;
+    background-color: green;
     position: relative;
+    width: 65%;
     width: 65%;
     height: 100%;
     border-radius: 12px;
     border: solid 4px;
     border-color: #FFF8E8;
     z-index: 50;
+    align-items: center;
+    justify-content: center;
+    display: flex;
     align-items: center;
     justify-content: center;
     display: flex;
