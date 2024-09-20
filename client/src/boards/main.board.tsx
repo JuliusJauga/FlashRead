@@ -77,15 +77,64 @@ const mainBoard = createBoard({
       <div className="MainBoard_content" id="contentDiv">
 
         <div className="MainBoard_mode1" id="mode1Div">
-
-          <div className="mode1_upperDiv" id="upperDiv"> 
-            {/* Spacer */}
+          <div className="mode1_upperDiv" id="upperDiv">
+            <div className="mode1_upperDiv_box" id="mode1_upperDiv_box">
+              <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
+                labas
+              </div>
+              <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
+                lol
+              </div>
+              <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
+                ne
+              </div>
+            </div>
           </div>
 
           <div className="mode1_innerDiv" id="textAreaDiv">
-            <div className="mode1TextDiv">
-              <div className="mode1_mainBox">
-                <p className="mode1Text">Loading...</p>
+            <div className="mode1_mainBox" id="mode1_mainBox">
+              <div className="mode1_textDiv" id="mode1_textDiv">
+                <p className="mode1_text" id="mode1_text">
+                  TEKSTAS KATRA REIK PERSKAITYT
+                </p>
+              </div>
+              <div className="mode1_answerDiv" id="mode1_answerDiv">
+                <p className="mode1_text" id="mode1_text">
+                  KLAUSIMAI KAZKOKIE TAI PADARYSIM
+                </p>
+              </div>
+              <div className="mode1_resultDiv" id="mode1_resultDiv">
+                <p className="mode1_text" id="mode1_text">
+                  DUOMENYS VISI
+                </p>
+              </div>
+              <div className="mode1_start_options">
+                <CustomButton label="Start" className="wideButton" id="mode1_startButton" onClick={() => {
+                  const startButton = document.getElementById("mode1_startButton") as HTMLButtonElement;
+                  const mode1AnswerDiv = document.getElementById("mode1_answerDiv") as HTMLDivElement;
+                  const mode1ResultDiv = document.getElementById("mode1_resultDiv") as HTMLDivElement;
+                  const mode1TextDiv = document.getElementById("mode1_textDiv") as HTMLDivElement;
+
+                  if (startButton.textContent === "Start") {
+                    console.log("Start clicked");
+                    startButton.textContent = "Stop";
+                  }else if (startButton.textContent === "Stop") {
+                    console.log("Stop clicked");
+                    mode1TextDiv.style.visibility = "hidden";
+                    mode1AnswerDiv.style.visibility = "visible";
+                    startButton.textContent = "Confirm";
+                  }else if (startButton.textContent === "Confirm") {
+                    console.log("Confirm clicked");
+                    mode1AnswerDiv.style.visibility = "hidden";
+                    mode1ResultDiv.style.visibility = "visible";
+                    startButton.textContent = "Again";
+                  }else {
+                    console.log("Again clicked");
+                    mode1TextDiv.style.visibility = "visible";
+                    mode1ResultDiv.style.visibility = "hidden";
+                    startButton.textContent = "Start";
+                  }
+                }}/>
               </div>
             </div>
           </div>
