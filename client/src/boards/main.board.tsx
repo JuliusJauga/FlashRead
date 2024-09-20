@@ -9,6 +9,7 @@ import Dropdown from "../components/dropdown";
 import CustomHyperlink from '../components/buttons/hyperlink';
 import { postTaskText } from "../components/axios";
 import { createBoard } from "@wixc3/react-board";
+import ChoiceBox from "../components/choiceBox";
 
 function handlePageChange(pageName: string) {
   console.log("Page change clicked");
@@ -80,10 +81,10 @@ const mainBoard = createBoard({
           <div className="mode1_upperDiv" id="upperDiv">
             <div className="mode1_upperDiv_box" id="mode1_upperDiv_box">
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                labas
+                <ChoiceBox choices={["A", "B", "C"]} onSelect={(choice) => console.log(choice)} label="Theme:"/>
               </div>
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                lol
+                <ChoiceBox choices={["A", "B", "C"]} onSelect={(choice) => console.log(choice)} label="Difficulty:"/>
               </div>
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
                 ne
