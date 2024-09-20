@@ -187,3 +187,9 @@
   text-align: center;
   font-family: "Poppins", sans-serif;
 }
+
+.smallText {
+  font-size: 16px;
+  font-family: "Poppins", sans-serif;
+  display: inline;
+}

@@ -2,9 +2,10 @@
     display: none;
     position: relative;
     flex-direction: column;
-    justify-content: center;
+    justify-content: space-between;
     height: 100%;
     z-index: 30;
+    overflow: hidden;
     /* background-color: aquamarine; */
 }
 

@@ -38,7 +38,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
         color: '#FFF8E8',
         transform: isHovered ? 'scale(0.95)' : 'scale(1)',
         fontSize: '26px',
-        fontFamily: 'Georgia, serif',
+        fontFamily: 'Poppins, sans-serif', 
         cursor: 'pointer',
         width: `${buttonSize}px`, 
         height: '100%',
@@ -74,7 +74,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
         cursor: 'pointer',
         color: '#FFF8E8',
         fontSize: '20px',
-        fontFamily: 'Georgia, serif',
+        fontFamily: 'Poppins, sans-serif', 
         whiteSpace: 'nowrap',
     };
 

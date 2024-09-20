@@ -60,3 +60,16 @@
     height: 15%;
     margin: 2em auto;
 }
+
+.hyperlink {
+    font-size: 16px;
+    font-family: "Poppins", sans-serif;
+    color: #0c4480;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline;
+}
+
+.hyperlink:hover {
+    color: white; /* Adjust hover text color as needed */
+}

@@ -34,7 +34,7 @@ function handlePageChange(pageName: string) {
     case "mode1Page":
       postTaskText().then((data) => {
         console.log(data);
-        const mode1Text = document.querySelector(".mode1Text") as HTMLParagraphElement;
+        const mode1Text = document.querySelector(".mode1_text") as HTMLParagraphElement;
         mode1Text.textContent = data.text;
       });
       pages.mode1Page.style.display = "flex";
@@ -87,7 +87,8 @@ const mainBoard = createBoard({
                 <ChoiceBox choices={["A", "B", "C"]} onSelect={(choice) => console.log(choice)} label="Difficulty:"/>
               </div>
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                ne
+                <span className="mode1Timer" id="mode1Timer">Timer: </span>
+                <input type="text" className="mode1TimerInput" id="mode1TimerInput" placeholder="0:00"/>
               </div>
             </div>
           </div>
@@ -195,9 +196,9 @@ const mainBoard = createBoard({
               <h1 className="loginPage_noAccountText">Don't have an account?</h1>
 
               <div className="loginPage_links">
-                <CustomHyperlink href="/register" label="Register " onClick={() => handlePageChange("registerPage")} />
-                <span> or </span>
-                <CustomHyperlink href="/guest" label=" continue as guest" onClick={() => handlePageChange("selectionPage")} />
+                <CustomHyperlink href="/register" label="Register " className="hyperlink" onClick={() => handlePageChange("registerPage")} />
+                <span className="smallText"> or </span>
+                <CustomHyperlink href="/guest" label=" continue as guest" className="hyperlink" onClick={() => handlePageChange("selectionPage")} />
               </div>
 
               {/* <CustomButton label="Return" className="loginPage_returnButton" onClick={() => handlePageChange("selectionPage")}/> */}
@@ -222,9 +223,9 @@ const mainBoard = createBoard({
               <h1 className="loginPage_noAccountText">Already have an account?</h1>
 
               <div className="loginPage_links">
-                <CustomHyperlink href="/login" label="Login " onClick={() => handlePageChange("loginPage")} />
-                <span> or </span>
-                <CustomHyperlink href="/guest" label=" continue as guest" onClick={() => handlePageChange("selectionPage")} />
+                <CustomHyperlink href="/login" label="Login " className="hyperlink" onClick={() => handlePageChange("loginPage")} />
+                <span className="smallText"> or </span>
+                <CustomHyperlink href="/guest" label=" continue as guest" className="hyperlink" onClick={() => handlePageChange("selectionPage")} />
               </div>
             </div>
 

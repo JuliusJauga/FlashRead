@@ -6,9 +6,10 @@ interface CustomHyperlinkProps {
   label: string;
   onClick?: () => void;
   className?: string;
+  id?: string;
 }
 
-const CustomHyperlink: React.FC<CustomHyperlinkProps> = ({ href, label, onClick, className }) => {
+const CustomHyperlink: React.FC<CustomHyperlinkProps> = ({ href, label, className, id, onClick }) => {
     const handleClick = (event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
       if (onClick) {
         event.preventDefault();
@@ -17,7 +18,7 @@ const CustomHyperlink: React.FC<CustomHyperlinkProps> = ({ href, label, onClick,
     };
   
     return (
-      <a href={href} onClick={handleClick} className={`custom-hyperlink ${className}`}>
+      <a href={href} onClick={handleClick} className={className} id={id}>
         {label}
       </a>
     );
