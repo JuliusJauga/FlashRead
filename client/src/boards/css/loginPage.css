@@ -62,7 +62,7 @@
     /* background-color: red;     */
 }
 
-.loginPage_loginButton {
+/* .loginPage_loginButton {
     width: 30%;
     margin: 2em auto;
 }
@@ -70,7 +70,7 @@
 .registerPage_registerButton {
     width: 30%;
     margin: 2em auto;   
-}
+} */
 
 .loginPage_links {
     display: flex;
@@ -105,6 +105,7 @@
     margin: 0.6em auto;
     border-radius: 15px;
     padding: 0.5em;
+    font-family: "Poppins", sans-serif;
 }
 
 .loginPage_noAccountText {
@@ -112,4 +113,13 @@
     margin-bottom: 1em;
     color: white;
     text-align: center;
+    font-family: "Poppins", sans-serif;
+}
+
+.loginPage_title {
+    font-size: 3em;
+    margin-bottom: 1em;
+    color: white;
+    text-align: center;
+    font-family: "Poppins", sans-serif;   
 }

@@ -1,0 +1,62 @@
+.squareButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1 / 1;
+    position: relative;
+    width: 100%;
+    max-width: 30vh;
+    flex-grow: 1;
+    box-sizing: border-box;
+    outline: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 4px solid #FFF8E8;
+    background-color: transparent;
+    color: #FFF8E8;
+    font-size: 26px;
+    font-family: "Poppins", sans-serif;
+}
+
+.wideButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 100%;
+    max-width: 30vh;
+    flex-grow: 1;
+    box-sizing: border-box;
+    outline: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 4px solid #FFF8E8;
+    background-color: transparent;
+    color: #FFF8E8;
+    font-size: 26px;
+    font-family: "Poppins", sans-serif;    
+}
+
+.loginButton {
+    /* wideButton styling: */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    max-width: 30vh;
+    /* flex-grow: 1; */
+    box-sizing: border-box;
+    outline: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 4px solid #FFF8E8;
+    background-color: transparent;
+    color: #FFF8E8;
+    font-size: 26px;
+    font-family: "Poppins", sans-serif;
+
+    /* loginButton specific styling: */
+    width: 30%;
+    height: 15%;
+    margin: 2em auto;
+}

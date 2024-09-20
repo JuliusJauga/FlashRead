@@ -44,8 +44,6 @@
   margin: auto;
 }
 
-
-
 .MainBoard_selection {
   width: 100%;
   display: flex;
@@ -172,6 +170,7 @@
   font-size: 2vh;
   color: white;
   text-align: center;
+  font-family: "Poppins", sans-serif;
 }
 
 .mode1TimerDiv {
@@ -186,4 +185,5 @@
   font-size: 2vh;
   color: white;
   text-align: center;
+  font-family: "Poppins", sans-serif;
 }

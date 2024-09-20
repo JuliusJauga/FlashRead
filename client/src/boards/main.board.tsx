@@ -2,6 +2,8 @@ import "./css/main.board.css";
 import "./css/dropdown.css";
 import "./css/mode1.css";
 import "./css/loginPage.css";
+import "./css/fonts.css";
+import "./css/buttons.css";
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
 import CustomHyperlink from '../components/buttons/hyperlink';
@@ -89,7 +91,7 @@ const mainBoard = createBoard({
           </div>
 
           <div className="mode1_lowerDiv" id="buttonDiv">
-            <CustomButton label="Return" className="MainBoard_returnButton" onClick={() => handlePageChange("selectionPage")}/>
+            <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => handlePageChange("selectionPage")}/>
           </div>
 
         </div>
@@ -98,23 +100,23 @@ const mainBoard = createBoard({
 
           <div className="MainBoard_grid" id="selectionGrid">
 
-            <CustomButton label= "Mode 1" className= "MainBoard_gridButton" onClick={()=>{
+            <CustomButton label= "Mode 1" className= "squareButton" id="MainBoard_mode1Button" onClick={()=>{
               console.log("Mode 1 clicked");
               handlePageChange("mode1Page");
             }}/>
 
-            <CustomButton label= "Mode 2" className= "MainBoard_gridButton" onClick={()=>{
+            <CustomButton label= "Mode 2" className= "squareButton" id="MainBoard_mode2Button" onClick={()=>{
               console.log("Mode 2 clicked");
-              const mode2Button = document.querySelector(".MainBoard_gridButton:nth-child(2)") as HTMLButtonElement;
+              const mode2Button = document.getElementById("MainBoard_mode2Button") as HTMLButtonElement;
               mode2Button.textContent = "Coming Soon";
               setTimeout(() => {
                 mode2Button.textContent = "Mode 2";
               }, 1000);
             }}/>
 
-            <CustomButton label= "Mode 3" className= "MainBoard_gridButton" onClick={()=>{
-              console.log("Mode 2 clicked");
-              const mode3Button = document.querySelector(".MainBoard_gridButton:nth-child(3)") as HTMLButtonElement;
+            <CustomButton label= "Mode 3" className= "squareButton" id="MainBoard_mode3Button" onClick={()=>{
+              console.log("Mode 3 clicked");
+              const mode3Button = document.getElementById("MainBoard_mode3Button") as HTMLButtonElement;
               mode3Button.textContent = "Coming Soon";
               setTimeout(() => {
                 mode3Button.textContent = "Mode 3";
@@ -136,7 +138,7 @@ const mainBoard = createBoard({
             <div className="loginPage_loginDiv">
               <input type="text" className="signinInput" id="signinEmailInput" placeholder="Username"/>
               <input type="password" className="signinInput" id="signinPasswordInput" placeholder="Password"/>
-              <CustomButton label="Login" className="loginPage_loginButton" onClick={() => handlePageChange("selectionPage")}/>
+              <CustomButton label="Login" className="loginButton" id="loginPage_loginButton" onClick={() => handlePageChange("selectionPage")}/>
             </div>
 
             <div className="loginPage_bottomDiv">
@@ -155,7 +157,7 @@ const mainBoard = createBoard({
           <div className="registerContainer" id="registerContainer">
 
             <div className="registerPage_topDiv">
-              <h1 className="registerPage_title">Create an account</h1>
+              <h1 className="loginPage_title">Create an account</h1>
             </div>
 
             <div className="registerPage_registerDiv">
@@ -163,7 +165,7 @@ const mainBoard = createBoard({
               <input type="text" className="signinInput" id="registerUsernameInput" placeholder="Username"/>
               <input type="password" className="signinInput" id="registerPasswordInput" placeholder="Password"/>
               <input type="password" className="signinInput" id="registerPasswordInput2" placeholder="Confirm Password"/>
-              <CustomButton label="Register" className="registerPage_registerButton" onClick={() => handlePageChange("selectionPage")}/>
+              <CustomButton label="Register" className="loginButton" id="registerPage_registerButton" onClick={() => handlePageChange("selectionPage")}/>
             </div>
 
             <div className="registerPage_bottomDiv">
