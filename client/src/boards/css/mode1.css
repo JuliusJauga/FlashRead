@@ -19,11 +19,19 @@
     width: 100%;
     visibility: visible;
     justify-content: center;
+    align-items: center;
+    flex-direction: row;
     bottom: 0;
     display: flex;
     flex: 1;
     z-index: 101;
   }
+
+  .timer {
+    font-size: 16px;
+    margin-right: 10%;
+  }
+
   .mode1_textDiv {
     position: absolute;
     width: 95%;

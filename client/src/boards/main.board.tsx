@@ -10,6 +10,8 @@ import CustomHyperlink from '../components/buttons/hyperlink';
 import { postTaskText } from "../components/axios";
 import { createBoard } from "@wixc3/react-board";
 import ChoiceBox from "../components/choiceBox";
+import Timer from "../components/timer";
+import "./css/timer.css";
 
 function handlePageChange(pageName: string) {
   console.log("Page change clicked");
@@ -31,8 +33,7 @@ function handlePageChange(pageName: string) {
   };
   const modes_start = {
     startButton1: document.getElementById("mode1_startButton") as HTMLButtonElement,
-  }
-
+  };
 
   const hideAllPages = () => {
     Object.values(pages).forEach(page => {
@@ -129,32 +130,29 @@ const mainBoard = createBoard({
                 </p>
               </div>
               <div className="mode1_start_options">
-                <CustomButton label="Start" className="wideButton" id="mode1_startButton" onClick={() => {
+                <Timer className="wideButton" id = "mode1_startButton" onClick= {() => {
                   const startButton = document.getElementById("mode1_startButton") as HTMLButtonElement;
                   const mode1AnswerDiv = document.getElementById("mode1_answerDiv") as HTMLDivElement;
                   const mode1ResultDiv = document.getElementById("mode1_resultDiv") as HTMLDivElement;
                   const mode1TextDiv = document.getElementById("mode1_textDiv") as HTMLDivElement;
-
-                  if (startButton.textContent === "Start") {
-                    console.log("Start clicked");
-                    startButton.textContent = "Stop";
-                  }else if (startButton.textContent === "Stop") {
+                  
+                  if (startButton.textContent === "Stop") {
                     console.log("Stop clicked");
                     mode1TextDiv.style.visibility = "hidden";
                     mode1AnswerDiv.style.visibility = "visible";
-                    startButton.textContent = "Confirm";
-                  }else if (startButton.textContent === "Confirm") {
+                  }
+                  if (startButton.textContent === "Confirm") {
                     console.log("Confirm clicked");
                     mode1AnswerDiv.style.visibility = "hidden";
                     mode1ResultDiv.style.visibility = "visible";
-                    startButton.textContent = "Again";
-                  }else {
+                  }
+                  if (startButton.textContent === "Again") {
                     console.log("Again clicked");
                     mode1TextDiv.style.visibility = "visible";
                     mode1ResultDiv.style.visibility = "hidden";
-                    startButton.textContent = "Start";
                   }
-                }}/>
+
+                }} />
               </div>
             </div>
           </div>

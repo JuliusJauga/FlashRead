@@ -1,0 +1,10 @@
+.timer-container {
+    display: flex;
+    justify-content: space-between; /* Align items in the container */
+    align-items: center; /* Center items vertically */
+    
+}
+
+.toggle-button {
+    margin-left: auto; /* Push the button to the right */
+}
