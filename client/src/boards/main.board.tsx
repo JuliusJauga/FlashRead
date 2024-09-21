@@ -21,10 +21,28 @@ function handlePageChange(pageName: string) {
     loginContainer: document.getElementById("loginContainer") as HTMLDivElement,
     registerContainer: document.getElementById("registerContainer") as HTMLDivElement,
   };
+  const inputs = {
+    signinEmailInput: document.getElementById("signinEmailInput") as HTMLInputElement,
+    signinPasswordInput: document.getElementById("signinPasswordInput") as HTMLInputElement,
+    registerEmailInput: document.getElementById("registerEmailInput") as HTMLInputElement,
+    registerUsernameInput: document.getElementById("registerUsernameInput") as HTMLInputElement,
+    registerPasswordInput: document.getElementById("registerPasswordInput") as HTMLInputElement,
+    registerPasswordInput2: document.getElementById("registerPasswordInput2") as HTMLInputElement,
+  };
+  const modes_start = {
+    startButton1: document.getElementById("mode1_startButton") as HTMLButtonElement,
+  }
+
 
   const hideAllPages = () => {
     Object.values(pages).forEach(page => {
       page.style.display = "none";
+    });
+    Object.values(inputs).forEach(input => {
+      input.value = "";
+    });
+    Object.values(modes_start).forEach(start => {
+      start.textContent = "Start";
     });
   };
 
