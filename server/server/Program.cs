@@ -1,3 +1,6 @@
+using server.src;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.SqlServer;
 
 namespace server
 {
@@ -10,8 +13,15 @@ namespace server
             
             var builder = WebApplication.CreateBuilder(args);
 
+
             // Add services to the container.
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            builder.Services.AddDbContext<FlashDbContext>(options => 
+                options.UseSqlServer("Server=localhost\\SQLEXPRESS01;Database=flash-read-db;Trusted_Connection=True;"));
+            
+            builder.Services.AddScoped<IUserHandler, UserHandler>();
+            builder.Services.AddScoped<IDatabaseManager, DatabaseManager>();
+
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -27,6 +37,8 @@ namespace server
 
             app.UseHttpsRedirection();
             
+            app.UseHsts();
+
             app.MapControllers();
 
             app.Run();

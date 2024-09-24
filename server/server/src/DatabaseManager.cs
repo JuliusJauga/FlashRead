@@ -1,15 +1,18 @@
 using System;
 using System.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
-public class DatabaseManager
+using FlashDbContext = server.src.FlashDbContext;
+public class DatabaseManager : IDatabaseManager
 {
+    private readonly FlashDbContext _context;
     private readonly string _connectionString;
     
     private readonly SqlCommands _sqlCommands = new SqlCommands();
 
-    public DatabaseManager(string connectionString)
+    public DatabaseManager(FlashDbContext dbContext)
     {
-        _connectionString = connectionString;
+        _context = dbContext;
         try {
             _sqlCommands = LoadSqlCommands("src/sqlcommands.json");
         } catch (Exception e) {
@@ -50,6 +53,21 @@ public class DatabaseManager
         string json = File.ReadAllText(path);
         var result = JsonConvert.DeserializeObject<SqlCommands>(json);
         return result ?? new SqlCommands();
+    }
+    public async Task<bool> AddUserAsync(User user)
+    {
+        // SqlConnection connection = GetConnection();
+        // OpenConnection(connection);
+        // SqlCommand command = new SqlCommand(_sqlCommands.Commands.Insert, connection);
+        // command.Parameters.AddWithValue("@name", user.name);
+        // command.Parameters.AddWithValue("@email", user.email);
+        // command.Parameters.AddWithValue("@password", user.password);
+        // int rowsAffected = await command.ExecuteNonQueryAsync();
+        // CloseConnection(connection);
+        // return rowsAffected > 0;
+        Console.WriteLine("User added");
+        Console.WriteLine(user.name + " " + user.email + " " + user.password);
+        return true;
     }
 }
 internal class SqlCommands
@@ -119,4 +137,8 @@ internal class SqlCommandBuilder
     {
         return _sqlCommands.Commands.OrderBy.Desc;
     }
-} 
+}
+public interface IDatabaseManager
+{
+    Task<bool> AddUserAsync(User user);
+}
