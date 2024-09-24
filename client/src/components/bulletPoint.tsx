@@ -20,11 +20,14 @@ const BulletPoints: React.FC<BulletPointsProps> = ({ choices }) => {
                     style={{
                         cursor: 'pointer',
                         listStyleType: selectedBullet === index ? 'disc' : 'circle', // 'disc' for filled, 'circle' for empty
-                        fontSize: '24px', // Adjust font size for better visibility
+                        fontSize: '32px', // Larger font size for bullet points
                         marginBottom: '10px',
+                        display: 'flex',
                     }}
                 >
-                    {choice} {/* Always show the bullet point text */}
+                    <span style={{ fontSize: '24px' }}> {/* Smaller font size for text */}
+                        {choice}
+                    </span>
                 </li>
             ))}
         </ul>
