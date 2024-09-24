@@ -33,3 +33,13 @@ Web: http://localhost:3000/
 
 ## Use case diagram
 ![Use case diagram](res/use_case_diagram.png)
+
+### Unit test setup
+
+```
+cd server/server
+dotnet add package xunit
+dotnet add package Moq
+dotnet add package Microsoft.AspNetCore.Mvc.Testing
+dotnet add package FluentAssertions
+```
