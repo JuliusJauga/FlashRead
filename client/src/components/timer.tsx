@@ -1,4 +1,4 @@
-import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import '../boards/css/timer.css';
 
 interface TimerProps {
@@ -7,7 +7,7 @@ interface TimerProps {
     onClick?: () => void;
 }
 
-const Timer = forwardRef(({ className, id, onClick }: TimerProps, ref) => {
+const Timer = forwardRef(({ id, onClick }: TimerProps, ref) => {
     const [seconds, setSeconds] = useState(0);
     const [isActive, setIsActive] = useState(false);
     const [buttonLabelIndex, setButtonLabelIndex] = useState(0);

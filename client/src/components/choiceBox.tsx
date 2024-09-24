@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import '../boards/css/choiceBox.css'; // Import the CSS file
 
 interface ChoiceBoxProps {
   choices: string[];
@@ -16,13 +17,13 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, onSelect, label = 'Choos
   };
 
   return (
-    <div>
-      <label htmlFor="choice-box">{label}</label>
+    <div className="choice-box-container">
+      <label htmlFor="choice-box" className="choice-box-label">{label}</label>
       <select
         id="choice-box"
         value={selectedChoice}
         onChange={handleSelect}
-        style={{ padding: '0.5rem', fontSize: '1rem', marginLeft: '0.5rem' }}
+        className="choice-box-select"
       >
         <option value="" disabled>
           Select...

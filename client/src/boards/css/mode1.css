@@ -15,7 +15,7 @@
 }
 
 .mode1_start_options {
-  background-color: #C5CCB8;
+  background-color: #808E67;
   position: absolute;
   width: 100%;
   visibility: visible;
@@ -41,7 +41,7 @@
   height: 92%;
   top:0;
   display: flex;
-  background-color: #C5CCB8;
+  background-color: #808E67;
   align-items: top;
   justify-content: left;
   z-index: 101;
@@ -54,7 +54,7 @@
   top: 0;
   visibility: hidden;
   display: flex;
-  background-color: #C5CCB8;
+  background-color: #808E67;
   align-items: top;
   justify-content: left;
   z-index: 100;
@@ -68,7 +68,7 @@
   flex-wrap: wrap;
   height: 92%;
   display: flex;
-  background-color: #C5CCB8;
+  background-color: #808E67;
   align-items: top;
   justify-content: left;
   z-index: 100;
@@ -139,7 +139,7 @@
 }
 
 .mode1_mainBox {
-  background-color: #C5CCB8;
+  background-color: #808E67;
   position: relative;
   width: 65%;
   width: 65%;
@@ -190,4 +190,81 @@
 .timerClass {
   font-family: "Poppins", sans-serif;
   font-size: 16px;
+}
+
+.mode1_question {
+  font-family: "Poppins", sans-serif;
+  font-size: 24px;
+  color: #FFF8E8;
+}
+
+/* Shared styles for mode1Timer and mode1TimerInput */
+.mode1-timer, .mode1-timer-input {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 1rem;
+  /* background-color: #f9f9f9; */
+  /* border: 1px solid #ddd; */
+  border-radius: 8px;
+  font-family: "Poppins", sans-serif;
+}
+
+.mode1-timer-input-label {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #333;
+  font-family: "Poppins", sans-serif;
+}
+
+.mode1-timer-label, .mode1-timer-input-label {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #FFF8E8;
+  font-family: "Poppins", sans-serif;
+}
+
+
+.mode1-timer-select, .mode1-timer-input-select {
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  /* background-color: #fff; */
+  color: #333;
+  /* cursor: pointer; */
+  /* transition: border-color 0.3s ease, box-shadow 0.3s ease; */
+}
+
+.mode1-timer-select:focus, .mode1-timer-input-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.mode1-timer-select option, .mode1-timer-input-select option {
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.mode1-timer-input-select {
+  padding: 0.5rem;
+  font-size: 1rem;
+  /* border: 1px solid #ccc; */
+  /* border-radius: 4px; */
+  /* background-color: #fff; */
+  color: #333;
+  /* transition: border-color 0.3s ease, box-shadow 0.3s ease; */
+}
+
+.mode1-timer-input-select:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  outline: none;
 }

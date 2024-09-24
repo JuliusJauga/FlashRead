@@ -120,8 +120,10 @@ const mainBoard = createBoard({
                 <ChoiceBox choices={["Easy", "Medium", "Hard", "EXTREME"]} onSelect={(choice) => console.log(choice)} label="Difficulty:"/>
               </div>
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                <span className="mode1Timer" id="mode1Timer">Timer: </span>
-                <input type="text" className="mode1TimerInput" id="mode1TimerInput" placeholder="0:00"/>
+                <div className="mode1_timerInput">
+                  <label htmlFor="mode1TimerInput" className="mode1-timer-input-label">Timer:</label>
+                  <input type="text" className="mode1-timer-input-select" id="mode1TimerInput" placeholder="0:00"/>
+                </div>
               </div>
             </div>
           </div>
@@ -137,15 +139,15 @@ const mainBoard = createBoard({
                 <p className="mode1_text" id="mode1_text"></p>
                 <div className="mode1_questionsContainer" id="mode1_questionsContainer">
                   <div className="mode1_questionDiv" id="mode1_question1Div">
-                    <h1 className="mode1_text">Question 1</h1>
+                    <h1 className="mode1_question">Question 1</h1>
                     <BulletPoints choices={["Answer 1", "Answer 2", "Answer 3"]} />
                   </div>
                   <div className="mode1_questionDiv" id="mode1_question2Div">
-                    <h1>Question 2</h1>
+                    <h1 className="mode1_question">Question 2</h1>
                     <BulletPoints choices={["Answer 1", "Answer 2", "Answer 3"]} />
                   </div>
                   <div className="mode1_questionDiv" id="mode1_question3Div">
-                    <h1>Question 3</h1>
+                    <h1 className="mode1_question">Question 3</h1>
                     <BulletPoints choices={["Answer 1", "Answer 2", "Answer 3"]} />
                   </div>
                 </div>              
@@ -156,7 +158,7 @@ const mainBoard = createBoard({
                 </p>
               </div>
               <div className="mode1_start_options">
-                <Timer ref={timerRef} className="wideButton" id = "mode1_startButton" onClick= {() => {
+                <Timer ref={timerRef} id = "mode1_startButton" onClick= {() => {
                   const startButton = document.getElementById("mode1_startButton") as HTMLButtonElement;
                   const mode1AnswerDiv = document.getElementById("mode1_answerDiv") as HTMLDivElement;
                   const mode1ResultDiv = document.getElementById("mode1_resultDiv") as HTMLDivElement;
