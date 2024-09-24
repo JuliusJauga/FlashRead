@@ -121,8 +121,8 @@ const mainBoard = createBoard({
               </div>
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
                 <div className="mode1_timerInput">
-                  <label htmlFor="mode1TimerInput" className="mode1-timer-input-label">Timer:</label>
-                  <input type="text" className="mode1-timer-input-select" id="mode1TimerInput" placeholder="0:00"/>
+                  <label htmlFor="mode1TimerInput" className="mode1_timerInputLabel">Timer:</label>
+                  <input type="text" className="mode1_timerInputSelect" id="mode1TimerInput" placeholder="0:00"/>
                 </div>
               </div>
             </div>

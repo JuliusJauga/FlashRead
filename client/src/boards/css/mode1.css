@@ -176,7 +176,6 @@
   flex-direction: column;
   height: 100%;
   width: 100%;
-  /* background-color: orange; */
 }
 
 .mode1_questionDiv {
@@ -198,30 +197,8 @@
   color: #FFF8E8;
 }
 
-/* Shared styles for mode1Timer and mode1TimerInput */
-.mode1-timer, .mode1-timer-input {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  max-width: 300px;
-  margin: 0 auto;
-  padding: 1rem;
-  /* background-color: #f9f9f9; */
-  /* border: 1px solid #ddd; */
-  border-radius: 8px;
-  font-family: "Poppins", sans-serif;
-}
-
-.mode1-timer-input-label {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #333;
-  font-family: "Poppins", sans-serif;
-}
-
-.mode1-timer-label, .mode1-timer-input-label {
+.mode1_timerInputLabel {
+  display: block;
   margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: bold;
@@ -229,42 +206,44 @@
   font-family: "Poppins", sans-serif;
 }
 
-
-.mode1-timer-select, .mode1-timer-input-select {
+.mode1_timerInputSelect {
   width: 100%;
   padding: 0.5rem;
   font-size: 1rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-  /* background-color: #fff; */
+  font-family: "Poppins", sans-serif;
   color: #333;
-  /* cursor: pointer; */
-  /* transition: border-color 0.3s ease, box-shadow 0.3s ease; */
 }
 
-.mode1-timer-select:focus, .mode1-timer-input-select:focus {
+.mode1_timerInputSelect:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
   outline: none;
 }
 
-.mode1-timer-select option, .mode1-timer-input-select option {
+.mode1_timerInputSelect option {
   padding: 0.5rem;
   font-size: 1rem;
 }
 
-.mode1-timer-input-select {
+.mode1_timerInputSelect {
   padding: 0.5rem;
   font-size: 1rem;
-  /* border: 1px solid #ccc; */
-  /* border-radius: 4px; */
-  /* background-color: #fff; */
   color: #333;
-  /* transition: border-color 0.3s ease, box-shadow 0.3s ease; */
 }
 
-.mode1-timer-input-select:focus {
+.mode1_timerInputSelect:focus {
   border-color: #007bff;
   box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
   outline: none;
+}
+
+.mode1_answerDiv::-webkit-scrollbar {
+  display: none;
+}
+
+.mode1_answerDiv {
+  -ms-overflow-style: none;
+  scrollbar-width: none; 
 }
