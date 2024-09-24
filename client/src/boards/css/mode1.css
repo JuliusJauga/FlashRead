@@ -1,167 +1,157 @@
 .MainBoard_mode1 {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    display: none;
-    flex-direction: column;
-    background-color: #AAB396;
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: cover;
-    background-attachment: scroll;
-    background-origin: padding-box;
-    background-clip: border-box;
-    z-index: 8;
-  }
-  .mode1_start_options {
-    background-color: violet;
-    position: absolute;
-    width: 100%;
-    visibility: visible;
-    justify-content: center;
-    align-items: center;
-    flex-direction: row;
-    bottom: 0;
-    display: flex;
-    flex: 1;
-    z-index: 101;
-  }
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: none;
+  flex-direction: column;
+  background-color: #AAB396;
+  background-repeat: no-repeat;
+  background-position: 50%;
+  background-size: cover;
+  background-attachment: scroll;
+  background-origin: padding-box;
+  background-clip: border-box;
+  z-index: 8;
+}
 
-  .timer {
-    font-size: 16px;
-    margin-right: 10%;
-  }
+.mode1_start_options {
+  background-color: #C5CCB8;
+  position: absolute;
+  width: 100%;
+  visibility: visible;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  bottom: 0;
+  display: flex;
+  flex: 1;
+  z-index: 101;
+}
 
-  .mode1_textDiv {
-    position: absolute;
-    width: 95%;
-    visibility: visible;
-    flex-wrap: wrap;
-    height: 92%;
-    top:0;
-    display: flex;
-    background-color: antiquewhite;
-    align-items: top;
-    justify-content: left;
-    z-index: 101;
-  }
-  .mode1_answerDiv {
-    position: absolute;
-    width: 95%;
-    flex-wrap: wrap;
-    height: 92%;
-    top: 0;
-    visibility: hidden;
-    display: flex;
-    background-color: antiquewhite;
-    align-items: top;
-    justify-content: left;
-    z-index: 100;
-  }
-  .mode1_resultDiv {
-    position: absolute;
-    visibility: hidden;
-    width: 95%;
-    top: 0;
-    flex-wrap: wrap;
-    height: 92%;
-    display: flex;
-    background-color: antiquewhite;
-    align-items: top;
-    justify-content: left;
-    z-index: 100;
-  }
-  
-  .mode1_Text {
-    font-size: 2vh;
-    color: black;
-    text-align: left;
-  }
+.timer {
+  font-size: 16px;
+  margin-right: 10%;
+}
 
-  .mode1_innerDiv {
-    position: relative;
-    display: flex;
-    background-color: aqua;
-    align-items: center;
-    height: 80%;
-    justify-content: center;
-    box-sizing: border-box;
-  }
-  .mode1_upperDiv {
-    background-color: red;
-    position: relative;
-    flex: 1;
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
-    box-sizing: border-box;
-    flex-direction: row;
-  }
+.mode1_textDiv {
+  position: absolute;
+  width: 95%;
+  visibility: visible;
+  flex-wrap: wrap;
+  height: 92%;
+  top:0;
+  display: flex;
+  background-color: #C5CCB8;
+  align-items: top;
+  justify-content: left;
+  z-index: 101;
+}
+.mode1_answerDiv {
+  position: absolute;
+  width: 95%;
+  flex-wrap: wrap;
+  height: 92%;
+  top: 0;
+  visibility: hidden;
+  display: flex;
+  background-color: #C5CCB8;
+  align-items: top;
+  justify-content: left;
+  z-index: 100;
+}
+.mode1_resultDiv {
+  position: absolute;
+  visibility: hidden;
+  width: 95%;
+  top: 0;
+  flex-wrap: wrap;
+  height: 92%;
+  display: flex;
+  background-color: #C5CCB8;
+  align-items: top;
+  justify-content: left;
+  z-index: 100;
+}
 
-  .mode1_upperDiv_parts {
-    flex: 1;
-    display: flex;
-    align-items: stretch;
-    justify-content: center;
-    box-sizing: border-box;
-    flex-direction: row;
-  }
+.mode1_Text {
+  font-size: 2vh;
+  color: black;
+  text-align: left;
+}
 
-  .mode1_upperDiv_parts {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    border: 2px solid black;
-  }
+.mode1_innerDiv {
+  position: relative;
+  display: flex;
+  background-color: #AAB396;
+  align-items: center;
+  height: 80%;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.mode1_upperDiv {
+  background-color: #AAB396;
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  box-sizing: border-box;
+  flex-direction: row;
+}
 
-  .mode1_upperDiv_box {
-    position: relative;
-    display: flex;
-    width: 65%;
-    height: 100%;
-    background-color: blueviolet;
-    z-index: 50;
-    box-sizing: border-box;
-    border: 2px solid black;
-  }
+.mode1_upperDiv_parts {
+  flex: 1;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  box-sizing: border-box;
+  flex-direction: row;
+}
 
-  .mode1_upperDiv_box {
-    position: relative;
-    display: flex;
-    width: 65%;
-    height: 100%;
-    background-color: blueviolet;
-    z-index: 50;
-    box-sizing: border-box;
-  }
-  .mode1_lowerDiv {
-    background-color: blue;
-    position: relative;
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-  }
-  .mode1_mainBox {
-    background-color: green;
-    position: relative;
-    width: 65%;
-    width: 65%;
-    height: 100%;
-    border-radius: 12px;
-    border: solid 4px;
-    border-color: #FFF8E8;
-    z-index: 50;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    display: flex;
-  }
+.mode1_upperDiv_parts {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.mode1_upperDiv_box {
+  position: relative;
+  display: flex;
+  width: 65%;
+  height: 100%;
+  background-color: #AAB396;
+  z-index: 50;
+  box-sizing: border-box;
+}
+
+.mode1_lowerDiv {
+  background-color: #AAB396;
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.mode1_mainBox {
+  background-color: #C5CCB8;
+  position: relative;
+  width: 65%;
+  width: 65%;
+  height: 100%;
+  border-radius: 12px;
+  border: solid 4px;
+  border-color: #FFF8E8;
+  z-index: 50;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
 
 .mode1_questionDiv:nth-child(1) {
     background-color: #ffcccc; /* Light red */
@@ -191,4 +181,9 @@
   width: 100%;
   flex-direction: column;
   box-sizing: border-box;
+}
+
+.timerClass {
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
 }
