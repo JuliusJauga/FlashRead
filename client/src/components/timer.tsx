@@ -1,4 +1,5 @@
 import React, { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
+import '../boards/css/timer.css';
 
 interface TimerProps {
     className?: string;
@@ -54,10 +55,18 @@ const Timer = forwardRef(({ className, id, onClick }: TimerProps, ref) => {
         setButtonLabelIndex((prevIndex) => (prevIndex + 1) % buttonLabels.length);
     };
 
+    const formatTime = (totalSeconds: number) => {
+        const minutes = Math.floor(totalSeconds / 60);
+        const seconds = totalSeconds % 60;
+        return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    };
+
     return (
         <div className="timer-container">
-            <h1>Timer: {seconds}s</h1>
-            <button onClick={handleButtonClick} className={className} id={id}>
+            <div className="timer-text-container">
+                <h1>Timer: {formatTime(seconds)}</h1>
+            </div>
+            <button onClick={handleButtonClick} className="toggle-button" id={id}>
                 {buttonLabels[buttonLabelIndex]}
             </button>
         </div>

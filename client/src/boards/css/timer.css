@@ -5,7 +5,7 @@
     justify-content: space-between; /* Align items in the container */
     align-items: center; /* Center items vertically */
     font-family: "Poppins", sans-serif;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     color: white;
     width: 100%; /* Ensure the container takes up the full width */
@@ -15,17 +15,23 @@
     display: flex;
     flex-direction: row; /* Align text elements in a row */
     gap: 5px; /* Optional: Add some space between text elements */
+    margin-left: 2.5%;
 }
 
 .toggle-button {
     margin-left: auto; /* Push the button to the right */
+    margin-right: 2.5%;
     padding: 5px 10px; 
-    font-size: 16px; 
-    width: 50%;
+    font-size: clamp(12px, 2vw, 16px);
+    font-weight: bold;
+    width: 20%;
+    height: 100%;
     background-color: transparent;
     color: white;
     border: 4px solid #FFF8E8;
     border-radius: 12px; /* Optional: Add border radius */
     cursor: pointer; /* Optional: Change cursor to pointer */
     font-family: "Poppins", sans-serif; 
+    overflow: hidden; /* Hide overflow content */
+    white-space: nowrap; /* Prevent text from wrapping */
 }
