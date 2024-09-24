@@ -4,7 +4,7 @@ import "./css/mode1.css";
 import "./css/loginPage.css";
 import "./css/fonts.css";
 import "./css/buttons.css";
-import { useRef } from "react";
+import React, { useRef } from 'react';
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
 import CustomHyperlink from '../components/buttons/hyperlink';
@@ -13,8 +13,9 @@ import { createBoard } from "@wixc3/react-board";
 import ChoiceBox from "../components/choiceBox";
 import Timer from "../components/timer";
 import "./css/timer.css";
+import { time } from "console";
 
-function handlePageChange(pageName: string) {
+function handlePageChange(pageName: string, timerRef?: React.RefObject<any>) {
   console.log("Page change clicked");
 
   const pages = {
@@ -62,6 +63,9 @@ function handlePageChange(pageName: string) {
 
     case "selectionPage":
       pages.selectionPage.style.display = "flex";
+      if (timerRef?.current) {
+        timerRef.current.reset();
+      }
       break;
 
     case "loginPage":
@@ -85,8 +89,11 @@ function handlePageChange(pageName: string) {
 
 const mainBoard = createBoard({
   name: "Main", 
-  Board: () => (
-    <div className="MainBoard_main" id="mainDiv">
+  Board: () => {
+    const timerRef = useRef(null);
+
+    return (
+      <div className="MainBoard_main" id="mainDiv">
       <div className="MainBoard_header" id="headerDiv">
         <Dropdown onSelect={function (item: string): void {
           if (item === "Login") {
@@ -131,7 +138,7 @@ const mainBoard = createBoard({
                 </p>
               </div>
               <div className="mode1_start_options">
-                <Timer className="wideButton" id = "mode1_startButton" onClick= {() => {
+                <Timer ref={timerRef} className="wideButton" id = "mode1_startButton" onClick= {() => {
                   const startButton = document.getElementById("mode1_startButton") as HTMLButtonElement;
                   const mode1AnswerDiv = document.getElementById("mode1_answerDiv") as HTMLDivElement;
                   const mode1ResultDiv = document.getElementById("mode1_resultDiv") as HTMLDivElement;
@@ -151,16 +158,14 @@ const mainBoard = createBoard({
                     console.log("Again clicked");
                     mode1TextDiv.style.visibility = "visible";
                     mode1ResultDiv.style.visibility = "hidden";
-                    
                   }
-
                 }} />
               </div>
             </div>
           </div>
 
           <div className="mode1_lowerDiv" id="buttonDiv">
-            <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => handlePageChange("selectionPage")}/>
+            <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => handlePageChange("selectionPage", timerRef)}/>
           </div>
 
         </div>
@@ -254,7 +259,8 @@ const mainBoard = createBoard({
       </div>
 
     </div>
-  ),
+    );
+  },
   isSnippet: true,
   environmentProps: { windowHeight: 554, windowWidth: 621 },
 });
