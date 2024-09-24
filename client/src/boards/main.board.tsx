@@ -161,7 +161,14 @@ const mainBoard = createBoard({
                   const mode1AnswerDiv = document.getElementById("mode1_answerDiv") as HTMLDivElement;
                   const mode1ResultDiv = document.getElementById("mode1_resultDiv") as HTMLDivElement;
                   const mode1TextDiv = document.getElementById("mode1_textDiv") as HTMLDivElement;
-                  
+
+                  if (startButton.textContent === "Start") {
+                    postTaskText().then((data) => {
+                      console.log(data);
+                      const mode1Text = document.querySelector(".mode1_text") as HTMLParagraphElement;
+                      mode1Text.textContent = data.text;
+                    });
+                  }
                   if (startButton.textContent === "Stop") {
                     console.log("Stop clicked");
                     mode1TextDiv.style.visibility = "hidden";

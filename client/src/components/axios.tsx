@@ -16,14 +16,12 @@ const fetchPostData = async (): Promise<string> => {
 
 const postTaskText = async (): Promise<mode1Response> => {
     try {
-        const response = await axios.post('http://localhost:5076/postTaskText', {
-            text: 'string'
-        }, {
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': 'application/json'
-            }
-        });
+        const response = await axios.post('http://localhost:5076/api/GetTask', {
+            TaskId : 1,
+            Theme : "string1",
+            Difficulty : "string2",
+        }
+        );
         console.log('Post response:', response.data);
         return response.data as mode1Response;
     } catch (err) {
