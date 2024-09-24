@@ -4,6 +4,10 @@ import "./css/mode1.css";
 import "./css/loginPage.css";
 import "./css/fonts.css";
 import "./css/buttons.css";
+import "./mode1Task.tsx";
+import { questionProps } from "./questionPoints.tsx";
+import { getTask1Data } from "./mode1Task.tsx";
+import QuestionPoints from "./questionPoints.tsx";
 import React, { useRef } from 'react';
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
@@ -53,11 +57,6 @@ function handlePageChange(pageName: string, timerRef?: React.RefObject<any>) {
 
   switch (pageName) {
     case "mode1Page":
-      postTaskText().then((data) => {
-        console.log(data);
-        const mode1Text = document.querySelector(".mode1_text") as HTMLParagraphElement;
-        mode1Text.textContent = data.text;
-      });
       pages.mode1Page.style.display = "flex";
       if (timerRef?.current) {
         timerRef.current.reset();
@@ -97,7 +96,7 @@ const mainBoard = createBoard({
   name: "Main", 
   Board: () => {
     const timerRef = useRef(null);
-
+    const [mode1Questions, setMode1Questions] = React.useState<questionProps>({} as questionProps);
     return (
       <div className="MainBoard_main" id="mainDiv">
       <div className="MainBoard_header" id="headerDiv">
@@ -138,18 +137,8 @@ const mainBoard = createBoard({
               <div className="mode1_answerDiv" id="mode1_answerDiv">
                 <p className="mode1_text" id="mode1_text"></p>
                 <div className="mode1_questionsContainer" id="mode1_questionsContainer">
-                  <div className="mode1_questionDiv" id="mode1_question1Div">
-                    <h1 className="mode1_question">Question 1</h1>
-                    <BulletPoints choices={["Answer 1", "Answer 2", "Answer 3"]} />
-                  </div>
-                  <div className="mode1_questionDiv" id="mode1_question2Div">
-                    <h1 className="mode1_question">Question 2</h1>
-                    <BulletPoints choices={["Answer 1", "Answer 2", "Answer 3"]} />
-                  </div>
-                  <div className="mode1_questionDiv" id="mode1_question3Div">
-                    <h1 className="mode1_question">Question 3</h1>
-                    <BulletPoints choices={["Answer 1", "Answer 2", "Answer 3"]} />
-                  </div>
+                  <QuestionPoints questions={mode1Questions.questions}></QuestionPoints>
+                
                 </div>              
               </div>
               <div className="mode1_resultDiv" id="mode1_resultDiv">
@@ -165,11 +154,7 @@ const mainBoard = createBoard({
                   const mode1TextDiv = document.getElementById("mode1_textDiv") as HTMLDivElement;
 
                   if (startButton.textContent === "Start") {
-                    postTaskText().then((data) => {
-                      console.log(data);
-                      const mode1Text = document.querySelector(".mode1_text") as HTMLParagraphElement;
-                      mode1Text.textContent = data.text;
-                    });
+                    getTask1Data(setMode1Questions);
                   }
                   if (startButton.textContent === "Stop") {
                     console.log("Stop clicked");

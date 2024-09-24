@@ -1,7 +1,9 @@
 import axios from 'axios';
+import { question } from '../boards/questionPoints';
 
 interface mode1Response {
     text: string;
+    questions: question[];
 }  
 
 const fetchPostData = async (): Promise<string> => {
@@ -23,10 +25,11 @@ const postTaskText = async (): Promise<mode1Response> => {
         }
         );
         console.log('Post response:', response.data);
+
         return response.data as mode1Response;
     } catch (err) {
         console.error('Error posting task text:', err);
-        return { text: 'Error posting task text' };
+        return { text: 'Error posting task text', questions: [] };
     }
 };
 

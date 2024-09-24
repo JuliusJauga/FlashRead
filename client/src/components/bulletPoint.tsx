@@ -10,7 +10,6 @@ const BulletPoints: React.FC<BulletPointsProps> = ({ choices }) => {
     const handleSelect = (id: number) => {
         setSelectedBullet(id); // Only the clicked bullet will be selected
     };
-
     return (
         <ul>
             {choices.map((choice, index) => (
