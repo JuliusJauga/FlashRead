@@ -21,6 +21,7 @@ const BulletPoints: React.FC<BulletPointsProps> = ({ choices }) => {
                         cursor: 'pointer',
                         listStyleType: selectedBullet === index ? 'disc' : 'circle', // 'disc' for filled, 'circle' for empty
                         fontSize: '26px', // Increased font size for larger bullets
+                        color: '#FFF8E8',
                         marginBottom: '10px',
                     }}
                 >
