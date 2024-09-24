@@ -62,6 +62,12 @@ function handlePageChange(pageName: string, timerRef?: React.RefObject<any>) {
       if (timerRef?.current) {
         timerRef.current.reset();
       }
+      const mode1AnswerDiv = document.getElementById("mode1_answerDiv") as HTMLDivElement;
+      const mode1ResultDiv = document.getElementById("mode1_resultDiv") as HTMLDivElement;
+      const mode1TextDiv = document.getElementById("mode1_textDiv") as HTMLDivElement;
+      mode1AnswerDiv.style.visibility = "hidden";
+      mode1ResultDiv.style.visibility = "hidden";
+      mode1TextDiv.style.visibility = "visible";
       break;
 
     case "selectionPage":
