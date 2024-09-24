@@ -43,7 +43,10 @@ const Timer = forwardRef(({ className, id, onClick }: TimerProps, ref) => {
             setIsActive(true);
         } else if (currentLabel === 'Stop') {
             setIsActive(false);
+        }else if (currentLabel === 'Again') {
+            setSeconds(0);
         }
+
 
         if (onClick) {
             onClick();

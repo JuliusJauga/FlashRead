@@ -4,6 +4,7 @@ import "./css/mode1.css";
 import "./css/loginPage.css";
 import "./css/fonts.css";
 import "./css/buttons.css";
+import { useRef } from "react";
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
 import CustomHyperlink from '../components/buttons/hyperlink';
@@ -150,6 +151,7 @@ const mainBoard = createBoard({
                     console.log("Again clicked");
                     mode1TextDiv.style.visibility = "visible";
                     mode1ResultDiv.style.visibility = "hidden";
+                    
                   }
 
                 }} />
