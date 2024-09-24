@@ -1,14 +1,8 @@
-# Base image
-FROM node:14 AS build
+FROM node:20 AS build
 WORKDIR /app
 
-# Install dependencies
-COPY package*.json ./
-RUN npm install
-
-# Build the app
 COPY . .
-RUN npm run build
+RUN npm install && npm run build
 
 # Final image
 FROM nginx:stable-alpine
