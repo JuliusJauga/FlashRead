@@ -59,13 +59,13 @@ function handlePageChange(pageName: string, timerRef?: React.RefObject<any>) {
         mode1Text.textContent = data.text;
       });
       pages.mode1Page.style.display = "flex";
+      if (timerRef?.current) {
+        timerRef.current.reset();
+      }
       break;
 
     case "selectionPage":
       pages.selectionPage.style.display = "flex";
-      if (timerRef?.current) {
-        timerRef.current.reset();
-      }
       break;
 
     case "loginPage":
@@ -108,10 +108,10 @@ const mainBoard = createBoard({
           <div className="mode1_upperDiv" id="upperDiv">
             <div className="mode1_upperDiv_box" id="mode1_upperDiv_box">
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                <ChoiceBox choices={["A", "B", "C"]} onSelect={(choice) => console.log(choice)} label="Theme:"/>
+                <ChoiceBox choices={["History", "Technology", "Anime", "Politics"]} onSelect={(choice) => console.log(choice)} label="Theme:"/>
               </div>
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                <ChoiceBox choices={["A", "B", "C"]} onSelect={(choice) => console.log(choice)} label="Difficulty:"/>
+                <ChoiceBox choices={["Easy", "Medium", "Hard", "EXTREME"]} onSelect={(choice) => console.log(choice)} label="Difficulty:"/>
               </div>
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
                 <span className="mode1Timer" id="mode1Timer">Timer: </span>
@@ -165,7 +165,7 @@ const mainBoard = createBoard({
           </div>
 
           <div className="mode1_lowerDiv" id="buttonDiv">
-            <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => handlePageChange("selectionPage", timerRef)}/>
+            <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => handlePageChange("selectionPage")}/>
           </div>
 
         </div>
@@ -176,7 +176,7 @@ const mainBoard = createBoard({
 
             <CustomButton label= "Mode 1" className= "squareButton" id="MainBoard_mode1Button" onClick={()=>{
               console.log("Mode 1 clicked");
-              handlePageChange("mode1Page");
+              handlePageChange("mode1Page", timerRef);
             }}/>
 
             <CustomButton label= "Mode 2" className= "squareButton" id="MainBoard_mode2Button" onClick={()=>{
