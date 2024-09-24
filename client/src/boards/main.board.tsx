@@ -13,7 +13,7 @@ import { createBoard } from "@wixc3/react-board";
 import ChoiceBox from "../components/choiceBox";
 import Timer from "../components/timer";
 import "./css/timer.css";
-import { time } from "console";
+import BulletPoints from "../components/bulletPoint";
 
 function handlePageChange(pageName: string, timerRef?: React.RefObject<any>) {
   console.log("Page change clicked");
@@ -132,27 +132,15 @@ const mainBoard = createBoard({
                 <div className="mode1_questionsContainer" id="mode1_questionsContainer">
                   <div className="mode1_questionDiv" id="mode1_question1Div">
                     <h1>Question 1</h1>
-                    <ul>
-                      <li>Answer 1</li>
-                      <li>Answer 2</li>
-                      <li>Answer 3</li>
-                    </ul>
+                    <BulletPoints />
                   </div>
                   <div className="mode1_questionDiv" id="mode1_question2Div">
                     <h1>Question 2</h1>
-                    <ul>
-                      <li>Answer 1</li>
-                      <li>Answer 2</li>
-                      <li>Answer 3</li>
-                    </ul>
+                    <BulletPoints />
                   </div>
                   <div className="mode1_questionDiv" id="mode1_question3Div">
                     <h1>Question 3</h1>
-                    <ul>
-                       <li>Answer 1</li>
-                      <li>Answer 2</li>
-                      <li>Answer 3</li>
-                    </ul>
+                    <BulletPoints />
                   </div>
                 </div>              
               </div>
