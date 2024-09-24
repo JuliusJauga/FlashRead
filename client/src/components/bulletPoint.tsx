@@ -1,17 +1,11 @@
 import React, { useState } from 'react';
 
-interface BulletPoint {
-    id: number;
+interface BulletPointsProps {
+    choices: string[];
 }
 
-const BulletPoints: React.FC = () => {
+const BulletPoints: React.FC<BulletPointsProps> = ({ choices }) => {
     const [selectedBullet, setSelectedBullet] = useState<number | null>(null);
-
-    const bulletPoints: BulletPoint[] = [
-        { id: 1 },
-        { id: 2 },
-        { id: 3 }
-    ];
 
     const handleSelect = (id: number) => {
         setSelectedBullet(id); // Only the clicked bullet will be selected
@@ -19,18 +13,18 @@ const BulletPoints: React.FC = () => {
 
     return (
         <ul>
-            {bulletPoints.map((bullet) => (
+            {choices.map((choice, index) => (
                 <li
-                    key={bullet.id}
-                    onClick={() => handleSelect(bullet.id)}
+                    key={index}
+                    onClick={() => handleSelect(index)}
                     style={{
                         cursor: 'pointer',
-                        listStyleType: selectedBullet === bullet.id ? 'disc' : 'circle', // 'disc' for filled, 'circle' for empty
+                        listStyleType: selectedBullet === index ? 'disc' : 'circle', // 'disc' for filled, 'circle' for empty
                         fontSize: '24px', // Adjust font size for better visibility
-                        marginBottom: '10px'
+                        marginBottom: '10px',
                     }}
                 >
-                    {selectedBullet === bullet.id ? `Bullet ${bullet.id}` : ''}
+                    {choice} {/* Always show the bullet point text */}
                 </li>
             ))}
         </ul>

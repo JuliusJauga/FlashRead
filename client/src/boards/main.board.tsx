@@ -132,15 +132,15 @@ const mainBoard = createBoard({
                 <div className="mode1_questionsContainer" id="mode1_questionsContainer">
                   <div className="mode1_questionDiv" id="mode1_question1Div">
                     <h1>Question 1</h1>
-                    <BulletPoints />
+                    <BulletPoints choices={["Answer 1", "Answer 2", "Answer 3"]} />
                   </div>
                   <div className="mode1_questionDiv" id="mode1_question2Div">
                     <h1>Question 2</h1>
-                    <BulletPoints />
+                    <BulletPoints choices={["Answer 1", "Answer 2", "Answer 3"]} />
                   </div>
                   <div className="mode1_questionDiv" id="mode1_question3Div">
                     <h1>Question 3</h1>
-                    <BulletPoints />
+                    <BulletPoints choices={["Answer 1", "Answer 2", "Answer 3"]} />
                   </div>
                 </div>              
               </div>
