@@ -128,9 +128,33 @@ const mainBoard = createBoard({
                 </p>
               </div>
               <div className="mode1_answerDiv" id="mode1_answerDiv">
-                <p className="mode1_text" id="mode1_text">
-                  KLAUSIMAI KAZKOKIE TAI PADARYSIM
-                </p>
+                <p className="mode1_text" id="mode1_text"></p>
+                <div className="mode1_questionsContainer" id="mode1_questionsContainer">
+                  <div className="mode1_questionDiv" id="mode1_question1Div">
+                    <h1>Question 1</h1>
+                    <ul>
+                      <li>Answer 1</li>
+                      <li>Answer 2</li>
+                      <li>Answer 3</li>
+                    </ul>
+                  </div>
+                  <div className="mode1_questionDiv" id="mode1_question2Div">
+                    <h1>Question 2</h1>
+                    <ul>
+                      <li>Answer 1</li>
+                      <li>Answer 2</li>
+                      <li>Answer 3</li>
+                    </ul>
+                  </div>
+                  <div className="mode1_questionDiv" id="mode1_question3Div">
+                    <h1>Question 3</h1>
+                    <ul>
+                       <li>Answer 1</li>
+                      <li>Answer 2</li>
+                      <li>Answer 3</li>
+                    </ul>
+                  </div>
+                </div>              
               </div>
               <div className="mode1_resultDiv" id="mode1_resultDiv">
                 <p className="mode1_text" id="mode1_text">
