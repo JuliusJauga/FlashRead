@@ -12,6 +12,17 @@ namespace server
             //DatabaseManager databaseManager = new DatabaseManager("Server=localhost\\SQLEXPRESS01;Database=flash-read-db;Trusted_Connection=True;");
             
             var builder = WebApplication.CreateBuilder(args);
+            var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                policy  => {
+                                    policy.AllowAnyOrigin()
+                                            .AllowAnyMethod()
+                                            .AllowAnyHeader();
+                                    });
+            });
 
 
             // Add services to the container.
@@ -36,6 +47,7 @@ namespace server
             }
 
             app.UseHttpsRedirection();
+            app.UseCors(MyAllowSpecificOrigins);
             
             app.UseHsts();
 

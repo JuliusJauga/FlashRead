@@ -1,0 +1,10 @@
+.custom-hyperlink {
+  text-decoration: none;
+  color: blue; /* Adjust the color as needed */
+  cursor: pointer;
+  display: inline; /* Change to inline to make it appear like regular text */
+}
+
+.custom-hyperlink:hover {
+  color: white; /* Adjust hover text color as needed */
+}

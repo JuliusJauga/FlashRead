@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@wixc3/react-board": "^4.3.1",
+    "nodejs": "^0.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.6.1",
+    "@types/react": "^18.3.8"
+  }
+}
