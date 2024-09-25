@@ -12,12 +12,11 @@ import React, { useRef } from 'react';
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
 import CustomHyperlink from '../components/buttons/hyperlink';
-import { postTaskText } from "../components/axios";
+import TimerInput from "../components/timerInput.tsx";
 import { createBoard } from "@wixc3/react-board";
 import ChoiceBox from "../components/choiceBox";
 import Timer from "../components/timer";
 import "./css/timer.css";
-import BulletPoints from "../components/bulletPoint";
 
 function handlePageChange(pageName: string, timerRef?: React.RefObject<any>) {
   console.log("Page change clicked");
@@ -121,7 +120,7 @@ const mainBoard = createBoard({
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
                 <div className="mode1_timerInput">
                   <label htmlFor="mode1TimerInput" className="mode1_timerInputLabel">Timer:</label>
-                  <input type="text" className="mode1_timerInputSelect" id="mode1TimerInput" placeholder="0:00"/>
+                  <TimerInput className="mode1_timerInputSelect" id="mode1TimerInput" />
                 </div>
               </div>
             </div>
@@ -138,7 +137,6 @@ const mainBoard = createBoard({
                 <p className="mode1_text" id="mode1_text"></p>
                 <div className="mode1_questionsContainer" id="mode1_questionsContainer">
                   <QuestionPoints questions={mode1Questions.questions}></QuestionPoints>
-                
                 </div>              
               </div>
               <div className="mode1_resultDiv" id="mode1_resultDiv">
