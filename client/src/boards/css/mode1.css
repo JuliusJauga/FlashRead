@@ -136,6 +136,7 @@
   justify-content: center;
   box-sizing: border-box;
   overflow: auto;
+  padding: 3em;
 }
 
 .mode1_mainBox {
@@ -246,4 +247,8 @@
 .mode1_answerDiv {
   -ms-overflow-style: none;
   scrollbar-width: none; 
+}
+
+.mode1_text {
+  color: #FFF8E8;
 }
