@@ -8,17 +8,17 @@ import "./mode1Task.tsx";
 import { questionProps } from "./questionPoints.tsx";
 import { getTask1Data } from "./mode1Task.tsx";
 import QuestionPoints from "./questionPoints.tsx";
-import React, { useRef } from 'react';
+import React, { useRef, useEffect } from 'react';
 import CustomButton from "../components/buttons/customButton";
 import Dropdown from "../components/dropdown";
 import CustomHyperlink from '../components/buttons/hyperlink';
 import TimerInput from "../components/timerInput.tsx";
 import { createBoard } from "@wixc3/react-board";
 import ChoiceBox from "../components/choiceBox";
-import Timer from "../components/timer";
+import Timer, { TimerHandle } from "../components/timer";
 import "./css/timer.css";
 
-function handlePageChange(pageName: string, timerRef?: React.RefObject<any>) {
+function handlePageChange(pageName: string, timerRef?: React.RefObject<TimerHandle>) {
   console.log("Page change clicked");
 
   const pages = {
@@ -55,7 +55,7 @@ function handlePageChange(pageName: string, timerRef?: React.RefObject<any>) {
   hideAllPages();
 
   switch (pageName) {
-    case "mode1Page":
+    case "mode1Page": {
       pages.mode1Page.style.display = "flex";
       if (timerRef?.current) {
         timerRef.current.reset();
@@ -67,7 +67,7 @@ function handlePageChange(pageName: string, timerRef?: React.RefObject<any>) {
       mode1ResultDiv.style.visibility = "hidden";
       mode1TextDiv.style.visibility = "visible";
       break;
-
+    }
     case "selectionPage":
       pages.selectionPage.style.display = "flex";
       break;
@@ -97,6 +97,13 @@ const mainBoard = createBoard({
     const timerRef = useRef(null);
     const [mode1Questions, setMode1Questions] = React.useState<questionProps>({} as questionProps);
     const [initialTime, setInitialTime] = React.useState<number>(0);
+    const [isActive] = React.useState<boolean>(false);
+
+    useEffect(() => {
+      if (isActive) {
+        console.log("Component is active");
+      }
+    }, [isActive]);
 
     const handleTimeChange = (seconds: number) => {
       setInitialTime(seconds);
@@ -176,7 +183,7 @@ const mainBoard = createBoard({
                     mode1TextDiv.style.visibility = "visible";
                     mode1ResultDiv.style.visibility = "hidden";
                   }
-                }}  onComplete={() => {
+                }} onComplete={() => {
                   const mode1AnswerDiv = document.getElementById("mode1_answerDiv") as HTMLDivElement;
                   const mode1TextDiv = document.getElementById("mode1_textDiv") as HTMLDivElement;
                   mode1TextDiv.style.visibility = "hidden";

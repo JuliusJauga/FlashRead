@@ -8,6 +8,9 @@ interface TimerProps {
     initialTime?: number; // Initial time in seconds
     onComplete?: () => void; // New prop for when the timer reaches 0
 }
+export interface TimerHandle {
+    reset: () => void;
+}
 
 const Timer = forwardRef(({ id, onClick, initialTime = 0, onComplete }: TimerProps, ref) => {
     const [seconds, setSeconds] = useState(initialTime); // Set initial time
