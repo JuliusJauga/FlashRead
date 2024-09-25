@@ -10,7 +10,7 @@ namespace server {
         }
         public ITaskResponse GetResponse(TaskRequest request) {
             TaskResponse resp = new() {
-                Text = "lorem ipsum testing ipsum",
+                Text = "lorem ipsum dolor sit amet consectetur adipiscing elit",
                 Questions = [
                     new() {Question = "Question 1", Variants = ["fox", "horse", "eagle"]},
                     new() {Question = "Question 2", Variants = ["ice", "fire", "rock"]},

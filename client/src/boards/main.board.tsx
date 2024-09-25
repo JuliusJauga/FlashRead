@@ -96,6 +96,13 @@ const mainBoard = createBoard({
   Board: () => {
     const timerRef = useRef(null);
     const [mode1Questions, setMode1Questions] = React.useState<questionProps>({} as questionProps);
+    const [initialTime, setInitialTime] = React.useState<number>(0);
+
+    const handleTimeChange = (seconds: number) => {
+      setInitialTime(seconds);
+    };
+
+
     return (
       <div className="MainBoard_main" id="mainDiv">
       <div className="MainBoard_header" id="headerDiv">
@@ -120,7 +127,7 @@ const mainBoard = createBoard({
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
                 <div className="mode1_timerInput">
                   <label htmlFor="mode1TimerInput" className="mode1_timerInputLabel">Timer:</label>
-                  <TimerInput className="mode1_timerInputSelect" id="mode1TimerInput" />
+                  <TimerInput onTimeChange={handleTimeChange} className="mode1_timerInputSelect" id="mode1TimerInput"  />
                 </div>
               </div>
             </div>
@@ -145,7 +152,7 @@ const mainBoard = createBoard({
                 </p>
               </div>
               <div className="mode1_start_options">
-                <Timer ref={timerRef} id = "mode1_startButton" onClick= {() => {
+                <Timer ref={timerRef} initialTime={initialTime} id = "mode1_startButton" onClick= {() => {
                   const startButton = document.getElementById("mode1_startButton") as HTMLButtonElement;
                   const mode1AnswerDiv = document.getElementById("mode1_answerDiv") as HTMLDivElement;
                   const mode1ResultDiv = document.getElementById("mode1_resultDiv") as HTMLDivElement;
@@ -169,7 +176,12 @@ const mainBoard = createBoard({
                     mode1TextDiv.style.visibility = "visible";
                     mode1ResultDiv.style.visibility = "hidden";
                   }
-                }} />
+                }}  onComplete={() => {
+                  const mode1AnswerDiv = document.getElementById("mode1_answerDiv") as HTMLDivElement;
+                  const mode1TextDiv = document.getElementById("mode1_textDiv") as HTMLDivElement;
+                  mode1TextDiv.style.visibility = "hidden";
+                  mode1AnswerDiv.style.visibility = "visible";
+                 }} />
               </div>
             </div>
           </div>

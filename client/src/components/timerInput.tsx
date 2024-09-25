@@ -1,31 +1,46 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-const TimerInput: React.FC<React.InputHTMLAttributes<HTMLInputElement>> = ({ className, id, ...props }) => {
-    // State to keep track of the raw input as a sequence of digits
-    const [inputSequence, setInputSequence] = useState<string>('000');
+interface TimerInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+    onTimeChange: (seconds: number) => void; // New prop to send the input time in seconds
+}
 
-    // Helper function to format the input sequence into "m:ss"
+const TimerInput: React.FC<TimerInputProps> = ({ className, id, onTimeChange, ...props }) => {
+    const [inputSequence, setInputSequence] = useState<string>('0000');
+
+    // Helper function to format the input sequence into "mm:ss"
     const formatToTimer = (sequence: string) => {
-        // Ensure the sequence has at least 3 digits, padding with leading zeros if necessary
-        const paddedSequence = sequence.padStart(3, '0');
-        // Extract the last two digits as seconds and the remaining as minutes
-        const minutes = parseInt(paddedSequence.slice(0, -2), 10);
-        const seconds = parseInt(paddedSequence.slice(-2), 10);
-        return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        const paddedSequence = sequence.padStart(4, '0');
+        const minutes = paddedSequence.slice(0, 2);
+        const seconds = paddedSequence.slice(2, 4);
+        return `${minutes}:${seconds}`;
+    };
+
+    // Convert the input sequence into total seconds
+    const convertToSeconds = (sequence: string) => {
+        const paddedSequence = sequence.padStart(4, '0');
+        const minutes = parseInt(paddedSequence.slice(0, 2), 10);
+        const seconds = parseInt(paddedSequence.slice(2, 4), 10);
+        return minutes * 60 + seconds;
     };
 
     // Handler for input change
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const value = e.target.value.replace(/[^0-9]/g, ''); // Remove any non-digit characters
-        if (value.length <= 3) {
+        if (value.length <= 4) {
             setInputSequence(value);
-        } else if (value.length > 3) {
-            // Allow typing only up to 3 digits
-            setInputSequence(value.slice(-3)); // Take only the last 3 digits
+        } else if (value.length > 4) {
+            // Allow typing only up to 4 digits
+            setInputSequence(value.slice(-4)); 
         }
     };
 
-    // Construct the display value in "m:ss" format based on the input sequence
+    // Trigger the onTimeChange callback whenever the input sequence changes
+    useEffect(() => {
+        const totalSeconds = convertToSeconds(inputSequence);
+        onTimeChange(totalSeconds);
+    }, [inputSequence, onTimeChange]);
+
+    // Construct the display value in "mm:ss" format based on the input sequence
     const displayValue = formatToTimer(inputSequence);
 
     return (
