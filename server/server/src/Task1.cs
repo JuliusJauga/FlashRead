@@ -1,13 +1,5 @@
 namespace server {
     public class Task1 : ITask {
-        public record RQuestion {
-            public required string Question {get; set;}
-            public required string[] Variants {get; set;}
-        } 
-        public record TaskResponse : ITaskResponse {
-            public required string Text { get; set; }
-            public required RQuestion[] Questions { get; set; }
-        }
         public ITaskResponse GetResponse(TaskRequest request) {
             TaskResponse resp = new() {
                 Text = "lorem ipsum testing ipsum",
@@ -20,4 +12,12 @@ namespace server {
             return resp;
         }
     }
+    public record TaskResponse : ITaskResponse {
+        public required string Text { get; set; }
+        public required RQuestion[] Questions { get; set; }
+    }
+    public record RQuestion {
+        public required string Question {get; set;}
+        public required string[] Variants {get; set;}
+    } 
 }

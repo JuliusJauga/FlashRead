@@ -61,4 +61,28 @@ public class UserDataControllerTests
         Assert.Equal(500, statusCodeResult.StatusCode);
         Assert.Equal("An error occurred while adding the user.", statusCodeResult.Value);
     }
+    [Fact]
+    public void PostGetTask_ValidTaskId_ReturnsTaskResponse()
+    {
+        // Arrange
+        var request = new TaskRequest { TaskId = 1 };
+
+        // Act
+        var result = _controller.PostGetTask(request);
+
+        // Assert
+        Assert.NotNull(result);
+        Assert.IsType<TaskResponse>(result);
+    }
+
+    [Fact]
+    public void PostGetTask_InvalidTaskId_ThrowsException()
+    {
+        // Arrange
+        var request = new TaskRequest { TaskId = 999 };
+
+        // Act & Assert
+        var exception = Assert.Throws<System.Exception>(() => _controller.PostGetTask(request));
+        Assert.Equal("Task not found", exception.Message);
+    }
 }
