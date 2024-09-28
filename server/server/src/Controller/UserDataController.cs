@@ -7,12 +7,14 @@ namespace server.Controller {
     public class UserDataController : ControllerBase {
         [HttpPost("GetTask")]
         public ITaskResponse PostGetTask(TaskRequest req) {
-            ITask task = req.TaskId switch
-            {
-                1 => new Task1(),
-                _ => throw new System.Exception("Task not found"),// TODO: throw custom exception
-            };
+            ITask task = ITask.GetTaskFromTaskId(req.TaskId);
             return task.GetResponse(req);
+        }
+        [HttpPost("GetTaskAnswer")]
+        public ITaskAnswerResponse PostGetTaskAnswer(TaskAnswerRequest req) {
+            int taskId = ITask.GetTaskIdFromSession(req.Session);
+            ITask task = ITask.GetTaskFromTaskId(taskId);
+            return task.CheckAnswer(req);
         }
     }
 }

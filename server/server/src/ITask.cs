@@ -1,11 +1,34 @@
+using System.Security.Cryptography;
+
 namespace server {
     public record TaskRequest {
         public int TaskId { get; set; }
         public string? Theme { get; set; }
-        public string? Dificulty { get; set; }
+        public string? Difficulty { get; set; }
     }
-    public interface ITaskResponse {}
+    public interface ITaskResponse {
+        public uint Session { get; set; }
+    }
+    public record TaskAnswerRequest {
+        public uint Session { get; set; }
+        public int[]? SelectedVariants { get; set; }
+    }
+    public interface ITaskAnswerResponse {}
     public interface ITask {
-        ITaskResponse GetResponse(TaskRequest request);
+        public static uint GenerateSessionBase(int TaskId) {
+            uint rand = (uint)RandomNumberGenerator.GetInt32(int.MaxValue) & ~(0b11U << 30); // clear first 2 bits for task id
+            return rand | ((uint)TaskId << 30);
+        }
+        public static int GetTaskIdFromSession(uint session) {
+            return (int)(session >> 30);
+        }
+        public static ITask GetTaskFromTaskId(int taskId) {
+            return taskId switch {
+                1 => new Task1(),
+                _ => throw new System.Exception("Task not found"),// TODO: throw custom exception
+            };
+        }
+        public ITaskResponse GetResponse(TaskRequest request);
+        public ITaskAnswerResponse CheckAnswer(TaskAnswerRequest request);
     }
 }
