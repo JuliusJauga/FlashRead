@@ -13,6 +13,7 @@ public class DatabaseManager : IDatabaseManager
     public DatabaseManager(FlashDbContext dbContext)
     {
         _context = dbContext;
+        _connectionString = _context.Database.GetDbConnection().ConnectionString;
         try {
             _sqlCommands = LoadSqlCommands("src/sqlcommands.json");
         } catch (Exception e) {
@@ -56,18 +57,21 @@ public class DatabaseManager : IDatabaseManager
     }
     public async Task<bool> AddUserAsync(User user)
     {
-        // SqlConnection connection = GetConnection();
-        // OpenConnection(connection);
-        // SqlCommand command = new SqlCommand(_sqlCommands.Commands.Insert, connection);
-        // command.Parameters.AddWithValue("@name", user.name);
-        // command.Parameters.AddWithValue("@email", user.email);
-        // command.Parameters.AddWithValue("@password", user.password);
-        // int rowsAffected = await command.ExecuteNonQueryAsync();
-        // CloseConnection(connection);
-        // return rowsAffected > 0;
-        Console.WriteLine("User added");
-        Console.WriteLine(user.name + " " + user.email + " " + user.password);
-        return true;
+        return await Task.Run(() =>
+        {
+            // SqlConnection connection = GetConnection();
+            // OpenConnection(connection);
+            // SqlCommand command = new SqlCommand(_sqlCommands.Commands.Insert, connection);
+            // command.Parameters.AddWithValue("@name", user.name);
+            // command.Parameters.AddWithValue("@email", user.email);
+            // command.Parameters.AddWithValue("@password", user.password);
+            // int rowsAffected = await command.ExecuteNonQueryAsync();
+            // CloseConnection(connection);
+            // return rowsAffected > 0;
+            Console.WriteLine("User added");
+            Console.WriteLine(user.name + " " + user.email + " " + user.password);
+            return true;
+        });
     }
 }
 internal class SqlCommands

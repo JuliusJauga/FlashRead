@@ -1,14 +1,4 @@
 services:
-  client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    ports:
-      - "3000:80"
-    volumes:
-      - ../client:/app
-    depends_on:
-      - server
 
   server:
     build:
@@ -16,3 +6,16 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5076:5076"
+    environment:
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_NAME: ${DB_NAME}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      SSH_USER: ${SSH_USER}
+      SSH_HOST: ${SSH_HOST}
+      SSH_PORT: ${SSH_PORT}
+    env_file:
+      - .env
+    entrypoint: ["dotnet", "server.dll"]
+    
