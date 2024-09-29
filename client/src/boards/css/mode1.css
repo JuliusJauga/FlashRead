@@ -62,16 +62,17 @@
 }
 .mode1_resultDiv {
   position: absolute;
-  visibility: hidden;
   width: 95%;
-  top: 0;
   flex-wrap: wrap;
   height: 92%;
+  top: 0;
+  visibility: hidden;
   display: flex;
   background-color: #808E67;
   align-items: top;
   justify-content: left;
   z-index: 100;
+  overflow: auto;
 }
 
 .mode1_Text {
