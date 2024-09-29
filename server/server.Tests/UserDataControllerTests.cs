@@ -1,88 +1,137 @@
-using server.src ;
-using server.Controller;
-using Xunit;
-using Moq;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+using Xunit;
+using server.src;
+using server.UserNamespace;
+using Microsoft.EntityFrameworkCore;
 
-namespace server.Tests;
-public class UserDataControllerTests
+namespace server.Tests
 {
-    private readonly Mock<IUserHandler> _mockUserHandler;
-    private readonly UserDataController _controller;
-
-    public UserDataControllerTests()
+    public class UserHandlerTests
     {
-        _mockUserHandler = new Mock<IUserHandler>();
-        _controller = new UserDataController(_mockUserHandler.Object);
+        private readonly FlashDbContext _context;
+        private readonly UserHandler _userHandler;
+
+        public UserHandlerTests()
+        {
+            var options = new DbContextOptionsBuilder<FlashDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .Options;
+            _context = new FlashDbContext(options);
+            _userHandler = new UserHandler(_context);
+        }
+
+        [Fact]
+        public async Task RegisterUserAsync_ValidUser_ReturnsTrue()
+        {
+            // Arrange
+            var user = new User("John Doe", "john.doe@example.com", "password123");
+
+            // Act
+            var result = await _userHandler.RegisterUserAsync(user);
+
+            // Assert
+            Assert.True(result);
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.email);
+            Assert.NotNull(dbUser);
+        }
+
+        [Fact]
+        public async Task RegisterUserAsync_SaveChangesFails_ReturnsFalse()
+        {
+            // Arrange
+            var user = new User("John Doe", "john.doe@example.com", "password123");
+
+            // Use a derived context class to simulate failure
+            var options = new DbContextOptionsBuilder<FlashDbContext>()
+                .UseInMemoryDatabase(databaseName: "TestDatabase")
+                .Options;
+            var failingContext = new FailingFlashDbContext(options);
+            var userHandlerWithFailingContext = new UserHandler(failingContext);
+
+            // Act
+            var result = await userHandlerWithFailingContext.RegisterUserAsync(user);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public async Task RegisterUserAsync_UserAlreadyExists_ReturnsFalse()
+        {
+            // Arrange
+            var user = new User("John Doe", "john.doe@example.com", "password123");
+            user.password = _userHandler.HashPassword(user.password);
+            var dbUser = new DbUser
+            {
+                Name = user.name,
+                Email = user.email,
+                Password = user.password
+            };
+            _context.Users.Add(dbUser);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _userHandler.RegisterUserAsync(user);
+
+            // Assert
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void HashPassword_ValidPassword_ReturnsHashedPassword()
+        {
+            // Arrange
+            var password = "password123";
+
+            // Act
+            var hashedPassword = _userHandler.HashPassword(password);
+
+            // Assert
+            Assert.NotNull(hashedPassword);
+            Assert.NotEqual(password, hashedPassword);
+        }
+
+        [Fact]
+        public void VerifyPassword_ValidPassword_ReturnsTrue()
+        {
+            // Arrange
+            var password = "password123";
+            var hashedPassword = _userHandler.HashPassword(password);
+
+            // Act
+            var result = _userHandler.VerifyPassword(password, hashedPassword);
+
+            // Assert
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void VerifyPassword_InvalidPassword_ReturnsFalse()
+        {
+            // Arrange
+            var password = "password123";
+            var hashedPassword = _userHandler.HashPassword(password);
+
+            // Act
+            var result = _userHandler.VerifyPassword("wrongpassword", hashedPassword);
+
+            // Assert
+            Assert.False(result);
+        }
     }
 
-    [Fact]
-    public async Task PostUser_InvalidModelState_ReturnsBadRequest()
+    // Derived context class to simulate failure
+    public class FailingFlashDbContext : FlashDbContext
     {
-        // Arrange
-        _controller.ModelState.AddModelError("Name", "Required");
+        public FailingFlashDbContext(DbContextOptions<FlashDbContext> options)
+            : base(options)
+        {
+        }
 
-        // Act
-        var result = await _controller.PostUser(new User());
-
-        // Assert
-        var badRequestResult = Assert.IsType<BadRequestObjectResult>(result);
-        Assert.Equal("Invalid user data.", badRequestResult.Value);
-    }
-
-    [Fact]
-    public async Task PostUser_ValidUser_ReturnsOk()
-    {
-        // Arrange
-        var user = new User { };
-        _mockUserHandler.Setup(handler => handler.RegisterUserAsync(user)).ReturnsAsync(true);
-
-        // Act
-        var result = await _controller.PostUser(user);
-
-        // Assert
-        var okResult = Assert.IsType<OkObjectResult>(result);
-        Assert.Equal("User added successfully.", okResult.Value);
-    }
-
-    [Fact]
-    public async Task PostUser_RegistrationFails_ReturnsStatusCode500()
-    {
-        // Arrange
-        var user = new User { };
-        _mockUserHandler.Setup(handler => handler.RegisterUserAsync(user)).ReturnsAsync(false);
-
-        // Act
-        var result = await _controller.PostUser(user);
-
-        // Assert
-        var statusCodeResult = Assert.IsType<ObjectResult>(result);
-        Assert.Equal(500, statusCodeResult.StatusCode);
-        Assert.Equal("An error occurred while adding the user.", statusCodeResult.Value);
-    }
-    [Fact]
-    public void PostGetTask_ValidTaskId_ReturnsTaskResponse()
-    {
-        // Arrange
-        var request = new TaskRequest { TaskId = 1 };
-
-        // Act
-        var result = _controller.PostGetTask(request);
-
-        // Assert
-        Assert.NotNull(result);
-        Assert.IsType<TaskResponse>(result);
-    }
-
-    [Fact]
-    public void PostGetTask_InvalidTaskId_ThrowsException()
-    {
-        // Arrange
-        var request = new TaskRequest { TaskId = 999 };
-
-        // Act & Assert
-        var exception = Assert.Throws<System.Exception>(() => _controller.PostGetTask(request));
-        Assert.Equal("Task not found", exception.Message);
+        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            throw new Exception("Database error");
+        }
     }
 }

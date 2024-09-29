@@ -2,7 +2,7 @@ using server.src;
 using Microsoft.EntityFrameworkCore;
 using server.src.Task1;
 using Npgsql;
-
+using server.UserNamespace;
 namespace server
 {
     public class Program
@@ -40,7 +40,6 @@ namespace server
             }
 
             builder.Services.AddScoped<IUserHandler, UserHandler>();
-            builder.Services.AddScoped<IDatabaseManager, DatabaseManager>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
