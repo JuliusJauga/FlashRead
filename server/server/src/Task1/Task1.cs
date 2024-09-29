@@ -15,7 +15,6 @@ namespace server.src.Task1 {
             public required string Question {get; set;}
             public required string[] Variants {get; set;}
             public int? CorrectVariant {get; set;}
-            public bool? IsSelectedCorrectly {get; set;}
         }
         public record TaskResponse : ITaskResponse {
             public required string Text { get; set; }
@@ -23,7 +22,12 @@ namespace server.src.Task1 {
             public uint Session { get; set; }
         }
         public record TaskAnswerResponse : ITaskAnswerResponse {
+            public record Task1AnswerStatistics {
+                public required int Correct { get; set; }
+                public required int Total { get; set; }
+            };
             public required TaskQuestion[] Answers { get; set; }
+            public required Task1AnswerStatistics Statistics { get; set; }
         }
         public ITaskResponse GetResponse(TaskRequest request) {
             Theme theme = request.Theme.ToEnum(Theme.Any);
@@ -53,21 +57,21 @@ namespace server.src.Task1 {
             (string _, TaskQuestion[] questions) = GenerateData(request.Session, (Theme)themeId, (Difficulty)difficultyId,
                                                                 queryText: false);
 
-            // compare answers
-            for (int i = 0; i < questions.Length; i++) {
-                if (request.SelectedVariants == null || i >= request.SelectedVariants.Length) {
-                    questions[i].IsSelectedCorrectly = false;
-                    continue;
-                }
+            // calculate statistics
+            int total = questions.Length;
+            int correct = 0;
+            for (int i = 0; i < questions.Length && i < request.SelectedVariants?.Length; i++) {
                 if (questions[i].CorrectVariant == request.SelectedVariants[i]) {
-                    questions[i].IsSelectedCorrectly = true;
-                } else {
-                    questions[i].IsSelectedCorrectly = false;
+                    correct++;
                 }
             }
 
             return new TaskAnswerResponse {
-                Answers = questions
+                Answers = questions,
+                Statistics = new TaskAnswerResponse.Task1AnswerStatistics {
+                    Correct = correct,
+                    Total = total
+                }
             };
         }
         private (string, TaskQuestion[]) GenerateData(uint sessionId, Theme theme, Difficulty difficulty,
