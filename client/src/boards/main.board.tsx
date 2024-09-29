@@ -4,9 +4,7 @@ import "./css/mode1.css";
 import "./css/loginPage.css";
 import "./css/fonts.css";
 import "./css/buttons.css";
-import "./mode1Task.tsx";
-import { questionProps } from "./questionPoints.tsx";
-import { getTask1Data } from "./mode1Task.tsx";
+import { requestTask1Data, submitTask1Answers, Mode1TaskData } from "./mode1Task.tsx";
 import QuestionPoints from "./questionPoints.tsx";
 import React, { useRef, useEffect } from 'react';
 import CustomButton from "../components/buttons/customButton";
@@ -95,9 +93,13 @@ const mainBoard = createBoard({
   name: "Main", 
   Board: () => {
     const timerRef = useRef(null);
-    const [mode1Questions, setMode1Questions] = React.useState<questionProps>({} as questionProps);
     const [initialTime, setInitialTime] = React.useState<number>(0);
     const [isActive] = React.useState<boolean>(false);
+
+    const [mode1Data, setMode1Data] = React.useState<Mode1TaskData | undefined>(undefined);
+    const [mode1Theme, setMode1Theme] = React.useState<string>("Any");
+    const [mode1Difficulty, setMode1Difficulty] = React.useState<string>("Any");
+    const [mode1Answers, setMode1Answers] = React.useState<number[]>([]);
 
     useEffect(() => {
       if (isActive) {
@@ -126,10 +128,10 @@ const mainBoard = createBoard({
           <div className="mode1_upperDiv" id="upperDiv">
             <div className="mode1_upperDiv_box" id="mode1_upperDiv_box">
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                <ChoiceBox choices={["History", "Technology", "Anime", "Politics"]} onSelect={(choice) => console.log(choice)} label="Theme:"/>
+                <ChoiceBox choices={["History", "Technology", "Anime", "Politics"]} onSelect={choice => setMode1Theme(choice)} label="Theme:"/>
               </div>
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                <ChoiceBox choices={["Easy", "Medium", "Hard", "EXTREME"]} onSelect={(choice) => console.log(choice)} label="Difficulty:"/>
+                <ChoiceBox choices={["Easy", "Medium", "Hard", "EXTREME"]} onSelect={choice => setMode1Difficulty(choice)} label="Difficulty:"/>
               </div>
               <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
                 <div className="mode1_timerInput">
@@ -144,19 +146,23 @@ const mainBoard = createBoard({
             <div className="mode1_mainBox" id="mode1_mainBox">
               <div className="mode1_textDiv" id="mode1_textDiv">
                 <p className="mode1_text" id="mode1_text">
-                  TEKSTAS KATRA REIK PERSKAITYT
+                  {mode1Data && mode1Data.text}
                 </p>
               </div>
               <div className="mode1_answerDiv" id="mode1_answerDiv">
-                <p className="mode1_text" id="mode1_text"></p>
                 <div className="mode1_questionsContainer" id="mode1_questionsContainer">
-                  <QuestionPoints questions={mode1Questions.questions}></QuestionPoints>
+                  {(mode1Data && mode1Data.questions) && <QuestionPoints 
+                    questions={mode1Data.questions}
+                    onChanged={p=>setMode1Answers(p)}
+                  />}
                 </div>              
               </div>
               <div className="mode1_resultDiv" id="mode1_resultDiv">
-                <p className="mode1_text" id="mode1_text">
-                  DUOMENYS VISI
-                </p>
+                <div className="mode1_questionsContainer" id="mode1_questionsContainer">
+                  {mode1Data && mode1Data.answers && <QuestionPoints
+                    questions={mode1Data.answers}
+                  />}
+                </div>              
               </div>
               <div className="mode1_start_options">
                 <Timer ref={timerRef} initialTime={initialTime} id = "mode1_startButton" onClick= {() => {
@@ -166,20 +172,44 @@ const mainBoard = createBoard({
                   const mode1TextDiv = document.getElementById("mode1_textDiv") as HTMLDivElement;
 
                   if (startButton.textContent === "Start") {
-                    getTask1Data(setMode1Questions);
+                    requestTask1Data({
+                      taskId: 1,
+                      theme: mode1Theme,
+                      difficulty: mode1Difficulty
+                    }).then(response => {
+                      setMode1Data(response);
+                    });
                   }
                   if (startButton.textContent === "Stop") {
-                    console.log("Stop clicked");
                     mode1TextDiv.style.visibility = "hidden";
                     mode1AnswerDiv.style.visibility = "visible";
+                    // remove text
+                    const newData = mode1Data;
+                    if (newData) {
+                      newData.text = "";
+                      setMode1Data(newData);
+                    }
                   }
                   if (startButton.textContent === "Confirm") {
-                    console.log("Confirm clicked");
                     mode1AnswerDiv.style.visibility = "hidden";
                     mode1ResultDiv.style.visibility = "visible";
+                    if (mode1Data) {
+                      submitTask1Answers({
+                        session: mode1Data.session,
+                        selectedVariants: mode1Answers
+                      }).then(response => {
+                        response.session = mode1Data.session;
+                        response.answers?.forEach((answer, index) => {
+                          answer.selectedVariant = index < mode1Answers.length ? mode1Answers[index] : -1;
+                        });
+                        setMode1Data(response);
+                      })
+                    } else {
+                      console.error("No data to submit");
+                    }
                   }
                   if (startButton.textContent === "Again") {
-                    console.log("Again clicked");
+                    setMode1Data(undefined);
                     mode1TextDiv.style.visibility = "visible";
                     mode1ResultDiv.style.visibility = "hidden";
                   }
@@ -188,6 +218,12 @@ const mainBoard = createBoard({
                   const mode1TextDiv = document.getElementById("mode1_textDiv") as HTMLDivElement;
                   mode1TextDiv.style.visibility = "hidden";
                   mode1AnswerDiv.style.visibility = "visible";
+                  // remove text
+                  const newData = mode1Data;
+                  if (newData) {
+                    newData.text = "";
+                    setMode1Data(newData);
+                  }
                  }} />
               </div>
             </div>

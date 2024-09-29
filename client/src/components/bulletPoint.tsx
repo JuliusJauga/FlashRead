@@ -1,28 +1,57 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-interface BulletPointsProps {
-    choices: string[];
-}
+const BulletPoints: React.FC<{
+    choices: string[],
+    correctVariant?: number,
+    selectedVariant?: number,
+    onChanged?: (arg0: number) => any
+}> = ({ choices, correctVariant, selectedVariant, onChanged }) => {
+    const [selectedBullet, setSelectedBullet] = useState<number>(-1);
 
-const BulletPoints: React.FC<BulletPointsProps> = ({ choices }) => {
-    const [selectedBullet, setSelectedBullet] = useState<number | null>(null);
+    useEffect(() => { // Reset the selected bullet when the choices change
+        setSelectedBullet(selectedVariant !== undefined ? selectedVariant : -1);
+    }, [choices, selectedVariant]);
 
-    const handleSelect = (id: number) => {
-        setSelectedBullet(id); // Only the clicked bullet will be selected
+    useEffect(() => {
+        onChanged && onChanged(selectedBullet);
+    }, [selectedBullet]);
+
+    const getListStyleType = (index: number) => {
+        if (index === selectedBullet) return 'disc';
+        return 'circle';
     };
+    const getColor = (index: number) => {
+        if (correctVariant !== undefined && correctVariant !== null) {
+            // if bullet is correct and selected, show green
+            // if bullet is correct and not selected, show blue
+            if (index === correctVariant) {
+                return selectedVariant === correctVariant ? '#00FF00' : '#0000FF';
+            }
+            // if bullet is selected and incorrect, show red
+            if (index === selectedBullet && index !== correctVariant) {
+                return '#FF0000';
+            }
+        }
+        // otherwise, show default
+        return '#FFF8E8';   
+    };
+
     return (
         <ul>
             {choices.map((choice, index) => (
                 <li
                     key={index}
-                    onClick={() => handleSelect(index)}
+                    onClick={() => {
+                        if (correctVariant !== undefined && correctVariant !== null) return; // disable selection if showing answer
+                        setSelectedBullet(index);
+                    }}
                     style={{
                         cursor: 'pointer',
-                        listStyleType: selectedBullet === index ? 'disc' : 'circle', // 'disc' for filled, 'circle' for empty
+                        listStyleType: getListStyleType(index), 
                         fontSize: '26px', // Increased font size for larger bullets
                         fontFamily: '"Poppins", sans-serif',
                         marginBottom: '10px',
-                        color: '#FFF8E8',
+                        color: getColor(index),
                     }}
                 >
                     {choice} {/* Always show the bullet point text */}
