@@ -74,6 +74,7 @@ namespace server.src.Task1 {
                                                              bool queryText = true, bool queryAnswers = true) {
             Random generator = new((int)sessionId);
 
+            // choose a text
             var availableTexts = theme == Theme.Any
                 ? _context.Task1Texts
                     .Select(t => t.Id)
@@ -88,12 +89,18 @@ namespace server.src.Task1 {
             }
             int chosenTextIndex = availableTexts[generator.Next(availableTexts.Length)];
 
-            int availableQuestionCount = _context.Task1Questions.Count(q => q.TextId == chosenTextIndex);
-            int questionCount = Math.Min(availableQuestionCount, GetQuestionCountFromDifficulty(generator, difficulty));
+            // choose questions
+            var availabeQuestions = _context.Task1Questions
+                .Where(q => q.TextId == chosenTextIndex)
+                .Select(q => q.Id)
+                .ToArray();
+            int questionCount = Math.Min(availabeQuestions.Length, GetQuestionCountFromDifficulty(generator, difficulty));
+            
             // use a hashset to guarantee unique question ids
             HashSet<int> questionIds = [];
             while (questionIds.Count < questionCount) {
-                questionIds.Add(generator.Next(availableQuestionCount));
+                int questionIdIndex = generator.Next(availabeQuestions.Length);
+                questionIds.Add(availabeQuestions[questionIdIndex]);
             }
 
             string text = "";
