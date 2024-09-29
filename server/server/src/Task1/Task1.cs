@@ -1,10 +1,15 @@
-namespace server {
+namespace server.src.Task1 {
     public class Task1 : ITask {
-        private enum Theme : uint {
-            ANY, HISTORY, TECHNOLOGY, ANIME, POLITICS
+        private readonly FlashDbContext _context;
+        public Task1(FlashDbContext context) {
+            _context = context;
         }
-        private enum Difficulty : uint {
-            ANY, EASY, MEDIUM, HARD, EXTREME
+        
+        public enum Theme {
+            Any, History, Technology, Anime, Politics
+        }
+        private enum Difficulty {
+            Any, Easy, Medium, Hard, Extreme
         }
         public record TaskQuestion {
             public required string Question {get; set;}
@@ -21,9 +26,9 @@ namespace server {
             public required TaskQuestion[] Answers { get; set; }
         }
         public ITaskResponse GetResponse(TaskRequest request) {
-            Theme theme = request.Theme.ToEnum(Theme.ANY);
-            Difficulty difficulty = request.Difficulty.ToEnum(Difficulty.ANY);
-            
+            Theme theme = request.Theme.ToEnum(Theme.Any);
+            Difficulty difficulty = request.Difficulty.ToEnum(Difficulty.Any);
+
             // generate a session (seed), later will be used to reconstruct questions so we don't need to track them
             // 2 bits task id, 22 bits random, 4 bits theme, 4 bits difficulty
             uint session = ITask.GenerateSessionBase(request.TaskId);
@@ -65,15 +70,25 @@ namespace server {
                 Answers = questions
             };
         }
-        private static (string, TaskQuestion[]) GenerateData(uint sessionId, Theme theme, Difficulty difficulty,
+        private (string, TaskQuestion[]) GenerateData(uint sessionId, Theme theme, Difficulty difficulty,
                                                              bool queryText = true, bool queryAnswers = true) {
             Random generator = new((int)sessionId);
 
-            int availabeTextCount = 0; // TODO: query db
-            int chosenTextIndex = generator.Next(availabeTextCount);
+            var availableTexts = theme == Theme.Any
+                ? _context.Task1Texts
+                    .Select(t => t.Id)
+                    .ToArray()
+                : _context.Task1Texts
+                    .Where(t => t.Theme == theme)
+                    .Select(t => t.Id)
+                    .ToArray();
+            
+            if (availableTexts.Length == 0) {
+                return ("", Array.Empty<TaskQuestion>());
+            }
+            int chosenTextIndex = availableTexts[generator.Next(availableTexts.Length)];
 
-            int availableQuestionCount = 0; // TODO: query db by chosen text index
-
+            int availableQuestionCount = _context.Task1Questions.Count(q => q.TextId == chosenTextIndex);
             int questionCount = Math.Min(availableQuestionCount, GetQuestionCountFromDifficulty(generator, difficulty));
             // use a hashset to guarantee unique question ids
             HashSet<int> questionIds = [];
@@ -83,39 +98,45 @@ namespace server {
 
             string text = "";
             if (queryText) {
-                text = "LOREM IPSUM DAR POKOLKAS"; // TODO: query db
+                var dbText = _context.Task1Texts
+                    .Where(t => t.Id == chosenTextIndex)
+                    .Select(t => t.Text)
+                    .First();
+                text = dbText ?? "";
             }
 
-            TaskQuestion[] questions = [    // TODO: query db for questions
-                new TaskQuestion {
-                    Question = "Test Q 1",
-                    Variants = ["42", "24", "0", "1"]
-                },
-                new TaskQuestion {
-                    Question = "Test Q 2",
-                    Variants = ["random", "variant", "list", "here"]
-                },
-            ];
-            Console.WriteLine(questionIds);
-            return (text, questions);
+            List<TaskQuestion> questions = [];
+            var dbQuestions = _context.Task1Questions
+                .Where(q => questionIds.Contains(q.Id))
+                .Select(q => new {q.Question, q.Variants, q.AnswerId})
+                .ToList();
+            foreach (var q in dbQuestions) {
+                var tq = new TaskQuestion {
+                    Question = q.Question,
+                    Variants = q.Variants,
+                };
+                if (queryAnswers) tq.CorrectVariant = q.AnswerId;
+                questions.Add(tq);
+            }
+            return (text, questions.ToArray());
         }
         private static int GetQuestionCountFromDifficulty(Random generator, Difficulty difficulty) {
             int countMin;
             int countMax;
             switch (difficulty) {
-                case Difficulty.EASY:
+                case Difficulty.Easy:
                     countMin = 2;
                     countMax = 3;
                     break;
-                case Difficulty.MEDIUM:
+                case Difficulty.Medium:
                     countMin = 4;
                     countMax = 5;
                     break;
-                case Difficulty.HARD:
+                case Difficulty.Hard:
                     countMin = 6;
                     countMax = 7;
                     break;
-                case Difficulty.EXTREME:
+                case Difficulty.Extreme:
                     countMin = 8;
                     countMax = 10;
                     break;

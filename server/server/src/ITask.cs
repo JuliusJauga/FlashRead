@@ -1,4 +1,6 @@
 using System.Security.Cryptography;
+using server.src;
+using server.src.Task1;
 
 namespace server {
     public record TaskRequest {
@@ -22,9 +24,9 @@ namespace server {
         public static int GetTaskIdFromSession(uint session) {
             return (int)(session >> 30);
         }
-        public static ITask GetTaskFromTaskId(int taskId) {
+        public static ITask GetTaskFromTaskId(int taskId, FlashDbContext context) {
             return taskId switch {
-                1 => new Task1(),
+                1 => new Task1(context),
                 _ => throw new System.Exception("Task not found"),// TODO: throw custom exception
             };
         }
