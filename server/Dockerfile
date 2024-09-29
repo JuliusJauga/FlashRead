@@ -1,5 +1,3 @@
-
-
 # Use the official .NET Core SDK as a parent image
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
@@ -36,8 +34,10 @@ RUN chmod +x /usr/local/bin/connect_postgres.sh
 
 # Expose the port your application will run on
 EXPOSE 5076
+
 # Turn on development environment for swagger API
 ENV ASPNETCORE_URLS=http://*:5076
+
 ENV ASPNETCORE_ENVIRONMENT=Development  
 
 # Start the application

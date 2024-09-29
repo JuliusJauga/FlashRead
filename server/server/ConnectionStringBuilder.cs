@@ -16,11 +16,17 @@ namespace server
                 throw new FileNotFoundException($"Configuration file not found: {configPath}");
             }
 
-            var configJson = JObject.Parse(File.ReadAllText(configPath));
-            string host = configJson["DB_HOST"]?.ToString() ?? string.Empty;
-            string port = configJson["DB_PORT"]?.ToString() ?? string.Empty;
-            string database = configJson["DB_NAME"]?.ToString() ?? string.Empty;
-            string username = configJson["DB_USER"]?.ToString() ?? string.Empty;
+            string host, port, database, username;
+
+            using (var stream = new FileStream(configPath, FileMode.Open, FileAccess.Read))
+            using (var reader = new StreamReader(stream))
+            {
+                var configJson = JObject.Parse(reader.ReadToEnd());
+                host = configJson["DB_HOST"]?.ToString() ?? string.Empty;
+                port = configJson["DB_PORT"]?.ToString() ?? string.Empty;
+                database = configJson["DB_NAME"]?.ToString() ?? string.Empty;
+                username = configJson["DB_USER"]?.ToString() ?? string.Empty;
+            }
 
             if (string.IsNullOrEmpty(host) || string.IsNullOrEmpty(port) || string.IsNullOrEmpty(database) || string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
