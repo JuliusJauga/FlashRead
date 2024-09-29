@@ -40,9 +40,5 @@ EXPOSE 5076
 ENV ASPNETCORE_URLS=http://*:5076
 ENV ASPNETCORE_ENVIRONMENT=Development  
 
-RUN mkdir -p /root/.ssh
-COPY ./secrets/id_rsa_vm /root/.ssh/id_rsa
-RUN chmod 0700 /root/.ssh
-
 # Start the application
 ENTRYPOINT ["dotnet", "server.dll"]

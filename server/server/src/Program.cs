@@ -19,10 +19,25 @@ namespace server
                 );
             });
 
-            var dataSourceBuilder = new NpgsqlDataSourceBuilder(/* TODO: ADD CONN STRING */);
-            dataSourceBuilder.MapEnum<Task1.Theme>();
-            var dataSource = dataSourceBuilder.Build();
-            builder.Services.AddDbContext<FlashDbContext>(options => options.UseNpgsql(dataSource));
+            
+            try
+            {
+                var dataSourceBuilder = new NpgsqlDataSourceBuilder(ConnectionStringBuilder.BuildConnectionString());
+                dataSourceBuilder.MapEnum<Task1.Theme>();
+                var dataSource = dataSourceBuilder.Build();
+                builder.Services.AddDbContext<FlashDbContext>(options => options.UseNpgsql(dataSource));
+                
+                // Test the connection
+                using (var connection = dataSource.CreateConnection())
+                {
+                    connection.Open();
+                    Console.WriteLine("Database connection successful.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Database connection failed: {ex.Message}");
+            }
 
             builder.Services.AddScoped<IUserHandler, UserHandler>();
             builder.Services.AddScoped<IDatabaseManager, DatabaseManager>();
