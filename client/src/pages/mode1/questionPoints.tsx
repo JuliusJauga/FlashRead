@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import BulletPoints from "../components/bulletPoint";
+import BulletPoints from "../../components/bulletPoint";
 
 export interface question {
     question: string;

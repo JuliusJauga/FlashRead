@@ -1,7 +1,7 @@
-import axios from '../components/axiosWrapper';
+import axios from '../../components/axiosWrapper';
 import { question } from './questionPoints';
 
-type Task1Request = {
+export type Task1Request = {
   taskId: number;
   theme: string;      // Any, History, Technology, Anime, Politics
   difficulty: string; // Any, Easy, Medium, Hard, Extreme
