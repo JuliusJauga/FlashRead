@@ -7,7 +7,7 @@ import "./css/buttons.css";
 import { requestTask1Data, submitTask1Answers, Mode1TaskData } from "../pages/mode1/mode1Task.tsx";
 import QuestionPoints from "../pages/mode1/questionPoints.tsx";
 import React, { useRef, useEffect } from 'react';
-import CustomButton from "../components/buttons/customButton";
+import CustomButton from "../pages/home/modeButton.tsx";
 import Dropdown from "../components/dropdown";
 import CustomHyperlink from '../components/buttons/hyperlink';
 import TimerInput from "../components/timerInput.tsx";

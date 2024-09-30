@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { TextField, Button, Container, Typography, Box } from '@mui/material';
 import axios from '../../components/axiosWrapper';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterPage: React.FC = () => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -93,12 +95,12 @@ const RegisterPage: React.FC = () => {
             </Box>
                 <Box mt={4} className="text-center">
                     <Typography variant="body1">
-                        <Button color="secondary" onClick={() => console.log('Continue as Guest')}>
+                        <Button color="secondary" onClick={() => navigate("/")}>
                             Continue as Guest
                         </Button>
                     </Typography>
                     <Typography variant="body1">
-                        Already have an account? <Button color="secondary" onClick={() => console.log('Navigate to login')}>Login</Button>
+                        Already have an account? <Button color="secondary" onClick={() => navigate("/login")}>Login</Button>
                     </Typography>
                 </Box>
             </Box>
