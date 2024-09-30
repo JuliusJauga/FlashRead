@@ -1,3 +1,4 @@
+import './index.css';
 import mainBoard from './boards/main.board';
 
 function App() {
