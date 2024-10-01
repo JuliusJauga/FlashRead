@@ -13,7 +13,7 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, prompt, onSelect, label 
   const [selectedChoice, setSelectedChoice] = useState<string>('');
 
   const handleSelect = (event: SelectChangeEvent<string>) => {
-    const choice = event.target.value as string;
+    const choice = event.target.value;
     setSelectedChoice(choice);
     onSelect(choice);
   };
