@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import BulletPoints from "../../components/bulletPoint";
+import '../../boards/css/mode1.css';
 
 export interface question {
     question: string;
