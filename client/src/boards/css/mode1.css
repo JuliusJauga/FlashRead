@@ -225,11 +225,12 @@
   background-color: #AAB396;
   position: relative;
   flex: 1;
+
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  overflow: auto;
+  overflow: hidden;
   padding: 3em;
 }
 
@@ -249,7 +250,7 @@
   align-items: center;
   justify-content: center;
   display: flex;
-  overflow: auto;
+  overflow: hidden;
 }
 
 
