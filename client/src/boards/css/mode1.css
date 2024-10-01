@@ -89,10 +89,48 @@
   visibility: hidden;
   display: flex;
   background-color: #808E67;
-  align-items: top;
-  justify-content: left;
+  align-items: center;
+  justify-content: space-between;
   z-index: 100;
   overflow: auto;
+}
+
+.mode1_resultAnswerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+  width: 70%;
+  flex: 1.5;
+}
+
+.mode1_resultsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  width: 30%;
+  flex: 1;
+}
+
+.correctAnswersDisplayDiv {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.WPMDisplayDiv {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
 }
 
 .mode1_Text {

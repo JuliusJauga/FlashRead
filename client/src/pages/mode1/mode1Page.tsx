@@ -77,11 +77,21 @@ const Mode1Page: React.FC = () => {
                     </div>              
                 </div>
                 <div className="mode1_resultDiv" id="mode1_resultDiv">
-                    <div className="mode1_questionsContainer" id="mode1_questionsContainer">
-                    {mode1Data && mode1Data.answers && <QuestionPoints
-                        questions={mode1Data.answers}
-                    />}
+                    <div className="mode1_resultAnswerContainer" id="mode1_resultContainer">
+                        {mode1Data && mode1Data.answers && <QuestionPoints
+                            questions={mode1Data.answers}
+                        />}
                     </div>              
+                    <div className="mode1_resultsContainer" id="mode1_resultContainer">
+                        <div className="correctAnswersDisplayDiv">
+                            <span className="mode1_Text">Correct answers: </span>
+                            <span className="mode1_Text">0/0</span>
+                        </div>
+                        <div className="WPMDisplayDiv">
+                            <span className="mode1_Text">Words per minute: </span>
+                            <span className="mode1_Text">0</span>                            
+                        </div>
+                    </div>
                 </div>
                 <div className="mode1_start_options">
                     <Timer ref={timerRef} initialTime={initialTime} id = "mode1_startButton" onClick= {() => {
