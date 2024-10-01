@@ -25,8 +25,7 @@ namespace server.Controller {
             return task.CheckAnswer(req);
         }
 
-        [HttpPost("PostUser")]
-        [RequireHttps]
+        [HttpPost("Users/Register")]
         public async Task<IActionResult> PostUser([FromBody] User user) {
             if (!ModelState.IsValid)
             {

@@ -29,9 +29,8 @@ namespace server.src {
                 entity.Property(e => e.AnswerId).HasColumnName("answer_id");
             });
             modelBuilder.Entity<DbUser>(entity => {
-                entity.ToTable("users", "public");
-                entity.HasKey(e => e.Id).HasName("users_pkey");
-                entity.Property(e => e.Id).HasColumnName("id");
+                entity.ToTable("users", "users");
+                entity.HasKey(e => e.Email).HasName("users_pkey");
                 entity.Property(e => e.Name).HasColumnName("name");
                 entity.Property(e => e.Email).HasColumnName("email");
                 entity.Property(e => e.Password).HasColumnName("password");
