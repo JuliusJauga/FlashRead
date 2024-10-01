@@ -25,6 +25,7 @@ namespace server.src.Task1 {
             public record Task1AnswerStatistics {
                 public required int Correct { get; set; }
                 public required int Total { get; set; }
+                public required int WPM { get; set; }
             };
             public required TaskQuestion[] Answers { get; set; }
             public required Task1AnswerStatistics Statistics { get; set; }
@@ -54,12 +55,17 @@ namespace server.src.Task1 {
             uint difficultyId = (request.Session) & 0xF;
 
             // generate the same questions as in GetResponse
-            (string _, TaskQuestion[] questions) = GenerateData(request.Session, (Theme)themeId, (Difficulty)difficultyId,
-                                                                queryText: false);
+            (string text, TaskQuestion[] questions) = GenerateData(request.Session, (Theme)themeId, (Difficulty)difficultyId,
+                                                                queryText: true);
 
             // calculate statistics
             int total = questions.Length;
             int correct = 0;
+            int wordCount = text.Split(' ').Length;
+            float timeTaken = (request.TimeTaken ?? 0);
+            timeTaken /= 60;
+            int WPM = timeTaken == 0 ? 0 : (int)(wordCount / timeTaken);
+
             for (int i = 0; i < questions.Length && i < request.SelectedVariants?.Length; i++) {
                 if (questions[i].CorrectVariant == request.SelectedVariants[i]) {
                     correct++;
@@ -70,7 +76,8 @@ namespace server.src.Task1 {
                 Answers = questions,
                 Statistics = new TaskAnswerResponse.Task1AnswerStatistics {
                     Correct = correct,
-                    Total = total
+                    Total = total,
+                    WPM = WPM
                 }
             };
         }

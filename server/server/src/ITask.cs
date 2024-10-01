@@ -14,6 +14,7 @@ namespace server {
     public record TaskAnswerRequest {
         public uint Session { get; set; }
         public int[]? SelectedVariants { get; set; }
+        public int? TimeTaken { get; set; }
     }
     public interface ITaskAnswerResponse {}
     public interface ITask {

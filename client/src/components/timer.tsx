@@ -64,10 +64,9 @@ const Timer = forwardRef(({ id, onClick, initialTime = 0, onComplete }: TimerPro
             setSeconds(initialTime); // Reset to the latest initialTime
             setIsActive(false);
             setButtonLabelIndex(0); // Reset to "Start"
-        }
+        },
+        getTime: () => seconds,
     }));
-
-    const getTime = () => seconds;
 
     const handleButtonClick = () => {
         const currentLabel = buttonLabels[buttonLabelIndex];
