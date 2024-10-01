@@ -15,7 +15,7 @@ const LoginPage: React.FC = () => {
         event.preventDefault();
         // Handle form submission logic here
         console.log('Form submitted:', { email, password });
-        axios.post('/api/users/login', { email, password })
+        axios.post('/api/Users/Login', { email, password })
             .then(response => {
                 console.log('Login successful:', response.data);
             })
@@ -33,9 +33,35 @@ const LoginPage: React.FC = () => {
                 </div>
 
                 <div className="loginPage_loginDiv">
-                    <input type="text" className="signinInput" id="signinEmailInput" placeholder="Username"/>
-                    <input type="password" className="signinInput" id="signinPasswordInput" placeholder="Password"/>
-                    <CustomButton label="Login" className="loginButton" id="loginPage_loginButton" onClick={() => navigate("/")}/>
+                    <input 
+                        type="text" 
+                        className="signinInput" 
+                        id="loginEmailInput" 
+                        placeholder="Email" 
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required 
+                    />
+                    <input 
+                        type="password" 
+                        className="signinInput" 
+                        id="loginPasswordInput" 
+                        placeholder="Password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required 
+                    />
+                    <CustomButton label="Login" className="loginButton" id="loginPage_loginButton" onClick={() => {
+                        if (!email || !password) {
+                            if (!email) {
+                                alert('Please fill in the email.');
+                            } else if (!password) {
+                                alert('Please fill in the password.');
+                            }
+                        } else {
+                            handleSubmit(new Event('submit') as unknown as React.FormEvent);
+                        }
+                    }}/>
                 </div>
 
                 <div className="loginPage_bottomDiv">
