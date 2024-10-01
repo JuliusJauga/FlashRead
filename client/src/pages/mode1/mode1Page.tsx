@@ -44,10 +44,10 @@ const Mode1Page: React.FC = () => {
             <div className="mode1_upperDiv" id="upperDiv">
                 <div className="mode1_upperDiv_box" id="mode1_upperDiv_box">
                 <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                    <ChoiceBox choices={["History", "Technology", "Anime", "Politics"]} onSelect={choice => setMode1Theme(choice)} label="Theme:"/>
+                    <ChoiceBox choices={["History", "Technology", "Anime", "Politics"]} prompt='Theme:' onSelect={choice => setMode1Theme(choice)} label="Theme:"/>
                 </div>
                 <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                    <ChoiceBox choices={["Easy", "Medium", "Hard", "EXTREME"]} onSelect={choice => setMode1Difficulty(choice)} label="Difficulty:"/>
+                    <ChoiceBox choices={["Easy", "Medium", "Hard", "EXTREME"]} prompt='Difficulty:' onSelect={choice => setMode1Difficulty(choice)} label="Difficulty:"/>
                 </div>
                 <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
                     <div className="mode1_timerInput">

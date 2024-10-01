@@ -1,45 +1,49 @@
 .choice-box-container {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    max-width: 300px;
-    margin: 0 auto;
-    padding: 1rem;
-    /* background-color: #f9f9f9; */
-    /* border: 1px solid #ddd; */
-    border-radius: 8px;
-    font-family: "Poppins", sans-serif;
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  max-width: 300px;
+  margin: 0 auto;
+  padding: 1rem;
+  font-family: "Poppins", sans-serif;
+  border-radius: 8px;
 }
 
 .choice-box-label {
-    margin-bottom: 0.5rem;
-    font-size: 1rem;
-    font-weight: bold;
-    color: #FFF8E8;
+  font-size: 1rem;
+  font-weight: bold;
+  color: #FFF8E8;
+  transition: 0.3s ease; /* Smooth transition for the label */
+  position: absolute; /* Position label absolutely */
+  left: 10px; /* Align label to the left */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust for centering */
+}
+
+.choice-box-label.filled {
+  top: 0; /* Move label to the top */
+  transform: translateY(0); /* No vertical adjustment needed */
+  font-size: 0.75rem; /* Smaller font size when filled */
+  color: #007bff; /* Change color when filled */
 }
 
 .choice-box-select {
-    width: 100%;
-    padding: 0.5rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #fff;
-    color: #333;
-    cursor: pointer;
-    font-family: "Poppins", sans-serif;
-    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  font-family: "Poppins", sans-serif;
+  height: 40px; /* Adjust the height to control the size */
+  position: relative; /* Allow label to position correctly */
 }
 
 .choice-box-select:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
-    outline: none;
-}
-
-.choice-box-select option {
-    padding: 0.5rem;
-    font-size: 1rem;
+  border-color: #007bff;
+  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+  outline: none;
 }
