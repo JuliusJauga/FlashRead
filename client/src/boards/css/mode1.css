@@ -85,6 +85,14 @@
   display: none;
 }
 
+.mode1_answerDiv {
+  scrollbar-width: none; /* Firefox */
+}
+
+.mode1_answerDiv {
+  -ms-overflow-style: none; /* Edge */
+}
+
 .mode1_resultDiv {
   position: absolute;
   width: 95%;
@@ -108,6 +116,10 @@
   height: 100%;
   width: 70%;
   flex: 1.5;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 2em;
   overflow: auto;
 }
 

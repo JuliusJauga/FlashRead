@@ -46,12 +46,13 @@ const BulletPoints: React.FC<{
                         setSelectedBullet(index);
                     }}
                     style={{
-                        marginLeft: '5%', // Indent the bullet points
+                        marginLeft: '1em', // Indent the bullet points
                         cursor: 'pointer',
                         listStyleType: getListStyleType(index), 
                         fontSize: '26px', // Increased font size for larger bullets
                         fontFamily: '"Poppins", sans-serif',
                         marginBottom: '10px',
+                        padding: '0.5em',
                         color: getColor(index),
                     }}
                 >
