@@ -51,6 +51,8 @@
 }
 
 .mode1_textDiv {
+  word-wrap: break-word;
+  white-space: pre-wrap;
   position: absolute;
   width: 95%;
   visibility: visible;
@@ -176,17 +178,6 @@
   overflow: auto;
 }
 
-/* .mode1_questionDiv:nth-child(1) {
-    background-color: #ffcccc;
-}
-
-.mode1_questionDiv:nth-child(2) {
-    background-color: #ccffcc;
-}
-
-.mode1_questionDiv:nth-child(3) {
-    background-color: #ccccff;
-} */
 
 .mode1_questionsContainer {
   display: flex;

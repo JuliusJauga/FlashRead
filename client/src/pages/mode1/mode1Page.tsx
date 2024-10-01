@@ -13,6 +13,7 @@ import { useNavigate } from 'react-router-dom';
 import '../../boards/css/main.board.css';
 import CustomButton from '../../components/buttons/customButton';
 import '../../boards/css/buttons.css';
+import AnimatedText from '../../components/animatedText';
 
 
 
@@ -52,8 +53,11 @@ const Mode1Page: React.FC = () => {
             <div className="mode1_innerDiv" id="textAreaDiv">
                 <div className="mode1_mainBox" id="mode1_mainBox">
                 <div className="mode1_textDiv" id="mode1_textDiv">
+                    
                     <p className="mode1_text" id="mode1_text">
-                    {mode1Data && mode1Data.text}
+                    {mode1Data && (
+                        <AnimatedText text={mode1Data?.text || ""} />
+                    )}
                     </p>
                 </div>
                 <div className="mode1_answerDiv" id="mode1_answerDiv">
