@@ -35,11 +35,65 @@ const RegisterPage: React.FC = () => {
             </div>
 
             <div className="registerPage_registerDiv">
-                <input type="text" className="signinInput" id="registerEmailInput" placeholder="Email"/>
-                <input type="text" className="signinInput" id="registerUsernameInput" placeholder="Username"/>
-                <input type="password" className="signinInput" id="registerPasswordInput" placeholder="Password"/>
-                <input type="password" className="signinInput" id="registerPasswordInput2" placeholder="Confirm Password"/>
-                <CustomButton label="Register" className="loginButton" id="registerPage_registerButton" onClick={() => navigate("/")}/>
+                <input 
+                    type="text" 
+                    className="signinInput" 
+                    id="registerUsernameInput" 
+                    placeholder="Username" 
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required 
+                />
+                <input 
+                    type="text" 
+                    className="signinInput" 
+                    id="registerEmailInput" 
+                    placeholder="Email" 
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required 
+                />
+                <input 
+                    type="password" 
+                    className="signinInput" 
+                    id="registerPasswordInput" 
+                    placeholder="Password" 
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required 
+                />
+                <input 
+                    type="password" 
+                    className={`signinInputRepeat ${repeatPassword !== password ? 'error' : ''}`} 
+                    id="registerPasswordInput2" 
+                    placeholder="Confirm Password" 
+                    value={repeatPassword}
+                    onChange={(e) => setRepeatPassword(e.target.value)}
+                    required 
+                />
+                <CustomButton 
+                    label="Register" 
+                    className="loginButton" 
+                    id="registerPage_registerButton" 
+                    onClick={() => {
+                        console.log('Form submitted:', { username, email, password, repeatPassword });
+                        if (!username || !email || !password || !repeatPassword) {
+                            if (!username) {
+                                alert('Please fill in the username.');
+                            } else if (!email) {
+                                alert('Please fill in the email.');
+                            } else if (!password) {
+                                alert('Please fill in the password.');
+                            } else if (!repeatPassword) {
+                                alert('Please fill in the repeat password.');
+                            }
+                        } else if (password !== repeatPassword) {
+                            alert('Passwords do not match.');
+                        } else {
+                            handleSubmit(new Event('submit') as unknown as React.FormEvent);
+                        }
+                    }}
+                />
             </div>
 
             <div className="registerPage_bottomDiv">
