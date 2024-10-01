@@ -10,7 +10,10 @@ interface TimerProps {
 }
 export interface TimerHandle {
     reset: () => void;
+    getTime: () => number;
 }
+
+
 
 const Timer = forwardRef(({ id, onClick, initialTime = 0, onComplete }: TimerProps, ref) => {
     const [seconds, setSeconds] = useState(initialTime); // Set initial time
@@ -64,6 +67,8 @@ const Timer = forwardRef(({ id, onClick, initialTime = 0, onComplete }: TimerPro
         }
     }));
 
+    const getTime = () => seconds;
+
     const handleButtonClick = () => {
         const currentLabel = buttonLabels[buttonLabelIndex];
 
@@ -81,6 +86,7 @@ const Timer = forwardRef(({ id, onClick, initialTime = 0, onComplete }: TimerPro
 
         setButtonLabelIndex((prevIndex) => (prevIndex + 1) % buttonLabels.length);
     };
+
 
     const formatTime = (totalSeconds: number) => {
         const minutes = Math.floor(totalSeconds / 60);

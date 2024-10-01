@@ -3,7 +3,7 @@ import { Button, Container, TextField, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import axios from '../../components/axiosWrapper';
 import * as mode1Task from './mode1Task';
-import Timer from '../../components/timer';
+import Timer, { TimerHandle } from '../../components/timer';
 import TimerInput from '../../components/timerInput';
 import { useRef } from 'react';
 import ModeButton from '../home/modeButton';
@@ -29,6 +29,13 @@ const Mode1Page: React.FC = () => {
     const handleTimeChange = (seconds: number) => {
         setInitialTime(seconds);
       };
+
+    function getCurrentTime() {
+        if (timerRef && timerRef.current) {
+          return Math.abs((timerRef.current as TimerHandle).getTime() - initialTime);
+        }
+        return 0;
+    }
 
     return (
         <div className='Mode1_content'>
@@ -108,7 +115,8 @@ const Mode1Page: React.FC = () => {
                         if (mode1Data) {
                         mode1Task.submitTask1Answers({
                             session: mode1Data.session,
-                            selectedVariants: mode1Answers
+                            selectedVariants: mode1Answers,
+                            timeTaken: getCurrentTime(),
                         }).then(response => {
                             response.session = mode1Data.session;
                             response.answers?.forEach((answer, index) => {

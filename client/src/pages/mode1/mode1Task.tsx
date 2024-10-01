@@ -14,6 +14,7 @@ type Task1Response = {
 type Task1AnswerRequest = {
   session: number;
   selectedVariants: number[];
+  timeTaken: number;
 };
 type Task1AnswerStatistics = {
   correct: number;
