@@ -114,13 +114,13 @@ const mainBoard = createBoard({
 
     return (
       <div className="MainBoard_main" id="mainDiv">
-      <div className="MainBoard_header" id="headerDiv">
-        <Dropdown onSelect={function (item: string): void {
-          if (item === "Login") {
-            handlePageChange("loginPage");
-          }
-        } } />
-      </div>
+        <div className="MainBoard_header" id="headerDiv">
+          <Dropdown onSelect={function (item: string): void {
+            if (item === "Login") {
+              handlePageChange("loginPage");
+            }
+          } } />
+        </div>
 
       <div className="MainBoard_content" id="contentDiv">
 
@@ -303,7 +303,7 @@ const mainBoard = createBoard({
               <input type="text" className="signinInput" id="registerEmailInput" placeholder="Email"/>
               <input type="text" className="signinInput" id="registerUsernameInput" placeholder="Username"/>
               <input type="password" className="signinInput" id="registerPasswordInput" placeholder="Password"/>
-              <input type="password" className="signinInput" id="registerPasswordInput2" placeholder="Confirm Password"/>
+              <input type="password" classNamweb-api-backend›e="signinInput" id="registerPasswordInput2" placeholder="Confirm Password"/>
               <CustomButton label="Register" className="loginButton" id="registerPage_registerButton" onClick={() => handlePageChange("selectionPage")}/>
             </div>
 

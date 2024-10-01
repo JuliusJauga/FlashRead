@@ -33,6 +33,7 @@ const Mode1Page: React.FC = () => {
     return (
         <div className='Mode1_content'>
             <div className="MainBoard_mode1" id="mode1Div">
+
             <div className="mode1_upperDiv" id="upperDiv">
                 <div className="mode1_upperDiv_box" id="mode1_upperDiv_box">
                 <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
@@ -141,7 +142,7 @@ const Mode1Page: React.FC = () => {
             </div>
 
             <div className="mode1_lowerDiv" id="buttonDiv">
-            <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => navigate("/")}/>
+                <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => navigate("/")}/>
             </div>
 
             </div>
