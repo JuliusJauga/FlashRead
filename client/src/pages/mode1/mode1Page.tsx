@@ -85,11 +85,11 @@ const Mode1Page: React.FC = () => {
                     <div className="mode1_resultsContainer" id="mode1_resultContainer">
                         <div className="correctAnswersDisplayDiv">
                             <span className="mode1_Text">Correct answers: </span>
-                            <span className="mode1_Text">0/0</span>
+                            <span className="mode1_Text">{mode1Data?.statistics?.correct + '/' + mode1Data?.statistics?.total}</span>
                         </div>
                         <div className="WPMDisplayDiv">
                             <span className="mode1_Text">Words per minute: </span>
-                            <span className="mode1_Text">0</span>                            
+                            <span className="mode1_Text">{mode1Data?.statistics?.wpm}</span>                            
                         </div>
                     </div>
                 </div>
