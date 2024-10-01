@@ -1,37 +1,45 @@
 using server.src;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.SqlServer;
-
+using server.src.Task1;
+using Npgsql;
+using server.UserNamespace;
 namespace server
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            // **UNCOMMENT THIS ONCE YOU HAVE CREATED THE DATABASE**
-            //DatabaseManager databaseManager = new DatabaseManager("Server=localhost\\SQLEXPRESS01;Database=flash-read-db;Trusted_Connection=True;");
-            
             var builder = WebApplication.CreateBuilder(args);
-            var  MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-            builder.Services.AddCors(options =>
-            {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                policy  => {
-                                    policy.AllowAnyOrigin()
-                                            .AllowAnyMethod()
-                                            .AllowAnyHeader();
-                                    });
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+            builder.Services.AddCors(options => {
+                options.AddPolicy(
+                    name: MyAllowSpecificOrigins, 
+                    policy  => {policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();}
+                );
             });
 
-
-            // Add services to the container.
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-            builder.Services.AddDbContext<FlashDbContext>(options => 
-                options.UseSqlServer("Server=localhost\\SQLEXPRESS01;Database=flash-read-db;Trusted_Connection=True;"));
             
+            try
+            {
+                var dataSourceBuilder = new NpgsqlDataSourceBuilder(ConnectionStringBuilder.BuildConnectionString());
+                dataSourceBuilder.MapEnum<Task1.Theme>();
+                var dataSource = dataSourceBuilder.Build();
+                builder.Services.AddDbContext<FlashDbContext>(options => options.UseNpgsql(dataSource));
+                
+                // Test the connection
+                using (var connection = dataSource.CreateConnection())
+                {
+                    connection.Open();
+                    Console.WriteLine("Database connection successful.");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Database connection failed: {ex.Message}");
+            }
+
             builder.Services.AddScoped<IUserHandler, UserHandler>();
-            builder.Services.AddScoped<IDatabaseManager, DatabaseManager>();
 
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
@@ -40,8 +48,7 @@ namespace server
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            if (app.Environment.IsDevelopment())
-            {
+            if (app.Environment.IsDevelopment()) {
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
@@ -54,11 +61,6 @@ namespace server
             app.MapControllers();
 
             app.Run();
-        }
-    
-        record User(string name, string email)
-        {
-            public User() : this("John Doe", "example.com") { }
         }
     }
 }
