@@ -7,24 +7,9 @@ namespace server.Controller {
     [ApiController]
     public class UserDataController : ControllerBase {
         private readonly IUserHandler _userHandler;
-        private readonly FlashDbContext _context;
-        public UserDataController(FlashDbContext context, IUserHandler userHandler) {
-            _context = context;
+        public UserDataController(IUserHandler userHandler) {
             _userHandler = userHandler;
         }
-        
-        [HttpPost("GetTask")]
-        public ITaskResponse PostGetTask(TaskRequest req) {
-            ITask task = ITask.GetTaskFromTaskId(req.TaskId, _context);
-            return task.GetResponse(req);
-        }
-        [HttpPost("GetTaskAnswer")]
-        public ITaskAnswerResponse PostGetTaskAnswer(TaskAnswerRequest req) {
-            int taskId = ITask.GetTaskIdFromSession(req.Session);
-            ITask task = ITask.GetTaskFromTaskId(taskId, _context);
-            return task.CheckAnswer(req);
-        }
-
         [HttpPost("Users/Register")]
         public async Task<IActionResult> PostUser([FromBody] User user) {
             if (!ModelState.IsValid)
@@ -37,6 +22,19 @@ namespace server.Controller {
                 return Ok("User added successfully.");
             }
             return StatusCode(500, "An error occurred while adding the user.");
+        }
+        [HttpPost("Users/Login")]
+        public async Task<IActionResult> PostLogin([FromBody] User user) {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest("Invalid user data.");
+            }
+            var result = await _userHandler.LoginUserAsync(user);
+            if (result)
+            {
+                return Ok("User logged in successfully.");
+            }
+            return Unauthorized("Invalid email or password.");
         }
     }
 }

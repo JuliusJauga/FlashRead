@@ -27,8 +27,44 @@ namespace server.UserNamespace {
                 Password = HashPassword(user.password)
             };
 
-            _context.Users.Add(dbUser);
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Users.Add(dbUser);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
+            return true;
+        }
+        public async Task<bool> LoginUserAsync(User user)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.email);
+            if (dbUser == null)
+            {
+                return false;
+            }
+            return VerifyPassword(user.password, dbUser.Password);
+        }
+        public async Task<bool> DeleteUserAsync(User user)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.email);
+            if (dbUser == null)
+            {
+                return false;
+            }
+            try
+            {
+                _context.Users.Remove(dbUser);
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return false;
+            }
             return true;
         }
         public string HashPassword(string password)
@@ -44,9 +80,11 @@ namespace server.UserNamespace {
     public interface IUserHandler
     {
         Task<bool> RegisterUserAsync(User user);
+        Task<bool> LoginUserAsync(User user);
+        Task<bool> DeleteUserAsync(User user);
     }
 
-    public record User(string name, string email, string password)
+    public record User(string email, string password, string name="")
     {
         public string password { get; set; } = password;
         public User() : this("John Doe", "example.com", "example") { }

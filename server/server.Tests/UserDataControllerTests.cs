@@ -25,7 +25,7 @@ namespace server.Tests
         public async Task RegisterUserAsync_ValidUser_ReturnsTrue()
         {
             // Arrange
-            var user = new User("John Doe", "john.doe@example.com", "password123");
+            var user = new User("john.doe@example.com", "password123", "John Doe");
 
             // Act
             var result = await _userHandler.RegisterUserAsync(user);
@@ -40,7 +40,7 @@ namespace server.Tests
         public async Task RegisterUserAsync_SaveChangesFails_ReturnsFalse()
         {
             // Arrange
-            var user = new User("John Doe", "john.doe@example.com", "password123");
+            var user = new User("john.doe@example.com", "password123", "John Doe");
 
             // Use a derived context class to simulate failure
             var options = new DbContextOptionsBuilder<FlashDbContext>()
@@ -60,7 +60,7 @@ namespace server.Tests
         public async Task RegisterUserAsync_UserAlreadyExists_ReturnsFalse()
         {
             // Arrange
-            var user = new User("John Doe", "john.doe@example.com", "password123");
+            var user = new User("john.doe.repeating@example.com", "password123", "John Doe Repeating");
             user.password = _userHandler.HashPassword(user.password);
             var dbUser = new DbUser
             {
@@ -119,8 +119,106 @@ namespace server.Tests
             // Assert
             Assert.False(result);
         }
-    }
+        [Fact]
+        public async Task LoginUserAsync_UserDoesNotExist_ReturnsFalse()
+        {
+            // Arrange
+            var user = new User("john.doe.doesnt_exist@example.com", "password123");
 
+            // Act
+            var result = await _userHandler.LoginUserAsync(user);
+
+            // Assert
+            Assert.False(result);
+        }
+        [Fact]
+        public async Task LoginUserAsync_UserExists_CorrectPassword_ReturnsTrue()
+        {
+           
+            // Arrange
+            var user = new User("john.doe.login.true@example.com", "password123", "John Doe Login");
+            
+            user.password = _userHandler.HashPassword(user.password);
+            var dbUser = new DbUser
+            {
+                Name = user.name,
+                Email = user.email,
+                Password = user.password
+            };
+            _context.Users.Add(dbUser);
+            await _context.SaveChangesAsync();
+
+            user = new User("john.doe.login.true@example.com", "password123");
+
+            // Act
+            var result = await _userHandler.LoginUserAsync(user);
+
+            // Assert
+            Assert.True(result);
+        }
+        [Fact]
+        public async Task LoginUserAsync_UserExists_IncorrectPassword_ReturnsFalse()
+        {
+           
+            // Arrange
+            var user = new User("john.doe.login.false@example.com", "password123", "John Doe Login");
+            
+            user.password = _userHandler.HashPassword(user.password);
+            var dbUser = new DbUser
+            {
+                Name = user.name,
+                Email = user.email,
+                Password = user.password
+            };
+            _context.Users.Add(dbUser);
+            await _context.SaveChangesAsync();
+
+            user = new User("john.doe.login.false@example.com", "password1234");
+
+            // Act
+
+            var result = await _userHandler.LoginUserAsync(user);
+
+            // Assert
+
+            Assert.False(result);
+        }
+        [Fact]
+        public async Task DeleteUserAsync_UserDoesNotExist_ReturnsFalse()
+        {
+            // Arrange
+            var user = new User("nonexist@example.com", "password123");
+
+            // Act
+            var result = await _userHandler.DeleteUserAsync(user);
+
+            // Assert
+            Assert.False(result);
+        }
+        [Fact]
+        public async Task DeleteUserAsync_UserExists_ReturnsTrue()
+        {
+            // Arrange
+            var user = new User("exist@example.com", "password123", "John Doe");
+            user.password = _userHandler.HashPassword(user.password);
+            var dbUser = new DbUser
+            {
+                Name = user.name,
+                Email = user.email,
+                Password = user.password
+            };
+            _context.Users.Add(dbUser);
+            await _context.SaveChangesAsync();
+
+            // Act
+            var result = await _userHandler.DeleteUserAsync(user);
+
+            // Assert
+            Assert.True(result);
+        }
+
+    }
+    
     // Derived context class to simulate failure
     public class FailingFlashDbContext : FlashDbContext
     {
@@ -128,7 +226,7 @@ namespace server.Tests
             : base(options)
         {
         }
-
+    
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             throw new Exception("Database error");
