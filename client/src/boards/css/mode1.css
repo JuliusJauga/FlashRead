@@ -80,6 +80,11 @@
   z-index: 100;
   overflow: auto;
 }
+
+.mode1_answerDiv::-webkit-scrollbar {
+  display: none;
+}
+
 .mode1_resultDiv {
   position: absolute;
   width: 95%;
@@ -92,7 +97,7 @@
   align-items: center;
   justify-content: space-between;
   z-index: 100;
-  overflow: auto;
+  overflow: hidden;
 }
 
 .mode1_resultAnswerContainer {
@@ -103,7 +108,21 @@
   height: 100%;
   width: 70%;
   flex: 1.5;
+  overflow: auto;
 }
+
+.mode1_resultAnswerContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.mode1_resultAnswerContainer {
+  scrollbar-width: none; /* Firefox */
+}
+
+.mode1_resultAnswerContainer {
+  -ms-overflow-style: none; /* Edge */
+}
+
 
 .mode1_resultsContainer {
   display: flex;
@@ -113,6 +132,8 @@
   height: 100%;
   width: 30%;
   flex: 1;
+  margin: 1.5em;
+  overflow: hidden;
 }
 
 .correctAnswersDisplayDiv {
