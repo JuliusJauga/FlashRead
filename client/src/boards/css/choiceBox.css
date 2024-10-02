@@ -15,7 +15,8 @@
   font-weight: bold;
   color: #FFF8E8;
   transition: 0.3s ease; /* Smooth transition for the label */
-  position: absolute; /* Position label absolutely */
+  position: flex; /* Position label absolutely */
+  align-items: center;
   left: 10px; /* Align label to the left */
   top: 50%; /* Center vertically */
   transform: translateY(-50%); /* Adjust for centering */
@@ -38,7 +39,7 @@
   color: #333;
   cursor: pointer;
   font-family: "Poppins", sans-serif;
-  height: 40px; /* Adjust the height to control the size */
+  height: 55px; /* Adjust the height to control the size */
   position: relative; /* Allow label to position correctly */
 }
 

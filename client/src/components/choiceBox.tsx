@@ -28,8 +28,6 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, prompt, onSelect, label 
           label={label}
           className="choice-box-select"
           sx={{
-            height: '40px', // Adjust the height here
-            padding: '8px', // Modify padding to reduce size
             display: 'flex',
             alignItems: 'center',
           }}
