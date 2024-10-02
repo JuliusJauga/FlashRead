@@ -11,7 +11,7 @@ export interface question {
 
 const QuestionPoints: React.FC<{
     questions: question[],
-    onChanged?: (arg0: number[]) => any
+    onChanged?: (arg0: number[]) => void,
 }> = ({ questions, onChanged }) => {
     const [selections, setSelections] = useState<number[]>(Array(questions ? questions.length : 0).fill(-1));
 
@@ -20,8 +20,10 @@ const QuestionPoints: React.FC<{
     }, [questions]);
 
     useEffect(() => {
-        onChanged && onChanged(selections);
-    }, [selections]);
+        if (onChanged) {
+            onChanged(selections);
+        }
+    }, [selections, onChanged]);
 
     return (
         <>

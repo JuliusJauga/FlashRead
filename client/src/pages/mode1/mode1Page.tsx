@@ -1,12 +1,8 @@
 import React from 'react';
-import { Button, Container, TextField, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import axios from '../../components/axiosWrapper';
 import * as mode1Task from './mode1Task';
 import Timer, { TimerHandle } from '../../components/timer';
 import TimerInput from '../../components/timerInput';
 import { useRef } from 'react';
-import ModeButton from '../home/modeButton';
 import ChoiceBox from '../../components/choiceBox';
 import QuestionPoints from './questionPoints';
 import { useNavigate } from 'react-router-dom';

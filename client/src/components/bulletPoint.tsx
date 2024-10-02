@@ -4,7 +4,7 @@ const BulletPoints: React.FC<{
     choices: string[],
     correctVariant?: number,
     selectedVariant?: number,
-    onChanged?: (arg0: number) => any
+    onChanged?: (arg0: number) => void,
 }> = ({ choices, correctVariant, selectedVariant, onChanged }) => {
     const [selectedBullet, setSelectedBullet] = useState<number>(-1);
 
@@ -13,8 +13,10 @@ const BulletPoints: React.FC<{
     }, [choices, selectedVariant]);
 
     useEffect(() => {
-        onChanged && onChanged(selectedBullet);
-    }, [selectedBullet]);
+        if (onChanged) {
+            onChanged(selectedBullet);
+        }
+    }, [selectedBullet, onChanged]);
 
     const getListStyleType = (index: number) => {
         if (index === selectedBullet) return 'disc';
