@@ -16,10 +16,11 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.x'
-      - name: Restore dependencies
-        working-directory: ./server/server/
-        run: dotnet restore
-      - name: Build the project
+      - name: Restore dependencies for both main and test projects
+        run: |
+          dotnet restore ./server/server/server.csproj
+          dotnet restore ./server/server.Tests/server.Tests.csproj
+      - name: Build the main project
         working-directory: ./server/server/
         run: dotnet build --configuration Release --no-restore
       - name: Build the test project
