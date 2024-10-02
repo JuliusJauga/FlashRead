@@ -3,6 +3,7 @@ using BCrypt.Net;
 using server.src;
 using server.UserNamespace;
 using Microsoft.EntityFrameworkCore;
+
 namespace server.UserNamespace {
     public class UserHandler : IUserHandler
     {
@@ -14,19 +15,12 @@ namespace server.UserNamespace {
         public async Task<bool> RegisterUserAsync(User user)
         {
             // Check if user already exists
-            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.email);
+            var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (existingUser != null)
             {
                 return false;
             }
-
-            var dbUser = new DbUser
-            {
-                Name = user.name,
-                Email = user.email,
-                Password = HashPassword(user.password)
-            };
-
+            var dbUser = convertUserToDbUser(user);
             try
             {
                 _context.Users.Add(dbUser);
@@ -41,16 +35,16 @@ namespace server.UserNamespace {
         }
         public async Task<bool> LoginUserAsync(User user)
         {
-            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.email);
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (dbUser == null)
             {
                 return false;
             }
-            return VerifyPassword(user.password, dbUser.Password);
+            return VerifyPassword(user.Password, dbUser.Password);
         }
         public async Task<bool> DeleteUserAsync(User user)
         {
-            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.email);
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (dbUser == null)
             {
                 return false;
@@ -75,6 +69,10 @@ namespace server.UserNamespace {
         {
             return BCrypt.Net.BCrypt.Verify(password, hash) ? true : false;
         }
+        private DbUser convertUserToDbUser(User user)
+        {
+            return (DbUser)user;
+        }
 
     }
     public interface IUserHandler
@@ -82,11 +80,5 @@ namespace server.UserNamespace {
         Task<bool> RegisterUserAsync(User user);
         Task<bool> LoginUserAsync(User user);
         Task<bool> DeleteUserAsync(User user);
-    }
-
-    public record User(string email, string password, string name="")
-    {
-        public string password { get; set; } = password;
-        public User() : this("John Doe", "example.com", "example") { }
     }
 }

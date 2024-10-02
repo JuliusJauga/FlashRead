@@ -32,7 +32,7 @@ namespace server.Tests
 
             // Assert
             Assert.True(result);
-            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.email);
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
             Assert.NotNull(dbUser);
         }
 
@@ -61,12 +61,12 @@ namespace server.Tests
         {
             // Arrange
             var user = new User("john.doe.repeating@example.com", "password123", "John Doe Repeating");
-            user.password = _userHandler.HashPassword(user.password);
+            user.Password = _userHandler.HashPassword(user.Password);
             var dbUser = new DbUser
             {
-                Name = user.name,
-                Email = user.email,
-                Password = user.password
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password
             };
             _context.Users.Add(dbUser);
             await _context.SaveChangesAsync();
@@ -138,12 +138,12 @@ namespace server.Tests
             // Arrange
             var user = new User("john.doe.login.true@example.com", "password123", "John Doe Login");
             
-            user.password = _userHandler.HashPassword(user.password);
+            user.Password = _userHandler.HashPassword(user.Password);
             var dbUser = new DbUser
             {
-                Name = user.name,
-                Email = user.email,
-                Password = user.password
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password
             };
             _context.Users.Add(dbUser);
             await _context.SaveChangesAsync();
@@ -163,12 +163,12 @@ namespace server.Tests
             // Arrange
             var user = new User("john.doe.login.false@example.com", "password123", "John Doe Login");
             
-            user.password = _userHandler.HashPassword(user.password);
+            user.Password = _userHandler.HashPassword(user.Password);
             var dbUser = new DbUser
             {
-                Name = user.name,
-                Email = user.email,
-                Password = user.password
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password
             };
             _context.Users.Add(dbUser);
             await _context.SaveChangesAsync();
@@ -200,12 +200,12 @@ namespace server.Tests
         {
             // Arrange
             var user = new User("exist@example.com", "password123", "John Doe");
-            user.password = _userHandler.HashPassword(user.password);
+            user.Password = _userHandler.HashPassword(user.Password);
             var dbUser = new DbUser
             {
-                Name = user.name,
-                Email = user.email,
-                Password = user.password
+                Name = user.Name,
+                Email = user.Email,
+                Password = user.Password
             };
             _context.Users.Add(dbUser);
             await _context.SaveChangesAsync();
