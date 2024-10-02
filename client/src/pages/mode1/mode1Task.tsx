@@ -19,10 +19,11 @@ type Task1AnswerRequest = {
 type Task1AnswerStatistics = {
   correct: number;
   total: number;
+  wpm : number;
 };
 type Task1AnswerResponse = {
   answers: question[];
-  stats: Task1AnswerStatistics;
+  statistics: Task1AnswerStatistics;
 };
 
 export type Mode1TaskData = {
@@ -30,7 +31,7 @@ export type Mode1TaskData = {
   text: string;
   questions?: question[];
   answers?: question[];
-  stats?: Task1AnswerStatistics;
+  statistics?: Task1AnswerStatistics;
 };
 
 const requestTask1Data = async (request: Task1Request) => {
@@ -51,11 +52,12 @@ const submitTask1Answers = async (request: Task1AnswerRequest) => {
   try {
     const axiosResponse = await axios.post('/api/GetTaskAnswer', request);
     const response = axiosResponse.data as Task1AnswerResponse;
+    
     return {
       session: 0,
       text: "",
       answers: response.answers,
-      stats: response.stats,
+      statistics: response.statistics,
     } as Mode1TaskData;
   } catch (err) {
     console.error('Error posting task text:', err);

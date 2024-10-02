@@ -1,12 +1,8 @@
 import React from 'react';
-import { Button, Container, TextField, Typography } from '@mui/material';
-import { Box } from '@mui/system';
-import axios from '../../components/axiosWrapper';
 import * as mode1Task from './mode1Task';
 import Timer, { TimerHandle } from '../../components/timer';
 import TimerInput from '../../components/timerInput';
 import { useRef } from 'react';
-import ModeButton from '../home/modeButton';
 import ChoiceBox from '../../components/choiceBox';
 import QuestionPoints from './questionPoints';
 import { useNavigate } from 'react-router-dom';
@@ -44,10 +40,10 @@ const Mode1Page: React.FC = () => {
             <div className="mode1_upperDiv" id="upperDiv">
                 <div className="mode1_upperDiv_box" id="mode1_upperDiv_box">
                 <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                    <ChoiceBox choices={["History", "Technology", "Anime", "Politics"]} onSelect={choice => setMode1Theme(choice)} label="Theme:"/>
+                    <ChoiceBox choices={["History", "Technology", "Anime", "Politics"]} prompt='Theme:' onSelect={choice => setMode1Theme(choice)} label="Theme:"/>
                 </div>
                 <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
-                    <ChoiceBox choices={["Easy", "Medium", "Hard", "EXTREME"]} onSelect={choice => setMode1Difficulty(choice)} label="Difficulty:"/>
+                    <ChoiceBox choices={["Easy", "Medium", "Hard", "EXTREME"]} prompt='Difficulty:' onSelect={choice => setMode1Difficulty(choice)} label="Difficulty:"/>
                 </div>
                 <div className="mode1_upperDiv_parts" id="mode1_upperDiv_parts">
                     <div className="mode1_timerInput">
@@ -77,11 +73,21 @@ const Mode1Page: React.FC = () => {
                     </div>              
                 </div>
                 <div className="mode1_resultDiv" id="mode1_resultDiv">
-                    <div className="mode1_questionsContainer" id="mode1_questionsContainer">
-                    {mode1Data && mode1Data.answers && <QuestionPoints
-                        questions={mode1Data.answers}
-                    />}
+                    <div className="mode1_resultAnswerContainer" id="mode1_resultContainer">
+                        {mode1Data && mode1Data.answers && <QuestionPoints
+                            questions={mode1Data.answers}
+                        />}
                     </div>              
+                    <div className="mode1_resultsContainer" id="mode1_resultContainer">
+                        <div className="correctAnswersDisplayDiv">
+                            <span className="mode1_Text">Correct answers: </span>
+                            <span className="mode1_Text">{mode1Data?.statistics?.correct + '/' + mode1Data?.statistics?.total}</span>
+                        </div>
+                        <div className="WPMDisplayDiv">
+                            <span className="mode1_Text">Words per minute: </span>
+                            <span className="mode1_Text">{mode1Data?.statistics?.wpm}</span>                            
+                        </div>
+                    </div>
                 </div>
                 <div className="mode1_start_options">
                     <Timer ref={timerRef} initialTime={initialTime} id = "mode1_startButton" onClick= {() => {
@@ -150,7 +156,7 @@ const Mode1Page: React.FC = () => {
             </div>
 
             <div className="mode1_lowerDiv" id="buttonDiv">
-                <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => navigate("/")}/>
+                <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => navigate("/home")}/>
             </div>
 
             </div>

@@ -23,6 +23,10 @@ const Timer = forwardRef(({ id, onClick, initialTime = 0, onComplete }: TimerPro
     const buttonLabels = ['Start', 'Stop', 'Confirm', 'Again'];
 
     useEffect(() => {
+        return tick();
+    }, [isActive]);
+
+    const tick = () => { 
         let interval: NodeJS.Timeout | undefined;
 
         if (isActive) {
@@ -49,14 +53,14 @@ const Timer = forwardRef(({ id, onClick, initialTime = 0, onComplete }: TimerPro
         }
 
         return () => clearInterval(interval);
-    }, [isActive, seconds, initialTime, onComplete]);
+    };
 
     // Update the seconds state whenever the initialTime prop changes
     useEffect(() => {
         if (!isActive) {
             setSeconds(initialTime); // Update seconds immediately with new initialTime
         }
-    }, [initialTime]);
+    }, [initialTime, isActive]);
 
     // Expose the reset function
     useImperativeHandle(ref, () => ({

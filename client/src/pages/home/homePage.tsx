@@ -1,6 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import ModeButton from "./modeButton";
-import OptionsButton from "./optionsButton";
 import Dropdown from '../../components/dropdown';
 import CustomButton from '../../components/buttons/customButton';
 import '../../boards/css/main.board.css';

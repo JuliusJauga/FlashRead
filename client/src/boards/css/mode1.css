@@ -80,6 +80,19 @@
   z-index: 100;
   overflow: auto;
 }
+
+.mode1_answerDiv::-webkit-scrollbar {
+  display: none;
+}
+
+.mode1_answerDiv {
+  scrollbar-width: none; /* Firefox */
+}
+
+.mode1_answerDiv {
+  -ms-overflow-style: none; /* Edge */
+}
+
 .mode1_resultDiv {
   position: absolute;
   width: 95%;
@@ -89,10 +102,68 @@
   visibility: hidden;
   display: flex;
   background-color: #808E67;
-  align-items: top;
-  justify-content: left;
+  align-items: center;
+  justify-content: space-between;
   z-index: 100;
+  overflow: hidden;
+}
+
+.mode1_resultAnswerContainer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+  width: 70%;
+  flex: 1.5;
+  margin-left: 0.5em;
+  margin-right: 0.5em;
+  margin-top: 0.5em;
+  margin-bottom: 2em;
   overflow: auto;
+}
+
+.mode1_resultAnswerContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.mode1_resultAnswerContainer {
+  scrollbar-width: none; /* Firefox */
+}
+
+.mode1_resultAnswerContainer {
+  -ms-overflow-style: none; /* Edge */
+}
+
+
+.mode1_resultsContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  width: 30%;
+  flex: 1;
+  margin: 1.5em;
+  overflow: hidden;
+}
+
+.correctAnswersDisplayDiv {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
+}
+
+.WPMDisplayDiv {
+  display: flex;
+  width: 100%;
+  flex: 1;
+  margin: 0;
+  justify-content: center;
+  align-items: center;
 }
 
 .mode1_Text {
@@ -109,7 +180,9 @@
   height: 80%;
   justify-content: center;
   box-sizing: border-box;
+  overflow: hidden;
 }
+
 .mode1_upperDiv {
   background-color: #AAB396;
   position: relative;
@@ -152,11 +225,12 @@
   background-color: #AAB396;
   position: relative;
   flex: 1;
+
   display: flex;
   align-items: center;
   justify-content: center;
   box-sizing: border-box;
-  overflow: auto;
+  overflow: hidden;
   padding: 3em;
 }
 
@@ -176,7 +250,7 @@
   align-items: center;
   justify-content: center;
   display: flex;
-  overflow: auto;
+  overflow: hidden;
 }
 
 
