@@ -26,12 +26,6 @@ RUN apt-get update && apt-get install -y \
     bash \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy the Bash script into the container
-COPY ./server/connect_postgres.sh /usr/local/bin/connect_postgres.sh
-
-# Make the script executable
-RUN chmod +x /usr/local/bin/connect_postgres.sh
-
 # Expose the port your application will run on
 EXPOSE 5076
 

@@ -8,7 +8,7 @@ namespace server
     {
         public static string BuildConnectionString()
         {
-            string configPath = "config.json";
+            string configPath = "./secrets/config.json";
             string password = Environment.GetEnvironmentVariable("DB_PASSWORD") ?? throw new InvalidOperationException("Environment variable DB_PASSWORD is not set.");
 
             if (!File.Exists(configPath))

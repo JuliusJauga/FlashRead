@@ -6,9 +6,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5076:5076"
-    environment:
-      DB_PASSWORD: ${DB_PASSWORD}
     env_file:
-      - .env
+      - ./server/server/secrets/.env
     entrypoint: ["dotnet", "server.dll"]
     
