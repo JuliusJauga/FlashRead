@@ -1,0 +1,27 @@
+name: backend-test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.x'
+      - name: Restore dependencies
+        working-directory: ./server/server/
+        run: dotnet restore
+      - name: Build the project
+        working-directory: ./server/server/
+        run: dotnet build --configuration Release --no-restore
+      - name: Run tests
+        working-directory: ./server/server.Tests/
+        run: dotnet test --no-restore --verbosity normal --configuration Release
