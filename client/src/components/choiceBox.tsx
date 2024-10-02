@@ -20,7 +20,26 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, prompt, onSelect, label 
 
   return (
     <div className="choice-box-container">
-      <FormControl fullWidth variant="outlined" className="choice-box-form-control">
+      <FormControl fullWidth variant="outlined" className="choice-box-form-control"
+       sx={{
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderWidth: '4px',
+                borderColor: '#FFF8E8', // Default border color
+            },
+            '&:hover fieldset': {
+                borderWidth: '3px',
+                borderColor: '#FFF8E8', // Border color on hover
+            },
+            '&.Mui-focused fieldset': {
+                borderWidth: '3px',
+                borderColor: '#1976d2', // Border color when focused
+            },
+    
+            width: '100%',
+        },
+      }}
+      >
         <InputLabel className="choice-box-label">{label}</InputLabel>
         <Select
           value={selectedChoice}

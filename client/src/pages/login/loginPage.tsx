@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, Container, Typography, Box } from '@mui/material';
+import { TextField, Button, Container, Typography, Box, FormControl } from '@mui/material';
 import CustomHyperlink from '../../components/buttons/hyperlink';
 import axios from '../../components/axiosWrapper';
 import CustomButton from "../../components/buttons/customButton.tsx";
@@ -33,23 +33,53 @@ const LoginPage: React.FC = () => {
                 </div>
 
                 <div className="loginPage_loginDiv">
-                    <input 
-                        type="text" 
-                        className="signinInput" 
-                        id="loginEmailInput" 
-                        placeholder="Email" 
+                    <TextField 
+                        variant='outlined'
+                        label="Email"
                         value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required 
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    borderWidth: '4px',
+                                    borderColor: '#FFF8E8', // Default border color
+                                },
+                                '&:hover fieldset': {
+                                    borderWidth: '3px',
+                                    borderColor: '#FFF8E8', // Border color on hover
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderWidth: '3px',
+                                    borderColor: '#1976d2', // Border color when focused
+                                },
+                        
+                                width: '100%',
+                            },
+                        }}
                     />
-                    <input 
-                        type="password" 
-                        className="signinInput" 
-                        id="loginPasswordInput" 
-                        placeholder="Password" 
+                    <TextField 
+                        label="Password"
                         value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required 
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                        type="password"
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    borderWidth: '4px',
+                                    borderColor: '#FFF8E8', // Default border color
+                                },
+                                '&:hover fieldset': {
+                                    borderWidth: '3px',
+                                    borderColor: '#FFF8E8', // Border color on hover
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderWidth: '3px',
+                                    borderColor: '#1976d2', // Border color when focused
+                                },
+                        
+                                width: '100%',
+                            },
+                        }}
                     />
                     <CustomButton label="Login" className="loginButton" id="loginPage_loginButton" onClick={() => {
                         if (!email || !password) {

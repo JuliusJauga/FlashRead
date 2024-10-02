@@ -35,41 +35,101 @@ const RegisterPage: React.FC = () => {
             </div>
 
             <div className="registerPage_registerDiv">
-                <input 
-                    type="text" 
-                    className="signinInput" 
-                    id="registerUsernameInput" 
-                    placeholder="Username" 
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required 
-                />
-                <input 
-                    type="text" 
-                    className="signinInput" 
-                    id="registerEmailInput" 
-                    placeholder="Email" 
+            <TextField 
+                        variant='outlined'
+                        label="Username"
+                        value={username}
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
+                        sx={{
+                            '& .MuiOutlinedInput-root': {
+                                '& fieldset': {
+                                    borderWidth: '4px',
+                                    borderColor: '#FFF8E8', // Default border color
+                                },
+                                '&:hover fieldset': {
+                                    borderWidth: '3px',
+                                    borderColor: '#FFF8E8', // Border color on hover
+                                },
+                                '&.Mui-focused fieldset': {
+                                    borderWidth: '3px',
+                                    borderColor: '#1976d2', // Border color when focused
+                                },
+                        
+                                width: '100%',
+                            },
+                        }}
+                    />
+                <TextField
+                    variant='outlined'
+                    label="Email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderWidth: '4px',
+                                borderColor: '#FFF8E8', // Default border color
+                            },
+                            '&:hover fieldset': {
+                                borderWidth: '3px',
+                                borderColor: '#FFF8E8', // Border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                                borderWidth: '3px',
+                                borderColor: '#1976d2', // Border color when focused
+                            },
+                    
+                            width: '100%',
+                        },
+                    }}
                 />
-                <input 
-                    type="password" 
-                    className="signinInput" 
-                    id="registerPasswordInput" 
-                    placeholder="Password" 
+                <TextField
+                    label="Password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                    type="password"
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderWidth: '4px',
+                                borderColor: '#FFF8E8', // Default border color
+                            },
+                            '&:hover fieldset': {
+                                borderWidth: '3px',
+                                borderColor: '#FFF8E8', // Border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                                borderWidth: '3px',
+                                borderColor: '#1976d2', // Border color when focused
+                            },
+                    
+                            width: '100%',
+                        },
+                    }}
                 />
-                <input 
-                    type="password" 
-                    className={`signinInputRepeat ${repeatPassword !== password ? 'error' : ''}`} 
-                    id="registerPasswordInput2" 
-                    placeholder="Confirm Password" 
+                <TextField
+                    label="Repeat password"
                     value={repeatPassword}
-                    onChange={(e) => setRepeatPassword(e.target.value)}
-                    required 
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepeatPassword(e.target.value)}
+                    type="password"
+                    sx={{
+                        '& .MuiOutlinedInput-root': {
+                            '& fieldset': {
+                                borderWidth: '4px',
+                                borderColor: '#FFF8E8', // Default border color
+                            },
+                            '&:hover fieldset': {
+                                borderWidth: '3px',
+                                borderColor: '#FFF8E8', // Border color on hover
+                            },
+                            '&.Mui-focused fieldset': {
+                                borderWidth: '3px',
+                                borderColor: '#1976d2', // Border color when focused
+                            },
+                    
+                            width: '100%',
+                        },
+                    }}
                 />
                 <CustomButton 
                     label="Register" 
