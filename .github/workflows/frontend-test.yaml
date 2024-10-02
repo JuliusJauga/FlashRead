@@ -23,8 +23,11 @@ jobs:
           path: ./src/node_modules 
           key: npm-${{ hashFiles('./src/package-lock.json') }} 
       - name: Install dependencies
+        working-directory: ./client
         run: npm install
       - name: Run linter
+        working-directory: ./client
         run: npm run lint
       - name: Build
+        working-directory: ./client
         run: npm run build
