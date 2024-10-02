@@ -70,7 +70,7 @@ const LoginPage: React.FC = () => {
                     <div className="loginPage_links">
                         <CustomHyperlink href="/register" label="Register " className="hyperlink" onClick={() => navigate("/register")} />
                         <span className="smallText"> or </span>
-                        <CustomHyperlink href="/guest" label=" continue as guest" className="hyperlink" onClick={() => navigate("/")} />
+                        <CustomHyperlink href="/guest" label=" continue as guest" className="hyperlink" onClick={() => navigate("/home")} />
                     </div>
 
                 {/* <CustomButton label="Return" className="loginPage_returnButton" onClick={() => handlePageChange("selectionPage")}/> */}

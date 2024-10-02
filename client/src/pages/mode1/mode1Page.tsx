@@ -160,7 +160,7 @@ const Mode1Page: React.FC = () => {
             </div>
 
             <div className="mode1_lowerDiv" id="buttonDiv">
-                <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => navigate("/")}/>
+                <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => navigate("/home")}/>
             </div>
 
             </div>

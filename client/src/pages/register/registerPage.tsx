@@ -102,7 +102,7 @@ const RegisterPage: React.FC = () => {
                 <div className="loginPage_links">
                     <CustomHyperlink href="/login" label="Login " className="hyperlink" onClick={() => navigate("/login")} />
                     <span className="smallText"> or </span>
-                    <CustomHyperlink href="/guest" label=" continue as guest" className="hyperlink" onClick={() => navigate("/")} />
+                    <CustomHyperlink href="/guest" label=" continue as guest" className="hyperlink" onClick={() => navigate("/home")} />
                 </div>
             </div>
 
