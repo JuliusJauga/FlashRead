@@ -1,0 +1,45 @@
+.choice-box-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 300px;
+    margin: 0 auto;
+    padding: 1rem;
+    /* background-color: #f9f9f9; */
+    /* border: 1px solid #ddd; */
+    border-radius: 8px;
+    font-family: "Poppins", sans-serif;
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
+}
+
+.choice-box-label {
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    font-weight: bold;
+    color: #FFF8E8;
+}
+
+.choice-box-select {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    cursor: pointer;
+    font-family: "Poppins", sans-serif;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.choice-box-select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    outline: none;
+}
+
+.choice-box-select option {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
