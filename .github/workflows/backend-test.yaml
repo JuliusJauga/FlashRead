@@ -22,6 +22,9 @@ jobs:
       - name: Build the project
         working-directory: ./server/server/
         run: dotnet build --configuration Release --no-restore
+      - name: Build the test project
+        working-directory: ./server/server.Tests/
+        run: dotnet build --configuration Release --no-restore
       - name: Run tests
         working-directory: ./server/server.Tests/
         run: dotnet test --no-restore --verbosity normal --configuration Release
