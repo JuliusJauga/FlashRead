@@ -1,29 +1,41 @@
-.MainBoard_loginPage {
-    display: none;
-    position: relative;
+.loginPage {
+    display: flex;
+    position: absolute;
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
+    width: 100%;
     z-index: 30;
     overflow: hidden;
     /* background-color: aquamarine; */
 }
 
+.registerPage {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    z-index: 30;
+    overflow: hidden;    
+}
+
 .loginContainer {
     width: 100%;
     height: 100%;
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     background-color: #AAB396;
-    position: absolute;
+    position: relative;
     z-index: -1;
 }
 
 .registerContainer {
     width: 100%;
     height: 100%;
-    display: none;
+    display: flex;
     flex-direction: column;
     justify-content: center;
     background-color: #AAB396;

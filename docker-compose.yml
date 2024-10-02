@@ -1,14 +1,4 @@
 services:
-  client:
-    build:
-      context: ./client
-      dockerfile: Dockerfile
-    ports:
-      - "3000:80"
-    volumes:
-      - ../client:/app
-    depends_on:
-      - server
 
   server:
     build:
@@ -16,3 +6,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - "5076:5076"
+    env_file:
+      - ./server/server/secrets/.env
+    entrypoint: ["dotnet", "server.dll"]
+    

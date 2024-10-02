@@ -10,9 +10,17 @@ const Button: React.FC<{
   const [isClicked, setIsClicked] = useState(false);
 
   const buttonStyle = {
-    opacity: isClicked ? 0.95 : 1, 
-    transition: 'transform 0.4s ease', 
-    transform: isHovered ? 'scale(0.95)' : 'scale(1)',
+    opacity: isClicked ? 0.95 : 1, // Adjust opacity when clicked
+    transition: 'transform 0.4s ease', // Smooth transitions
+    // outline: 'none',
+    // padding: '10px 20px', // Padding inside the button
+    // borderRadius: '12px',
+    // border: '4px solid #FFF8E8', // Border color
+    // backgroundColor: 'transparent',
+    // color: '#FFF8E8', // Text color
+    transform: isHovered ? 'scale(0.95)' : 'scale(1)', // Shrink button on hover
+    // fontSize: '26px',
+    // fontFamily: 'Georgia, serif',
   };
 
   return (
