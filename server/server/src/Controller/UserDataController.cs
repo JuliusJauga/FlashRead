@@ -48,7 +48,7 @@ namespace server.Controller {
             return Ok(usersWithoutPasswords);
         }
         public record UserFromAPI(string Email, string Password, string? Username = null);
-        public User convertUserFromAPI(UserFromAPI userFromAPI)
+        private User convertUserFromAPI(UserFromAPI userFromAPI)
         {
             return new User(userFromAPI.Email, userFromAPI.Password, userFromAPI.Username ?? string.Empty);
         }
