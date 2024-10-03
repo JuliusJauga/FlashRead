@@ -60,7 +60,7 @@ const Timer = forwardRef(({ id, onClick, initialTime = 0, onComplete }: TimerPro
         if (!isActive) {
             setSeconds(initialTime); // Update seconds immediately with new initialTime
         }
-    }, [initialTime, isActive]);
+    }, [initialTime]);
 
     // Expose the reset function
     useImperativeHandle(ref, () => ({
