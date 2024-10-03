@@ -17,7 +17,7 @@ const RegisterPage: React.FC = () => {
         event.preventDefault();
         // Handle form submission logic here
         console.log('Form submitted:', { username, email, password });
-        axios.post('/api/users/register', { username, email, password })
+        axios.post('/api/Users/Register', { email, password, username })
             .then(response => {
                 console.log('Registration successful:', response.data);
             })
