@@ -21,6 +21,7 @@ namespace server.UserNamespace {
                 return false;
             }
             var dbUser = convertUserToDbUser(user);
+            dbUser.Password = HashPassword(dbUser.Password);
             try
             {
                 _context.Users.Add(dbUser);
