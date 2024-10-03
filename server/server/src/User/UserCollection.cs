@@ -19,6 +19,26 @@ namespace server.UserNamespace
             users.Sort();
         }
 
+        public User this[int index]
+        {
+            get 
+            {
+                if (index < 0 || index >= users.Count)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+                return users[index];
+            }
+            set
+            {
+                if (index < 0 || index >= users.Count)
+                {
+                    throw new IndexOutOfRangeException();
+                }
+                users[index] = value;
+            }
+        }
+
         public IEnumerator<User> GetEnumerator()
         {
             return users.GetEnumerator();

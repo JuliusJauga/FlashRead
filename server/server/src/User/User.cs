@@ -6,10 +6,10 @@ namespace server.UserNamespace
 {
     public struct User : IEnumerable<string>, IComparable<User>
     {
-        public string Email { get; set; }
+        public string Email { get; }
         public int Score { get; set; }
-        public string Password { get; set; }
-        public string Name { get; set; }
+        public string Password { get; }
+        public string Name { get; }
 
         public User(string email, string password, string name = "", int score = 0)
         {
@@ -36,6 +36,7 @@ namespace server.UserNamespace
         {
             return GetEnumerator();
         }
+
         public static explicit operator DbUser(User u)
         {
             return new DbUser { Email = u.Email, Password = u.Password, Name = u.Name };
