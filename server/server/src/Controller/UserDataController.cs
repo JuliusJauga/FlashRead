@@ -11,7 +11,8 @@ namespace server.Controller {
             _userHandler = userHandler;
         }
         [HttpPost("Users/Register")]
-        public async Task<IActionResult> PostUser([FromBody] User user) {
+        public async Task<IActionResult> PostUser([FromBody] UserFromAPI userAPI) {
+            var user = convertUserFromAPI(userAPI);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid user data.");
@@ -24,7 +25,8 @@ namespace server.Controller {
             return StatusCode(500, "An error occurred while adding the user.");
         }
         [HttpPost("Users/Login")]
-        public async Task<IActionResult> PostLogin([FromBody] User user) {
+        public async Task<IActionResult> PostLogin([FromBody] UserFromAPI userAPI) {
+            var user = convertUserFromAPI(userAPI);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid user data.");
@@ -35,6 +37,20 @@ namespace server.Controller {
                 return Ok("User logged in successfully.");
             }
             return Unauthorized("Invalid email or password.");
+        }
+        [HttpPost("Users/All")]
+        public async Task<IActionResult> GetAllUsers() {
+            var users = await _userHandler.GetAllUsersAsync();
+            var usersWithoutPasswords = users.Select(user => new {
+            user.Name,
+            user.Email,
+            });
+            return Ok(usersWithoutPasswords);
+        }
+        public record UserFromAPI(string Email, string Password, string? Username = null);
+        public User convertUserFromAPI(UserFromAPI userFromAPI)
+        {
+            return new User(userFromAPI.Email, userFromAPI.Password, userFromAPI.Username ?? string.Empty);
         }
     }
 }

@@ -62,6 +62,16 @@ namespace server.UserNamespace {
             }
             return true;
         }
+        public async Task<IEnumerable<User>> GetAllUsersAsync()
+        {
+            UserCollection users = new UserCollection();
+            var userList = await _context.Users.ToListAsync();
+            foreach (var dbUser in userList)
+            {
+                users.Add((User)dbUser);
+            }
+            return users;
+        }
         public string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
@@ -81,5 +91,6 @@ namespace server.UserNamespace {
         Task<bool> RegisterUserAsync(User user);
         Task<bool> LoginUserAsync(User user);
         Task<bool> DeleteUserAsync(User user);
+        Task<IEnumerable<User>> GetAllUsersAsync();
     }
 }
