@@ -16,7 +16,7 @@ const BulletPoints: React.FC<{
         if (onChanged) {
             onChanged(selectedBullet);
         }
-    }, [selectedBullet, onChanged]);
+    }, [selectedBullet]);
 
     const getListStyleType = (index: number) => {
         if (index === selectedBullet) return 'disc';

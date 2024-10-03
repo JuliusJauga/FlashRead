@@ -44,6 +44,10 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
         height: '100%',
         zIndex: 99,
         boxSizing: 'border-box', 
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        paddingBottom: '3px'
     };
 
     const dropdownMenuStyle: CSSProperties = {

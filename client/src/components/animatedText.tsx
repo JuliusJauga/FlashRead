@@ -23,7 +23,7 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({ text }) => {
         }, [text]);
 
         return (
-            <Typography variant="body1" style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            <Typography variant="body1" component={'span'} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
                 {visibleText.split('').map((char, index) => (
                     <span key={index}>{char}</span>
                 ))}
