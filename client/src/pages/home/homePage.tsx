@@ -30,11 +30,7 @@ const HomePage: React.FC = () => {
 
                         <CustomButton label= "Mode 2" className= "squareButton" id="MainBoard_mode2Button" onClick={()=>{
                             console.log("Mode 2 clicked");
-                            const mode2Button = document.getElementById("MainBoard_mode2Button") as HTMLButtonElement;
-                            mode2Button.textContent = "Coming Soon";
-                            setTimeout(() => {
-                            mode2Button.textContent = "Mode 2";
-                            }, 1000);
+                            navigate("/mode2");
                         }}/>
 
                         <CustomButton label= "Mode 3" className= "squareButton" id="MainBoard_mode3Button" onClick={()=>{
