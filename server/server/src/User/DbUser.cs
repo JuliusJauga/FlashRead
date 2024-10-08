@@ -3,6 +3,7 @@ namespace server.UserNamespace {
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
         public string Name { get; set; } = null!;
+        public string[] HistoryIds { get; set; } = null!;
 
         public static explicit operator User(DbUser dbUser)
         {

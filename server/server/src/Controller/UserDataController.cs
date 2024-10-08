@@ -38,7 +38,7 @@ namespace server.Controller {
             }
             return Unauthorized("Invalid email or password.");
         }
-        [HttpPost("Users/All")]
+        [HttpGet("Users/All")]
         public async Task<IActionResult> GetAllUsers() {
             var users = await _userHandler.GetAllUsersAsync();
             var usersWithoutPasswords = users.Select(user => new {
