@@ -2,8 +2,12 @@ import Canvas from "./canvas";
 import { vec2, droppingText, GameData } from "./canvas";
 import { useState, useRef } from "react";
 
+// Temporary for presentation
+interface Mode2TaskProps {
+    setPoints: (points: number) => void;
+}
 
-const mode2Task = () => {
+const mode2Task: React.FC <Mode2TaskProps> = ({ setPoints }) => {
     const [canvasSize, setCanvasSize] = useState<vec2>({ x: 1200, y: 600 });
     const [playerPos, setPlayerPos] = useState<vec2>({ x: 0, y: 0.1});
     const [textArray, setTextArray] = useState<droppingText[]>([]);
@@ -28,6 +32,7 @@ const mode2Task = () => {
         const pos = { x: e.clientX / canvasSize.x - getCanvasOffset(), y: 0.1 };
         setPlayerPos(pos);
     };
+    let points = 0;
     
     const onTick = (context: CanvasRenderingContext2D, dt: number) => {
         if (playerPosRef === undefined || playerPosRef.current === undefined) return undefined;
@@ -53,6 +58,8 @@ const mode2Task = () => {
 
         // collisions
         for (let i = 0; i < textArray.length; i++) {
+            setPoints(points);
+
             const text = textArray[i];
                 if (text === undefined) {
                     textArray.splice(i, 1);
@@ -101,18 +108,19 @@ const mode2Task = () => {
             const b = Math.abs(unrotatedPlayer.y - closestPoint.y);
             const distance = Math.sqrt((a * a) + (b * b));
 
-            
+
             if (text.pos.y < 0) {
                 textArray.splice(i, 1);
                 i--;
-                // TODO: lose points
+                // TODO: lose points 
+                points -= 1;
                 continue;
             }
             if (distance > playerRadius) continue;
             
             textArray.splice(i, 1);
             i--;
-
+            points += 1;
             // TODO: give points
 
             
