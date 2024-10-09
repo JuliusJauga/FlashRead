@@ -1,7 +1,6 @@
 import Canvas from "./canvas";
 import { vec2, droppingText, GameData } from "./canvas";
-
-import { useEffect, useState, useRef } from "react";
+import { useState, useRef } from "react";
 
 
 const mode2Task = () => {

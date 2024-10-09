@@ -4,6 +4,7 @@ import '../../boards/css/main.board.css';
 import CustomButton from '../../components/buttons/customButton';
 import '../../boards/css/buttons.css';
 import Mode2Task from './mode2Task';
+import "../../boards/css/mode2.css";
 
 const Mode2Page: React.FC = () => {
     const navigate = useNavigate();
@@ -11,6 +12,10 @@ const Mode2Page: React.FC = () => {
     return (
         <div className='Mode1_content'>
             <div className="mode2_centerDiv" id="mode1Div">
+                <div className="points">
+                    <p className="pointsText">Points:</p>
+                    <p className="pointsText" id="points">0</p>
+                </div>
                 <div className="w-full h-full">
                     <Mode2Task />
                 </div>

@@ -40,15 +40,18 @@ const Canvas: React.FC<{
         console.log("image loaded");
     };
 
-    const toScreenPos = (pos: vec2) => {
+    const getCanvasShift = () => {
         const rect = canvasRef.current?.getBoundingClientRect();
-
         if (!rect) {
             return { x: 0, y: 0 };
         }
+        return { x: rect.left, y: rect.top };
+    }
+
+    const toScreenPos = (pos: vec2) => {
 
         return {
-            x: pos.x * canvasSize.x - rect.left,
+            x: pos.x * canvasSize.x - getCanvasShift().x,
             y: canvasSize.y - pos.y * canvasSize.y,
         };
     };
