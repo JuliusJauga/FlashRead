@@ -15,6 +15,9 @@ const HomePage: React.FC = () => {
                 if (item === "Login") {
                     navigate("/login");
                 }
+                else if (item === "Settings") {
+                    navigate("/settings");
+                }
                 } } />
             </div>
 

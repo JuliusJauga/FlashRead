@@ -6,6 +6,9 @@ import RegisterPage from './pages/register/registerPage';
 import LoginPage from './pages/login/loginPage';
 import Mode1Page from './pages/mode1/mode1Page';
 import Mode2Page from './pages/mode2/mode2Page';
+import SettingsPage from './pages/settings/settingsPage';
+
+import './boards/css/variables.css';
 
 const App: React.FC = () => (
   <BrowserRouter>
@@ -14,6 +17,7 @@ const App: React.FC = () => (
       <Route path="/home" element={<HomePage/>}/>
       <Route path="/register" element={<RegisterPage/>}/>
       <Route path="/login" element={<LoginPage/>}/>
+      <Route path="/settings" element={<SettingsPage/>}/>
       <Route path="/mode1" element={<Mode1Page/>}/>
       <Route path="/mode2" element={<Mode2Page/>}/>
     </Routes>

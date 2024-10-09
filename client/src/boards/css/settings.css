@@ -1,0 +1,44 @@
+.settingsPage {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    background-color: var(--backgroundColor);
+    overflow: hidden;
+}
+
+.settingsHeader {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+    /* background-color: brown; */
+}
+
+.settingsContent {
+    display: flex;
+    flex: 3;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background-color: blue; */
+}
+
+.settingsFooter {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 3em;
+    /* background-color: azure; */
+}
+
+.settingsHeaderText {
+    font-family: var(--fontStyle);
+    font-size: var(--headerFontSize);
+    color: var(--textColor);
+}

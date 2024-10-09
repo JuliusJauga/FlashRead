@@ -1,0 +1,11 @@
+:root {
+    --backgroundColor: #AAB396;
+    --primaryColor: #AAB396;
+    --secondaryColor: #808E67;
+    --accentColor: #F2CC8F;
+
+    --borderColor: #FFF8E8;
+    --textColor: #FFF8E8;
+    --fontStyle: "Poppins", sans-serif;
+    --headerFontSize: 3em;
+}
