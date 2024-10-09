@@ -10,7 +10,7 @@ const Mode2Page: React.FC = () => {
 
     return (
         <div className='Mode1_content'>
-            <div className="MainBoard_mode1" id="mode1Div">
+            <div className="mode2_centerDiv" id="mode1Div">
                 <div className="w-full h-full">
                     <Mode2Task />
                 </div>

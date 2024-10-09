@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import playerImgSource from '../../images/player.png';
 
 export type vec2 = {
     x: number;
@@ -30,18 +31,40 @@ const Canvas: React.FC<{
     const [lastTime, setLastTime] = useState(0);
     const lastTimeRef = useRef<number>(); lastTimeRef.current = lastTime;
 
+    //image loading
+    let imageLoaded = false;
+    const playerImg = new Image();
+    playerImg.src = playerImgSource;
+    playerImg.onload = () => {
+        imageLoaded = true;
+        console.log("image loaded");
+    };
+
     const toScreenPos = (pos: vec2) => {
+        const rect = canvasRef.current?.getBoundingClientRect();
+
+        if (!rect) {
+            return { x: 0, y: 0 };
+        }
+
         return {
-            x: pos.x * canvasSize.x,
+            x: pos.x * canvasSize.x - rect.left,
             y: canvasSize.y - pos.y * canvasSize.y,
         };
     };
 
     const drawPlayer = (context: CanvasRenderingContext2D, gameData: GameData) => {
         context.beginPath();
+        context.imageSmoothingEnabled = false;
         const player = toScreenPos(gameData.playerPos);
-        context.arc(player.x, player.y, 0.05 * canvasSize.x, 0, 2 * Math.PI);
+            // HitBox ---------------------------------------------------
+            // context.arc(player.x, player.y, 0.05 * canvasSize.x, 0, 2 * Math.PI);
         context.stroke();
+
+        if (imageLoaded) {
+            context.drawImage(playerImg, player.x - 0.057 * canvasSize.x, player.y - 0.075 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
+        }
+
     };
 
     const drawText = (context: CanvasRenderingContext2D, gameData: GameData) => {
@@ -101,7 +124,7 @@ const Canvas: React.FC<{
         return () => cancelAnimationFrame(frameRef.current);
     }, [canvasSize]);
 
-    return <canvas ref={canvasRef} />;
+    return <canvas ref={canvasRef} style={{ cursor: 'none'}}/>;
 }
 
 export default Canvas;
