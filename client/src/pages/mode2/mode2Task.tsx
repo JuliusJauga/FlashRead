@@ -27,7 +27,8 @@ const mode2Task = () => {
         // spawn new text
         const difficulty = 0.01;
         if (Math.random() < difficulty * 2 && textArray.length < difficulty * 400) {
-            const text = "TESTdawda";
+            const texts = ["Hello", "World", "Test", "Sample", "Random", "Text", "Example"];
+            const text = texts[Math.floor(Math.random() * texts.length)];
             const angle = 0;
             const color = "black";
             const pos = { x: Math.random() * 0.8 + 0.1, y: 1 };
