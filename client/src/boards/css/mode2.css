@@ -1,0 +1,18 @@
+.points {
+    display: flex;
+    justify-content: center;
+    gap: 1vh;
+}
+.mode2_centerDiv {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1vh;
+}
+.pointsText {
+    font-size: 2vh;
+    color: white;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+}
