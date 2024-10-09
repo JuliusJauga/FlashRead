@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import playerImgSource from '../../images/player.png';
+import { get } from "http";
 
 export type vec2 = {
     x: number;
@@ -37,10 +38,9 @@ const Canvas: React.FC<{
     playerImg.src = playerImgSource;
     playerImg.onload = () => {
         imageLoaded = true;
-        console.log("image loaded");
     };
 
-    const getCanvasShift = () => {
+    const getCanvasOffset = () => {
         const rect = canvasRef.current?.getBoundingClientRect();
         if (!rect) {
             return { x: 0, y: 0 };
@@ -51,7 +51,7 @@ const Canvas: React.FC<{
     const toScreenPos = (pos: vec2) => {
 
         return {
-            x: pos.x * canvasSize.x - getCanvasShift().x,
+            x: pos.x * canvasSize.x,
             y: canvasSize.y - pos.y * canvasSize.y,
         };
     };
@@ -87,10 +87,18 @@ const Canvas: React.FC<{
     useEffect(() => {
         const canvas = canvasRef.current;
         if (canvas) {
-          canvas.addEventListener('mousemove', onMouseMove, true);
+            const handleMouseMove = (event: MouseEvent) => {
+                const adjustedEvent = {
+                    ...event,
+                    clientX: event.clientX - getCanvasOffset().x,
+                    clientY: event.clientY - getCanvasOffset().y,
+                };
+                onMouseMove(adjustedEvent);
+            };
+          canvas.addEventListener('mousemove', handleMouseMove, true);
     
           return () => {
-            canvas.removeEventListener('mousemove', onMouseMove, true);
+            canvas.removeEventListener('mousemove', handleMouseMove, true);
           };
         }
     }, [onMouseMove]);

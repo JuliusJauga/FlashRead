@@ -9,10 +9,23 @@ const mode2Task = () => {
     const [textArray, setTextArray] = useState<droppingText[]>([]);
     const playerPosRef = useRef<vec2>(); playerPosRef.current = playerPos;
     const textArrayRef = useRef<droppingText[]>(); textArrayRef.current = textArray;
-    
+    const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+
+    const getCanvasOffset = () => {
+        if (canvasRef.current) {
+            const rect = canvasRef.current.getBoundingClientRect();
+            const offsetX =  rect.left; // Mouse position relative to the canvas
+            console.log(offsetX);
+            return offsetX;
+        }
+        console.log("canvasRef.current is null");
+        return 0;
+    };
 
     const handleMouseMove = (e: any) => {
-        const pos = { x: e.clientX / canvasSize.x, y: 0.1 };
+
+        const pos = { x: e.clientX / canvasSize.x - getCanvasOffset(), y: 0.1 };
         setPlayerPos(pos);
     };
     
@@ -41,6 +54,10 @@ const mode2Task = () => {
         // collisions
         for (let i = 0; i < textArray.length; i++) {
             const text = textArray[i];
+                if (text === undefined) {
+                    textArray.splice(i, 1);
+                    continue;
+                }
             // move the text
             text.pos.y -= text.fallSpeed * dt;
             text.angle += text.rotSpeed * dt;
@@ -89,6 +106,7 @@ const mode2Task = () => {
                 textArray.splice(i, 1);
                 i--;
                 // TODO: lose points
+                continue;
             }
             if (distance > playerRadius) continue;
             
