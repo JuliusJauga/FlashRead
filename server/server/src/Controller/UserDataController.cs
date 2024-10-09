@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.src;
 using server.UserNamespace;
@@ -6,8 +7,8 @@ namespace server.Controller {
 
     [ApiController]
     public class UserDataController : ControllerBase {
-        private readonly IUserHandler _userHandler;
-        public UserDataController(IUserHandler userHandler) {
+        private readonly UserHandler _userHandler;
+        public UserDataController(UserHandler userHandler) {
             _userHandler = userHandler;
         }
         [HttpPost("Users/Register")]
@@ -32,9 +33,9 @@ namespace server.Controller {
                 return BadRequest("Invalid user data.");
             }
             var result = await _userHandler.LoginUserAsync(user);
-            if (result)
+            if (result != null)
             {
-                return Ok("User logged in successfully.");
+                return Ok(new { Token = result });
             }
             return Unauthorized("Invalid email or password.");
         }
@@ -47,6 +48,23 @@ namespace server.Controller {
             });
             return Ok(usersWithoutPasswords);
         }
+        [Authorize]
+        [HttpGet("Users/GetLogins")]
+        public async Task<IActionResult> GetUser() {
+            var userEmail = User.Identity?.Name;
+            if (string.IsNullOrEmpty(userEmail))
+            {
+            return Unauthorized("Invalid token.");
+            }
+
+            var user = await _userHandler.GetUserByEmailAsync(userEmail);
+            if (user != null)
+            {
+            return Ok(new { Email = user?.Email, Name = user?.Name });
+            }
+            return NotFound("User not found.");
+        }
+
         public record UserFromAPI(string Email, string Password, string? Username = null);
         private User convertUserFromAPI(UserFromAPI userFromAPI)
         {
