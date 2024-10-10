@@ -52,8 +52,8 @@ const SettingsPage: React.FC = () => {
                 borderColor = "#383B42";
                 break;
             case 'Dark':
-                mainBackground = "#26272C";
-                secondaryBackground = "#322b36";
+                mainBackground = "#0F171E";
+                secondaryBackground = "#26272C"; 
                 textColor = "#F8F2F4";
                 primaryColor = "#080709";
                 accentColor = "#111013";
