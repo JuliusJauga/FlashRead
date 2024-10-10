@@ -25,10 +25,12 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, prompt, onSelect, label 
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
                 borderWidth: '3px',
+                color: 'var(--textColor)', // Default border color
                 borderColor: 'var(--borderColor)', // Default border color
             },
             '&:hover fieldset': {
                 borderWidth: '3px',
+                color: 'var(--textColor)', // Border color on hover
                 borderColor: 'var(--borderColor)', // Border color on hover
             },
             '&.Mui-focused fieldset': {
@@ -40,22 +42,46 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, prompt, onSelect, label 
         },
       }}
       >
-        <InputLabel className="choice-box-label">{label}</InputLabel>
+        <InputLabel className="choice-box-label" 
+        sx={{
+          color: 'var(--textColor)', // Normal state color
+          '&.Mui-focused': {
+            color: '#1976d2', // Focused state color
+          },
+          '&.MuiFormLabel-filled': {
+            color: 'var(--textColor)', // When the input has a value
+          },
+          '&.Mui-focused.MuiFormLabel-filled': {
+                color: '#1976d2', // Focused and has a value
+            },
+        }}
+        >{label}</InputLabel>
         <Select
           value={selectedChoice}
           onChange={handleSelect}
           label={label}
           className="choice-box-select"
+          MenuProps={{
+            PaperProps: {
+              sx: {
+                backgroundColor: 'var(--backgroundColor)',
+                color: 'var(--textColor)',
+              },
+            },
+          }}
           sx={{
             display: 'flex',
             alignItems: 'center',
             color: 'var(--textColor)',
-            '& .MuiSelect-select:empty': {
+            '& .MuiSelect-select': {
+              color: 'var(--textColor)', // Ensure the selected text color is set
+            },
+            '& .MuiSelect-select.MuiSelect-placeholder': {
               color: 'var(--textColor)', // Placeholder text color
             },
           }}
         >
-          <MenuItem value="" disabled sx={{ color: 'var(--textColor)', textAlign: 'center'}}>
+          <MenuItem value="" disabled sx={{color: 'var(--textColor)', textAlign: 'center'}}>
             {prompt}
           </MenuItem>
           {choices.map((choice, index) => (
