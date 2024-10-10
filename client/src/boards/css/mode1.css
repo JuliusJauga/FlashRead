@@ -6,7 +6,7 @@
   align-items: center;
   height: 100%;
   width: 100%;
-  background-color: #AAB396;
+  background-color: var(--backgroundColor);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -21,7 +21,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  background-color: #AAB396;
+  background-color: var(--backgroundColor);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -32,7 +32,7 @@
 }
 
 .mode1_start_options {
-  background-color: #808E67;
+  background-color: var(--secondaryColor);
   position: absolute;
   width: 100%;
   height: 7%;
@@ -61,7 +61,7 @@
   height: 92%;
   top:0;
   display: flex;
-  background-color: #808E67;
+  background-color: var(--secondaryColor);
   align-items: top;
   justify-content: left;
   z-index: 101;
@@ -74,7 +74,7 @@
   top: 0;
   visibility: hidden;
   display: flex;
-  background-color: #808E67;
+  background-color: var(--secondaryColor);
   align-items: top;
   justify-content: left;
   z-index: 100;
@@ -101,7 +101,7 @@
   top: 0;
   visibility: hidden;
   display: flex;
-  background-color: #808E67;
+  background-color: var(--secondaryColor);
   align-items: center;
   justify-content: space-between;
   z-index: 100;
@@ -168,14 +168,14 @@
 
 .mode1_Text {
   font-size: 2vh;
-  color: #FFF8E8;
+  color: var(--textColor);
   text-align: left;
 }
 
 .mode1_innerDiv {
   position: relative;
   display: flex;
-  background-color: #AAB396;
+  background-color: var(--backgroundColor);
   align-items: center;
   height: 80%;
   justify-content: center;
@@ -184,7 +184,7 @@
 }
 
 .mode1_upperDiv {
-  background-color: #AAB396;
+  background-color: var(--backgroundColor);
   position: relative;
   flex: 1;
   display: flex;
@@ -216,13 +216,13 @@
   display: flex;
   width: 65%;
   height: 100%;
-  background-color: #AAB396;
+  background-color: var(--backgroundColor);
   z-index: 50;
   box-sizing: border-box;
 }
 
 .mode1_lowerDiv {
-  background-color: #AAB396;
+  background-color: var(--backgroundColor);
   position: relative;
   flex: 1;
 
@@ -235,14 +235,14 @@
 }
 
 .mode1_mainBox {
-  background-color: #808E67;
+  background-color: var(--secondaryColor);
   position: relative;
   width: 65%;
   width: 65%;
   height: 100%;
   border-radius: 12px;
   border: solid 4px;
-  border-color: #FFF8E8;
+  border-color: var(--borderColor);
   z-index: 50;
   align-items: center;
   justify-content: center;
@@ -272,14 +272,14 @@
 }
 
 .timerClass {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fontStyle);
   font-size: 16px;
 }
 
 .mode1_question {
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fontStyle);
   font-size: 24px;
-  color: #FFF8E8;
+  color: var(--textColor);
 }
 
 .mode1_timerInputLabel {
@@ -287,18 +287,18 @@
   margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: bold;
-  color: #FFF8E8;
-  font-family: "Poppins", sans-serif;
+  color: var(--textColor);
+  font-family: var(--fontStyle);
 }
 
 .mode1_timerInputSelect {
   width: 100%;
   padding: 0.5rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 1px solid var(--borderColor);
   border-radius: 4px;
-  font-family: "Poppins", sans-serif;
-  color: #333;
+  font-family: var(--fontStyle);
+  color: var(--choiceBoxLabelColor);
 }
 
 .mode1_timerInputSelect:focus {
@@ -334,5 +334,5 @@
 }
 
 .mode1_text {
-  color: #FFF8E8;
+  color: var(--textColor);
 }

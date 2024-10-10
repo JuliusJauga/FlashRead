@@ -7,8 +7,8 @@
 .settingsChoiceBoxLabel {
     margin-right: 8px;
     font-weight: bold;
-    font-family: var(--font_style);
-    color: var(--text_color);
+    font-family: var(--fontStyle);
+    color: var(--textColor);
 }
 
 .settingsChoiceBoxSelect {

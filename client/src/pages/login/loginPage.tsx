@@ -41,12 +41,12 @@ const LoginPage: React.FC = () => {
                         sx={{
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderWidth: '4px',
-                                    borderColor: '#FFF8E8', // Default border color
+                                    borderWidth: '3px',
+                                    borderColor: 'var(--borderColor)', // Default border color
                                 },
                                 '&:hover fieldset': {
                                     borderWidth: '3px',
-                                    borderColor: '#FFF8E8', // Border color on hover
+                                    borderColor: 'var(--borderColor)', // Border color on hover
                                 },
                                 '&.Mui-focused fieldset': {
                                     borderWidth: '3px',
@@ -65,12 +65,12 @@ const LoginPage: React.FC = () => {
                         sx={{
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderWidth: '4px',
-                                    borderColor: '#FFF8E8', // Default border color
+                                    borderWidth: '3px',
+                                    borderColor: 'var(--borderColor)', // Default border color
                                 },
                                 '&:hover fieldset': {
                                     borderWidth: '3px',
-                                    borderColor: '#FFF8E8', // Border color on hover
+                                    borderColor: 'var(--borderColor)', // Border color on hover
                                 },
                                 '&.Mui-focused fieldset': {
                                     borderWidth: '3px',

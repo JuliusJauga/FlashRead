@@ -24,12 +24,12 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, prompt, onSelect, label 
        sx={{
         '& .MuiOutlinedInput-root': {
             '& fieldset': {
-                borderWidth: '4px',
-                borderColor: '#FFF8E8', // Default border color
+                borderWidth: '3px',
+                borderColor: 'var(--borderColor)', // Default border color
             },
             '&:hover fieldset': {
                 borderWidth: '3px',
-                borderColor: '#FFF8E8', // Border color on hover
+                borderColor: 'var(--borderColor)', // Border color on hover
             },
             '&.Mui-focused fieldset': {
                 borderWidth: '3px',
@@ -49,9 +49,13 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, prompt, onSelect, label 
           sx={{
             display: 'flex',
             alignItems: 'center',
+            color: 'var(--textColor)',
+            '& .MuiSelect-select:empty': {
+              color: 'var(--textColor)', // Placeholder text color
+            },
           }}
         >
-          <MenuItem value="" disabled sx={{ textAlign: 'center'}}>
+          <MenuItem value="" disabled sx={{ color: 'var(--textColor)', textAlign: 'center'}}>
             {prompt}
           </MenuItem>
           {choices.map((choice, index) => (
