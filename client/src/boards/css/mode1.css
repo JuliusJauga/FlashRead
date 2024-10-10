@@ -65,6 +65,8 @@
   align-items: top;
   justify-content: left;
   z-index: 101;
+  padding: 0.5em;
+  padding-top: 1em;
 }
 .mode1_answerDiv {
   position: absolute;
@@ -169,6 +171,7 @@
 .mode1_Text {
   font-size: 2vh;
   color: var(--textColor);
+  font-family: var(--fontStyle);
   text-align: left;
 }
 
@@ -299,6 +302,7 @@
   border-radius: 4px;
   font-family: var(--fontStyle);
   color: var(--choiceBoxLabelColor);
+  background-color: var(--backgroundColor);
 }
 
 .mode1_timerInputSelect:focus {
@@ -315,7 +319,7 @@
 .mode1_timerInputSelect {
   padding: 0.5rem;
   font-size: 1rem;
-  color: #333;
+  color: var(--textColor);
 }
 
 .mode1_timerInputSelect:focus {
@@ -331,8 +335,4 @@
 .mode1_answerDiv {
   -ms-overflow-style: none;
   scrollbar-width: none; 
-}
-
-.mode1_text {
-  color: var(--textColor);
 }

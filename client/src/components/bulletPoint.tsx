@@ -35,7 +35,7 @@ const BulletPoints: React.FC<{
             }
         }
         // otherwise, show default
-        return '#FFF8E8';   
+        return 'var(--textColor)';   
     };
 
     return (
@@ -52,7 +52,7 @@ const BulletPoints: React.FC<{
                         cursor: 'pointer',
                         listStyleType: getListStyleType(index), 
                         fontSize: '26px', // Increased font size for larger bullets
-                        fontFamily: '"Poppins", sans-serif',
+                        fontFamily: '"var(--fontStyle)',
                         marginBottom: '10px',
                         padding: '0.5em',
                         color: getColor(index),

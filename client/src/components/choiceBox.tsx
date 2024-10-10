@@ -45,14 +45,18 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, prompt, onSelect, label 
         <InputLabel className="choice-box-label" 
         sx={{
           color: 'var(--textColor)', // Normal state color
+          fontFamily: 'var(--fontStyle)',
           '&.Mui-focused': {
             color: '#1976d2', // Focused state color
+            fontFamily: 'var(--fontStyle)',
           },
           '&.MuiFormLabel-filled': {
             color: 'var(--textColor)', // When the input has a value
+            fontFamily: 'var(--fontStyle)',
           },
           '&.Mui-focused.MuiFormLabel-filled': {
                 color: '#1976d2', // Focused and has a value
+                fontFamily: 'var(--fontStyle)',
             },
         }}
         >{label}</InputLabel>
@@ -66,26 +70,30 @@ const ChoiceBox: React.FC<ChoiceBoxProps> = ({ choices, prompt, onSelect, label 
               sx: {
                 backgroundColor: 'var(--backgroundColor)',
                 color: 'var(--textColor)',
+                fontFamily: 'var(--fontStyle)',
               },
             },
           }}
           sx={{
             display: 'flex',
             alignItems: 'center',
+            fontFamily: 'var(--fontStyle)',
             color: 'var(--textColor)',
             '& .MuiSelect-select': {
               color: 'var(--textColor)', // Ensure the selected text color is set
+              fontFamily: 'var(--fontStyle)',
             },
             '& .MuiSelect-select.MuiSelect-placeholder': {
               color: 'var(--textColor)', // Placeholder text color
+              fontFamily: 'var(--fontStyle)',
             },
           }}
         >
-          <MenuItem value="" disabled sx={{color: 'var(--textColor)', textAlign: 'center'}}>
+          <MenuItem value="" disabled sx={{color: 'var(--textColor)', textAlign: 'center', font: 'var(--fontStyle)'}}>
             {prompt}
           </MenuItem>
           {choices.map((choice, index) => (
-            <MenuItem key={index} value={choice}>
+            <MenuItem key={index} value={choice} sx={{ fontFamily: 'var(--fontFamily)' }}>
               {choice}
             </MenuItem>
           ))}

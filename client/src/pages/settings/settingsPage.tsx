@@ -44,8 +44,8 @@ const SettingsPage: React.FC = () => {
             borderColor;
         switch (theme) {
             case 'Light':
-                mainBackground = "#FFF";
-                secondaryBackground = "#FFF8E8";
+                mainBackground = "#F8F8FA";
+                secondaryBackground = "#F1F1F5";
                 primaryColor = "#FFF";
                 accentColor = "#FFD6DA";
                 textColor = "#383B42";
@@ -53,10 +53,10 @@ const SettingsPage: React.FC = () => {
                 break;
             case 'Dark':
                 mainBackground = "#26272C";
-                secondaryBackground = "#555862";
+                secondaryBackground = "#322b36";
                 textColor = "#F8F2F4";
-                primaryColor = "#26272C";
-                accentColor = "#555862";
+                primaryColor = "#080709";
+                accentColor = "#111013";
                 borderColor = "#F8F2F4";
                 break;
             case 'Olive':

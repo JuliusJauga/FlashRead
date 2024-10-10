@@ -1,0 +1,5 @@
+.animatedText {
+    color: var(--textColor);
+    font-family: var(--fontStyle);
+    font-size: 1.25em;
+}
