@@ -5,16 +5,20 @@
 
 #include "Context.h"
 #include "io/Input.h"
+#include "game/TestScene.h"
+#include "rendering/Mesh.h"
 
 Context* ctx = nullptr;
 
 void mainLoop() {
     Input::Poll(false);
-
+    
     // logic
+    ctx->scene->Update();
 
     // rendering
-    ctx->renderer.Render();
+    ctx->renderer.SetViewportSize(ctx->rt.width, ctx->rt.height);
+    ctx->renderer.Render(ctx->scene);
     ctx->rt.SwapBuffers();
 }
 
@@ -30,12 +34,15 @@ bool start() {
         delete ctx;
         return false;
     }
-
+    
+    // create scene (TODO: offload to game logic or something)
+    ctx->scene = std::make_shared<TestScene>();
     // start main loop
     emscripten_set_main_loop(mainLoop, 0, 1);
     return true;
 }
 void stop() {
+    MeshRegistry::Clear();
     emscripten_cancel_main_loop();
     if (ctx == nullptr) return;
     delete ctx;

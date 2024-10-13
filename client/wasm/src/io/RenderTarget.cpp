@@ -23,15 +23,7 @@ RenderTarget::RenderTarget() {
         return;
     }
 
-    // Create OpenGLES2 context
-    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2) != 0) {
-        printf("SDL_GL_SetAttribute Error: %s\n", SDL_GetError());
-        return;
-    }
-    if (SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 0) != 0) {
-        printf("SDL_GL_SetAttribute Error: %s\n", SDL_GetError());
-        return;
-    }
+    // Create webgl context
     if (SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1) != 0) {
         printf("SDL_GL_SetAttribute Error: %s\n", SDL_GetError());
         return;
@@ -84,7 +76,6 @@ void RenderTarget::Resize(int32_t width, int32_t height) {
     this->height = height;
     if (!IsValid()) return;
     SDL_SetWindowSize(m_window, width, height);
-    glViewport(0, 0, width, height);
 }
 
 void RenderTarget::SwapBuffers() {

@@ -45,3 +45,12 @@ ShaderProgram::~ShaderProgram() {
 void ShaderProgram::Use() {
     glUseProgram(m_program);
 }
+
+void ShaderProgram::AddUniformBufferBinding(std::string_view name, GLuint bindingIndex) {
+    GLuint blockIndex = glGetUniformBlockIndex(m_program, name.data());
+    if (blockIndex == GL_INVALID_INDEX) {
+        printf("ERROR::SHADER_UNIFORM_BLOCK_NOT_FOUND: %s\n", name.data());
+        return;
+    }
+    glUniformBlockBinding(m_program, blockIndex, bindingIndex);   
+}
