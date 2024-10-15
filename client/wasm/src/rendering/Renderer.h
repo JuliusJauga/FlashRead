@@ -19,6 +19,7 @@ public:
 
     void SetViewportSize(int32_t width, int32_t height);
 
+    void ReloadShaders();
 private:
     uint32_t m_nextUniformBindingIndex = 0;
     uint32_t GetNextUniformBindingIndex() { return m_nextUniformBindingIndex++; }
@@ -34,6 +35,14 @@ private:
         glm::mat4 projection;
     };
     UniformBuffer<CameraUniform> m_cameraUniform;
+
+    struct LightingInfoUniform {
+        glm::vec3 lightPos;
+        float p1;
+        glm::vec3 cameraPos;
+        float p2;
+    };
+    UniformBuffer<LightingInfoUniform> m_lightingInfoUniform;
 
     constexpr static inline uint32_t m_matricesPerUniformBuffer = 256;
     struct BatchRenderData {

@@ -9,6 +9,8 @@
 #define TINYOBJLOADER_IMPLEMENTATION
 #include "tiny_obj_loader.h"
 
+constexpr bool SmoothNormals = true;
+
 struct Vertex {
     glm::vec3 position{0};
     glm::vec3 normal{0};
@@ -108,6 +110,40 @@ std::vector<Vertex> loadModel(const std::filesystem::path& file) {
                 };
             }
             vertices.push_back(vertex);
+        }
+    }
+    if (attrib.normals.empty()) {
+        std::cout << "  No normals found, creating from vertices ..." << std::endl;
+
+        for (const auto& shape : reader.GetShapes()) {
+            auto& mesh = shape.mesh;
+            std::vector<glm::vec3> normals(mesh.indices.size());
+            for (uint32_t i = 0; i < mesh.indices.size(); i += 3) {
+                glm::vec3 pos1 {
+                    attrib.vertices[3 * mesh.indices[i + 0].vertex_index + 0],
+                    attrib.vertices[3 * mesh.indices[i + 0].vertex_index + 1],
+                    attrib.vertices[3 * mesh.indices[i + 0].vertex_index + 2]
+                };
+                glm::vec3 pos2 {
+                    attrib.vertices[3 * mesh.indices[i + 1].vertex_index + 0],
+                    attrib.vertices[3 * mesh.indices[i + 1].vertex_index + 1],
+                    attrib.vertices[3 * mesh.indices[i + 1].vertex_index + 2]
+                };
+                glm::vec3 pos3 {
+                    attrib.vertices[3 * mesh.indices[i + 2].vertex_index + 0],
+                    attrib.vertices[3 * mesh.indices[i + 2].vertex_index + 1],
+                    attrib.vertices[3 * mesh.indices[i + 2].vertex_index + 2]
+                };
+                glm::vec3 normal = glm::normalize(glm::cross(pos2 - pos1, pos3 - pos1));
+                for (uint32_t j = 0; j < 3; j++) {
+                    if (SmoothNormals) normals[mesh.indices[i + j].vertex_index] += normal;
+                    else normals[i + j] = normal;
+                }
+            }
+            for (uint32_t i = 0; i < mesh.indices.size(); i++) {
+                if (SmoothNormals) vertices[i].normal = glm::normalize(normals[mesh.indices[i].vertex_index]);
+                else vertices[i].normal = normals[i];
+            }
         }
     }
     std::cout << "  Loaded " << vertices.size() << " vertices" << std::endl;

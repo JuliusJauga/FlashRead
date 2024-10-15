@@ -20,6 +20,7 @@ public:
     const std::shared_ptr<Camera>& GetCamera() const { return m_camera; }
 
     entt::registry registry;
+    glm::vec3 sunPosition{0, 100, 0};
 protected:
     std::shared_ptr<Camera> m_camera;
 };

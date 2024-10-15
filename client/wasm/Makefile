@@ -27,7 +27,10 @@ debug:
 	$(comp) \
 	-O0 \
 	-g \
-	--tracing
+	--tracing \
+	-D SHADER_HOT_RELOAD \
+	-sFETCH \
+	-sASYNCIFY
 
 build-obj:
 	clang++ -o objpacker/objpacker objpacker/main.cpp \

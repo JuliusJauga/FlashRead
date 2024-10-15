@@ -17,6 +17,10 @@ void mainLoop() {
     ctx->scene->Update();
 
     // rendering
+    #ifdef SHADER_HOT_RELOAD
+        if (Input::JustPressed(SDL_SCANCODE_P)) ctx->renderer.ReloadShaders();
+    #endif
+
     ctx->renderer.SetViewportSize(ctx->rt.width, ctx->rt.height);
     ctx->renderer.Render(ctx->scene);
     ctx->rt.SwapBuffers();

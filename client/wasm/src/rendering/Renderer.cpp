@@ -3,38 +3,14 @@
 #include <unordered_map>
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
+#include <emscripten/fetch.h>
+#include <string.h>
+#include <string>
 
 #include "../core/Components.h"
 
 Renderer::Renderer() {
-    // mesh
-    {
-        const GLchar vertexSource[] = {
-            #include "shaders/mesh.vs"
-        };
-        const GLchar fragmentSource[] = {
-            #include "shaders/mesh.fs"
-        };
-        m_meshProgram = std::make_unique<ShaderProgram>(vertexSource, fragmentSource);
-    }
-    // post
-    {
-        const GLchar vertexSource[] = {
-        #include "shaders/post.vs"
-        };
-        const GLchar fragmentSource[] = {
-        #include "shaders/post.fs"
-        };
-        m_postProcessingProgram = std::make_unique<ShaderProgram>(vertexSource, fragmentSource);
-    }
-
-    // setup uniforms
-    m_cameraUniform.SetBindingIndex(GetNextUniformBindingIndex());
-    m_meshProgram->AddUniformBufferBinding("Camera", m_cameraUniform.GetBindingIndex());
-    m_cameraUniform.Bind();
-
-    m_modelUniform.SetBindingIndex(GetNextUniformBindingIndex());
-    m_meshProgram->AddUniformBufferBinding("ModelMatrices", m_modelUniform.GetBindingIndex());
+    ReloadShaders();
 
     // GL settings
     glEnable(GL_CULL_FACE);
@@ -43,9 +19,87 @@ Renderer::Renderer() {
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
 
-    glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+    glClearColor(0.5f, 0.4f, 0.3f, 1.0f);
 }
 Renderer::~Renderer() {}
+
+void Renderer::ReloadShaders() {
+#ifdef SHADER_HOT_RELOAD
+#define SHADER_LOAD_FROM_FILE(target, shaderFile) \
+    std::string target ## data; \
+    { \
+        bool finished; \
+        std::pair<std::string*, bool*> userData = {&target ## data, &finished}; \
+        emscripten_fetch_attr_t attr; \
+        emscripten_fetch_attr_init(&attr); \
+        strcpy(attr.requestMethod, "GET"); \
+        attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY; \
+        attr.userData = &userData; \
+        attr.onsuccess = [](emscripten_fetch_t* fetch) { \
+            auto userData = static_cast<std::pair<std::string*, bool*>*>(fetch->userData); \
+            if (fetch->status == 200) { \
+                *(userData->first) = std::string(fetch->data + 3, fetch->numBytes - (3 + 2)); \
+            } else { \
+                printf("Failed to load shader: %s\n", fetch->url); \
+            } \
+            *(userData->second) = true; \
+            emscripten_fetch_close(fetch); \
+        }; \
+        attr.onerror = [](emscripten_fetch_t* fetch) { \
+            auto userData = static_cast<std::pair<std::string*, bool*>*>(fetch->userData); \
+            *(userData->second) = true; \
+            emscripten_fetch_close(fetch); \
+        }; \
+        emscripten_fetch(&attr, "http://localhost:8000/" shaderFile); \
+        while (!finished) { \
+            emscripten_sleep(10); \
+        } \
+        target = target ## data.c_str(); \
+        printf("loaded shader: %s\n", shaderFile); \
+    }
+#endif
+    // mesh
+    {
+        #ifdef SHADER_HOT_RELOAD
+            const GLchar* vertexSource;
+            const GLchar* fragmentSource;
+            SHADER_LOAD_FROM_FILE(vertexSource, "shaders/mesh.vs")
+            SHADER_LOAD_FROM_FILE(fragmentSource, "shaders/mesh.fs")
+        #else
+            const GLchar vertexSource[] = {
+                #include "shaders/mesh.vs"
+            };
+            const GLchar fragmentSource[] = {
+                #include "shaders/mesh.fs"
+            };
+        #endif
+
+        m_meshProgram = std::make_unique<ShaderProgram>(vertexSource, fragmentSource);
+    }
+    // // post
+    // {
+    //     const GLchar vertexSource[] = {
+    //     #include "shaders/post.vs"
+    //     };
+    //     const GLchar fragmentSource[] = {
+    //     #include "shaders/post.fs"
+    //     };
+    //     m_postProcessingProgram = std::make_unique<ShaderProgram>(vertexSource, fragmentSource);
+    // }
+
+
+    // setup uniforms
+    m_cameraUniform.SetBindingIndex(GetNextUniformBindingIndex());
+    m_meshProgram->AddUniformBufferBinding("Camera", m_cameraUniform.GetBindingIndex());
+    m_cameraUniform.Bind();
+
+    m_lightingInfoUniform.SetBindingIndex(GetNextUniformBindingIndex());
+    m_meshProgram->AddUniformBufferBinding("LightingInfo", m_lightingInfoUniform.GetBindingIndex());
+    m_lightingInfoUniform.Bind();
+
+    m_modelUniform.SetBindingIndex(GetNextUniformBindingIndex());
+    m_meshProgram->AddUniformBufferBinding("ModelMatrices", m_modelUniform.GetBindingIndex());
+}
 
 void Renderer::Render(const std::shared_ptr<Scene> &scene) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -56,6 +110,10 @@ void Renderer::Render(const std::shared_ptr<Scene> &scene) {
     m_cameraUniform.Update({
         .view = camera->GetViewMatrix(),
         .projection = camera->GetProjectionMatrix()
+    });
+    m_lightingInfoUniform.Update({
+        .lightPos = scene->sunPosition,
+        .cameraPos = camera->position,
     });
 
     // render entities
