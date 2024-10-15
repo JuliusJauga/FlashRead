@@ -1,10 +1,12 @@
 import React, { useState, CSSProperties, useRef, useEffect } from 'react';
-
+import { useAuth } from '../context/AuthContext';
+import { login } from '../services/authService';
 interface DropdownProps {
     onSelect: (item: string) => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
+    const { checkUserAuth, isAuthenticated } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
@@ -103,7 +105,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
                 &#8801;
             </button>
             <ul style={dropdownMenuStyle}>
-                {['Profile', 'Settings', 'Login'].map((option, index) => (
+                {['Profile', 'Settings', isAuthenticated ? 'Logout' : 'Login'].map((option, index) => (
                     <li
                         key={index}
                         style={menuItemStyle}
