@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
-import axios from '../../components/axiosWrapper';
 import CustomButton from "../../components/buttons/customButton.tsx";
 import CustomHyperlink from '../../components/buttons/hyperlink';
 import '../../boards/css/loginPage.css';
