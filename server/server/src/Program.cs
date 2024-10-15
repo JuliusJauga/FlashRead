@@ -19,9 +19,15 @@ namespace server
             builder.Services.AddCors(options => {
                 options.AddPolicy(
                     name: MyAllowSpecificOrigins, 
-                    policy  => {policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();}
-                );
-            });
+                    policy  => {
+                        policy.WithOrigins("http://localhost:5173")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
+                        }
+                    );
+                }
+            );
 
             while (true) {
                 try

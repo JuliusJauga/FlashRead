@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using server.src;
 using server.UserNamespace;
+using System.Security.Claims;
 namespace server.Controller {
     [Route("api")]
 
@@ -19,9 +20,10 @@ namespace server.Controller {
                 return BadRequest("Invalid user data.");
             }
             var result = await _userHandler.RegisterUserAsync(user);
+            var token = await _userHandler.LoginUserAsync(user);
             if (result)
             {
-                return Ok("User added successfully.");
+                return Ok(new { Token = token});
             }
             return StatusCode(500, "An error occurred while adding the user.");
         }
@@ -51,18 +53,27 @@ namespace server.Controller {
         [Authorize]
         [HttpGet("Users/GetLogins")]
         public async Task<IActionResult> GetUser() {
-            var userEmail = User.Identity?.Name;
-            if (string.IsNullOrEmpty(userEmail))
-            {
-            return Unauthorized("Invalid token.");
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(userEmail)) {
+                return Unauthorized("Invalid token.");
             }
 
             var user = await _userHandler.GetUserByEmailAsync(userEmail);
-            if (user != null)
-            {
-            return Ok(new { Email = user?.Email, Name = user?.Name });
+            if (user != null) {
+                return Ok(new { Email = user?.Email, Name = user?.Name });
             }
             return NotFound("User not found.");
+        }
+        [Authorize]
+        [HttpPost("Users/CheckAuth")]
+        public IActionResult CheckAuth() {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return Unauthorized("Invalid token.");
+            }
+            return Ok("Token is valid.");
         }
 
         public record UserFromAPI(string Email, string Password, string? Username = null);
@@ -70,5 +81,6 @@ namespace server.Controller {
         {
             return new User(userFromAPI.Email, userFromAPI.Password, userFromAPI.Username ?? string.Empty);
         }
+        
     }
 }
