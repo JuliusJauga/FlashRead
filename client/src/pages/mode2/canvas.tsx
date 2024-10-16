@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import playerImgSource from '../../images/player.png';
-import { get } from "http";
+import playerLeftImgSource from '../../images/player_left.png';
 
 export type vec2 = {
     x: number;
@@ -31,11 +31,19 @@ const Canvas: React.FC<{
     const frameRef = useRef<number>(0);
     const [lastTime, setLastTime] = useState(0);
     const lastTimeRef = useRef<number>(); lastTimeRef.current = lastTime;
+    const [prevMousePos, setPrevMousePos] = useState<{x: number, y: number } | null>(null);
+    const [direction, setDirection] = useState<string | null>(null);
 
     //image loading
     let imageLoaded = false;
+    let imageLoadedLeft = false;
+    const playerLeftImg = new Image();
     const playerImg = new Image();
+    playerLeftImg.src = playerLeftImgSource;
     playerImg.src = playerImgSource;
+    playerLeftImg.onload = () => {
+        imageLoadedLeft = true;
+    };
     playerImg.onload = () => {
         imageLoaded = true;
     };
@@ -67,7 +75,6 @@ const Canvas: React.FC<{
         if (imageLoaded) {
             context.drawImage(playerImg, player.x - 0.057 * canvasSize.x, player.y - 0.075 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
         }
-
     };
 
     const drawText = (context: CanvasRenderingContext2D, gameData: GameData) => {
@@ -93,6 +100,13 @@ const Canvas: React.FC<{
                     clientX: event.clientX - getCanvasOffset().x,
                     clientY: event.clientY - getCanvasOffset().y,
                 };
+                if (prevMousePos) {
+                    const newDirection = adjustedEvent.clientX > prevMousePos.x ? 'right' : 'left';
+                    setDirection(newDirection);
+                    console.log(newDirection);
+                }
+                setPrevMousePos({ x: adjustedEvent.clientX, y: adjustedEvent.clientY });
+
                 onMouseMove(adjustedEvent);
             };
           canvas.addEventListener('mousemove', handleMouseMove, true);
@@ -101,7 +115,7 @@ const Canvas: React.FC<{
             canvas.removeEventListener('mousemove', handleMouseMove, true);
           };
         }
-    }, [onMouseMove]);
+    }, [prevMousePos, onMouseMove]);
 
     useEffect(() => {
         function draw(context: CanvasRenderingContext2D) {
