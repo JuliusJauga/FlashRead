@@ -3,15 +3,9 @@ using BCrypt.Net;
 using server.src;
 using server.UserNamespace;
 using Microsoft.EntityFrameworkCore;
-
 namespace server.UserNamespace {
-    public class UserHandler : IUserHandler
+    public class UserHandler(FlashDbContext _context, TokenProvider tokenProvider)
     {
-        private readonly FlashDbContext _context;
-        public UserHandler(FlashDbContext context)
-        {
-            _context = context;
-        }
         public async Task<bool> RegisterUserAsync(User user)
         {
             // Check if user already exists
@@ -34,14 +28,22 @@ namespace server.UserNamespace {
             }
             return true;
         }
-        public async Task<bool> LoginUserAsync(User user)
+        public async Task<string> LoginUserAsync(User user)
         {
             var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (dbUser == null)
             {
-                return false;
+                throw new Exception("User not found");
             }
-            return VerifyPassword(user.Password, dbUser.Password);
+            
+            if (!VerifyPassword(user.Password, dbUser.Password))
+            {
+                throw new Exception("Invalid password");
+            }
+
+            string token = tokenProvider.Create(user);
+
+            return token;
         }
         public async Task<bool> DeleteUserAsync(User user)
         {
@@ -72,6 +74,24 @@ namespace server.UserNamespace {
             }
             return users;
         }
+        public async Task<User?> GetUserAsync(User user)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+            if (dbUser == null)
+            {
+                return null;
+            }
+            return (User)dbUser;
+        }
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                return null;
+            }
+            return (User)dbUser;
+        }
         public string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
@@ -84,13 +104,5 @@ namespace server.UserNamespace {
         {
             return (DbUser)user;
         }
-
-    }
-    public interface IUserHandler
-    {
-        Task<bool> RegisterUserAsync(User user);
-        Task<bool> LoginUserAsync(User user);
-        Task<bool> DeleteUserAsync(User user);
-        Task<IEnumerable<User>> GetAllUsersAsync();
     }
 }

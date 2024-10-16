@@ -9,4 +9,5 @@ services:
     env_file:
       - ./server/server/secrets/.env
     entrypoint: ["dotnet", "server.dll"]
-    
+    environment:
+      - TZ=UTC

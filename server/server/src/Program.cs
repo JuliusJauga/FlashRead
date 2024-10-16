@@ -3,6 +3,10 @@ using Microsoft.EntityFrameworkCore;
 using server.src.Task1;
 using Npgsql;
 using server.UserNamespace;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Net.NetworkInformation;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 namespace server
 {
     public class Program
@@ -15,9 +19,15 @@ namespace server
             builder.Services.AddCors(options => {
                 options.AddPolicy(
                     name: MyAllowSpecificOrigins, 
-                    policy  => {policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();}
-                );
-            });
+                    policy  => {
+                        policy.WithOrigins("http://localhost:5173")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
+                        }
+                    );
+                }
+            );
 
             while (true) {
                 try
@@ -41,11 +51,26 @@ namespace server
                 }
             }
             
-            builder.Services.AddScoped<IUserHandler, UserHandler>();
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET") ?? throw new InvalidOperationException("JWT_SECRET environment variable is not set!"))),
+                        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
+            builder.Services.AddSingleton<TokenProvider>();
+
+            builder.Services.AddScoped<UserHandler>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGenWithAuth();
 
             var app = builder.Build();
 
@@ -62,6 +87,9 @@ namespace server
 
             app.MapControllers();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+            
             app.Run();
         }
     }
