@@ -7,14 +7,14 @@ namespace server.Controller {
     [Route("api")]
 
     [ApiController]
-    public class UserDataController : ControllerBase {
+    public class AuthController : ControllerBase {
         private readonly UserHandler _userHandler;
-        public UserDataController(UserHandler userHandler) {
+        public AuthController(UserHandler userHandler) {
             _userHandler = userHandler;
         }
         [HttpPost("Users/Register")]
         public async Task<IActionResult> PostUser([FromBody] UserFromAPI userAPI) {
-            var user = convertUserFromAPI(userAPI);
+            var user = IUserApi.convertUserFromAPI(userAPI);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid user data.");
@@ -29,7 +29,7 @@ namespace server.Controller {
         }
         [HttpPost("Users/Login")]
         public async Task<IActionResult> PostLogin([FromBody] UserFromAPI userAPI) {
-            var user = convertUserFromAPI(userAPI);
+            var user = IUserApi.convertUserFromAPI(userAPI);
             if (!ModelState.IsValid)
             {
                 return BadRequest("Invalid user data.");
@@ -41,30 +41,6 @@ namespace server.Controller {
             }
             return Unauthorized("Invalid email or password.");
         }
-        [HttpGet("Users/All")]
-        public async Task<IActionResult> GetAllUsers() {
-            var users = await _userHandler.GetAllUsersAsync();
-            var usersWithoutPasswords = users.Select(user => new {
-            user.Name,
-            user.Email,
-            });
-            return Ok(usersWithoutPasswords);
-        }
-        [Authorize]
-        [HttpGet("Users/GetLogins")]
-        public async Task<IActionResult> GetUser() {
-            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
-
-            if (string.IsNullOrEmpty(userEmail)) {
-                return Unauthorized("Invalid token.");
-            }
-
-            var user = await _userHandler.GetUserByEmailAsync(userEmail);
-            if (user != null) {
-                return Ok(new { Email = user?.Email, Name = user?.Name });
-            }
-            return NotFound("User not found.");
-        }
         [Authorize]
         [HttpPost("Users/CheckAuth")]
         public IActionResult CheckAuth() {
@@ -75,12 +51,5 @@ namespace server.Controller {
             }
             return Ok("Token is valid.");
         }
-
-        public record UserFromAPI(string Email, string Password, string? Username = null);
-        private User convertUserFromAPI(UserFromAPI userFromAPI)
-        {
-            return new User(userFromAPI.Email, userFromAPI.Password, userFromAPI.Username ?? string.Empty);
-        }
-        
     }
 }

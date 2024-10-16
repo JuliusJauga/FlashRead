@@ -35,6 +35,7 @@ namespace server.src {
                 entity.Property(e => e.Email).HasColumnName("email");
                 entity.Property(e => e.Password).HasColumnName("password");
                 entity.Property(e => e.HistoryIds).HasColumnName("history_ids");
+                entity.Property(e => e.ContributionsIds).HasColumnName("contributions_ids");
             });
             modelBuilder.Entity<DbTask1History>(entity => {
                 entity.ToTable("history", "users");
@@ -42,7 +43,13 @@ namespace server.src {
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
                 entity.Property(e => e.Answers).HasColumnName("answers");
-            }); 
+            });
+            modelBuilder.Entity<DbTask1Contribution>(entity => {
+                entity.ToTable("contributions", "users");
+                entity.HasKey(e => e.Id).HasName("contributions_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
+            });
         }
     }
 }

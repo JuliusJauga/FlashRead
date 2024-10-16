@@ -4,6 +4,7 @@ namespace server.UserNamespace {
         public string Password { get; set; } = null!;
         public string Name { get; set; } = null!;
         public string[] HistoryIds { get; set; } = new string[0];
+        public string[] ContributionsIds { get; set; } = new string[0];
 
         public static explicit operator User(DbUser dbUser)
         {
