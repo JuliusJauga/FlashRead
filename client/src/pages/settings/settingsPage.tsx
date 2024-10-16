@@ -6,19 +6,22 @@ import CustomButton from '../../components/buttons/customButton';
 import '../../boards/css/buttons.css';
 import SettingsChoiceBox from '../../components/settingsChoiceBox';
 import { useAuth } from '../../context/AuthContext';
+import { useVisualSettings } from '../../context/VisualSettingsContext';
 import Cookies from 'js-cookie';
+import { changeFont, changeTheme } from '../../components/utils/visualSettingsUtils';
 
 const SettingsPage: React.FC = () => {
     const navigate = useNavigate();
-    const { checkUserAuth, isAuthenticated } = useAuth();
-    const [theme, setTheme] = useState<string>("Olive");
-    const [font, setFont] = useState<string>("Poppins");
+    const { isAuthenticated } = useAuth();
+    const { visualSettings, setVisualSettings } = useVisualSettings();
+    const [theme, setTheme] = useState<string>(visualSettings.theme);
+    const [font, setFont] = useState<string>(visualSettings.font);
 
     useEffect(() => {
         if (isAuthenticated) {
             const fetchSettings = async () => {
                 try {
-                    const response = await axios.post('/api/GetSettings');
+                    const response = await axios.get('/api/GetSettings');
                     const data = response.data;
                     setTheme(data.theme);
                     setFont(data.font);
@@ -42,98 +45,45 @@ const SettingsPage: React.FC = () => {
                 console.log('Loaded font from cookie:', settings.font);
                 changeTheme(settings.theme);
                 changeFont(settings.font);
-            }            
+            }
         }
-    }, []);
+    }, [isAuthenticated]);
 
     const handleFontChange = (font: string) => {
         setFont(font);
         changeFont(font);
-        updateSettings({ theme, font });
+        const newSettings = { theme, font };
+        setVisualSettings(newSettings);
+        if (isAuthenticated) {
+            updateSettings(newSettings);
+        } else {
+            saveSettingsToCookie(newSettings);
+        }
     }
 
     const handleThemeChange = (theme: string) => {
         setTheme(theme);
         changeTheme(theme);
-        updateSettings({ theme, font });
+        const newSettings = { theme, font };
+        setVisualSettings(newSettings);
+        if (isAuthenticated) {
+            updateSettings(newSettings);
+        } else {
+            saveSettingsToCookie(newSettings);
+        }
     };
 
     const updateSettings = async (settings: { theme: string, font: string }) => {
-        if (isAuthenticated) {
-            try {
-                await axios.post('/api/UpdateSettings', settings);
-            } catch (err) {
-                console.error('Error updating settings:', err);
-            }
-        } else {
-            saveSettingsToCookie(settings);
+        try {
+            await axios.post('/api/UpdateSettings', settings);
+        } catch (err) {
+            console.error('Error updating settings:', err);
         }
-    
     }
 
     const saveSettingsToCookie = (settings: { theme: string, font: string }) => {
         const settingsJson = JSON.stringify(settings);
-        document.cookie = `visualSettings=${settingsJson}; path=/; Secure; SameSite=Strict`;
-        console.log('Settings saved to cookie:', document.cookie);
-    }
-
-    const changeFont = (font: string) => {
-        let fontValue;
-        switch (font) {
-            case 'Poppins':
-                fontValue = "\"Poppins\", sans-serif";
-                break;
-            case 'Merriweather':
-                fontValue = "\"Merriweather\", serif";
-                break;
-            default:
-                fontValue = "\"Poppins\", sans-serif";
-                break;
-        }
-        document.documentElement.style.setProperty('--fontStyle', fontValue);
-    }
-
-    const changeTheme = (theme: string) => {
-        let mainBackground, secondaryBackground, textColor, primaryColor, accentColor, borderColor;
-        switch (theme) {
-            case 'Light':
-                mainBackground = "#F8F8FA";
-                secondaryBackground = "#F1F1F5";
-                primaryColor = "#FFF";
-                accentColor = "#FFD6DA";
-                textColor = "#383B42";
-                borderColor = "#383B42";
-                break;
-            case 'Dark':
-                mainBackground = "#0F171E";
-                secondaryBackground = "#26272C"; 
-                textColor = "#F8F2F4";
-                primaryColor = "#080709";
-                accentColor = "#111013";
-                borderColor = "#F8F2F4";
-                break;
-            case 'Olive':
-                mainBackground = "#AAB396";
-                secondaryBackground = "#808E67";
-                textColor = "#FFF8E8";
-                primaryColor = "#AAB396";
-                accentColor = "#808E67";
-                borderColor = "#FFF8E8";
-                break;
-            default:
-                mainBackground = "#AAB396";
-                secondaryBackground = "#808E67";
-                textColor = "#FFF8E8";  
-                primaryColor = "#AAB396";
-                accentColor = "#808E67";
-                borderColor = "#FFF8E8"; 
-        }
-        document.documentElement.style.setProperty('--backgroundColor', mainBackground);
-        document.documentElement.style.setProperty('--secondaryColor', secondaryBackground);
-        document.documentElement.style.setProperty('--textColor', textColor);
-        document.documentElement.style.setProperty('--primaryColor', primaryColor);
-        document.documentElement.style.setProperty('--accentColor', accentColor);
-        document.documentElement.style.setProperty('--borderColor', borderColor);
+        Cookies.set('visualSettings', settingsJson, { path: '/', secure: true, sameSite: 'Strict' });
     }
 
     return (

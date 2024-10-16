@@ -10,19 +10,22 @@ import SettingsPage from './pages/settings/settingsPage';
 
 import './boards/css/variables.css';
 import { AuthProvider } from './context/AuthContext';
+import { VisualSettingsProvider } from './context/VisualSettingsContext';
 const App: React.FC = () => (
   <AuthProvider>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Navigate to="/login"/>}/>
-        <Route path="/home" element={<HomePage/>}/>
-        <Route path="/register" element={<RegisterPage/>}/>
-        <Route path="/login" element={<LoginPage/>}/>
-        <Route path="/settings" element={<SettingsPage/>}/>
-        <Route path="/mode1" element={<Mode1Page/>}/>
-        <Route path="/mode2" element={<Mode2Page/>}/>
-      </Routes>
-    </BrowserRouter>
+    <VisualSettingsProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Navigate to="/login"/>}/>
+          <Route path="/home" element={<HomePage/>}/>
+          <Route path="/register" element={<RegisterPage/>}/>
+          <Route path="/login" element={<LoginPage/>}/>
+          <Route path="/settings" element={<SettingsPage/>}/>
+          <Route path="/mode1" element={<Mode1Page/>}/>
+          <Route path="/mode2" element={<Mode2Page/>}/>
+        </Routes>
+      </BrowserRouter>
+    </VisualSettingsProvider>  
   </AuthProvider>
 );
 
