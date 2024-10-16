@@ -2,6 +2,8 @@
 
 #include <string_view>
 #include <GLES3/gl3.h>
+#include <unordered_map>
+#include <string>
 
 class ShaderProgram {
 public:
@@ -17,6 +19,9 @@ public:
 
     void AddUniformBufferBinding(std::string_view name, GLuint bindingIndex);
 
+    void SetTexture(std::string_view name, GLuint index, GLuint texture);
+
 private:
     GLuint m_program;
+    std::unordered_map<std::string, GLuint> m_uniformLocations;
 };

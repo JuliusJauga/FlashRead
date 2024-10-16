@@ -1,44 +1,28 @@
 R"(#version 300 es
 precision mediump float;
-out vec4 fragColor;
 
-layout(std140) uniform LightingInfo {
-    vec3 lightPos;
-    vec3 cameraPos;
+layout (location = 0) out vec4 gPosition;
+layout (location = 1) out vec4 gColor;
+layout (location = 2) out vec4 gNormal;
+
+layout(std140) uniform Camera {
+    mat4 projxview;
+    vec2 nearFarPlane;
 };
 
 in vec3 u_fragPos;
 in vec3 u_normal;
 
+float linearDepth(float depth) {
+    float near = nearFarPlane.x;
+    float far = nearFarPlane.y;
+    float z = depth * 2.0 - 1.0; // back to NDC
+    return (2.0 * near * far) / (far + near - z * (far - near));
+}
+
 void main() {
-    vec3 color = vec3(0.9, 0.8, 0.7);
-
-    vec3 normal = normalize(u_normal);
-
-    float ambient = 0.05;
-
-    vec3 lightDir = normalize(lightPos - u_fragPos);
-    float diffuse = max(dot(lightDir, normal), 0.0);
-    
-    vec3 viewDir = normalize(cameraPos - u_fragPos);
-    vec3 reflectDir = reflect(-lightDir, normal);
-    vec3 halfwayDir = normalize(lightDir + viewDir);  
-    float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
-    spec *= 0.3;
-
-    float strength = ambient + diffuse + spec;
-
-    // apply steps
-    if (strength > 0.9) {
-        strength = 1.1;
-    } else if (strength > 0.6) {
-        strength = 0.8;
-    } else if (strength > 0.2) {
-        strength = 0.5;
-    } else {
-        strength = 0.2;
-    }
-
-    fragColor = vec4(color * strength, 1.0f);
+    gPosition = vec4(u_fragPos, linearDepth(gl_FragCoord.z));
+    gColor = vec4(0.9, 0.8, 0.7, 1.0);
+    gNormal = vec4(normalize(u_normal), 1.0);
 }
 )"

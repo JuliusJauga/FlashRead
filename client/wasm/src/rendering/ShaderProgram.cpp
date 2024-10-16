@@ -54,3 +54,18 @@ void ShaderProgram::AddUniformBufferBinding(std::string_view name, GLuint bindin
     }
     glUniformBlockBinding(m_program, blockIndex, bindingIndex);   
 }
+
+void ShaderProgram::SetTexture(std::string_view name, GLuint index, GLuint texture) {
+    GLuint location;
+    auto it = m_uniformLocations.find(name.data());
+    if (it != m_uniformLocations.end()) {
+        location = it->second;
+    } else {
+        location = glGetUniformLocation(m_program, name.data());
+        m_uniformLocations[name.data()] = location;
+    }
+
+    glUniform1i(location, index);
+    glActiveTexture(GL_TEXTURE0 + index);
+    glBindTexture(GL_TEXTURE_2D, texture);
+}

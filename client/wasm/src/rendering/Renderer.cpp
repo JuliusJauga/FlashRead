@@ -4,12 +4,11 @@
 #include <vector>
 #include <glm/gtc/matrix_transform.hpp>
 #include <emscripten/fetch.h>
-#include <string.h>
-#include <string>
 
 #include "../core/Components.h"
 
-Renderer::Renderer() {
+Renderer::Renderer()
+    : m_viewportWidth{1}, m_viewportHeight{1}, m_gbuffer(m_viewportWidth, m_viewportHeight) {
     ReloadShaders();
 
     // GL settings
@@ -23,100 +22,134 @@ Renderer::Renderer() {
 }
 Renderer::~Renderer() {}
 
-void Renderer::ReloadShaders() {
-#ifdef SHADER_HOT_RELOAD
-#define SHADER_LOAD_FROM_FILE(target, shaderFile) \
-    std::string target ## data; \
-    { \
-        bool finished; \
-        std::pair<std::string*, bool*> userData = {&target ## data, &finished}; \
-        emscripten_fetch_attr_t attr; \
-        emscripten_fetch_attr_init(&attr); \
-        strcpy(attr.requestMethod, "GET"); \
-        attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY; \
-        attr.userData = &userData; \
-        attr.onsuccess = [](emscripten_fetch_t* fetch) { \
-            auto userData = static_cast<std::pair<std::string*, bool*>*>(fetch->userData); \
-            if (fetch->status == 200) { \
-                *(userData->first) = std::string(fetch->data + 3, fetch->numBytes - (3 + 2)); \
-            } else { \
-                printf("Failed to load shader: %s\n", fetch->url); \
-            } \
-            *(userData->second) = true; \
-            emscripten_fetch_close(fetch); \
-        }; \
-        attr.onerror = [](emscripten_fetch_t* fetch) { \
-            auto userData = static_cast<std::pair<std::string*, bool*>*>(fetch->userData); \
-            *(userData->second) = true; \
-            emscripten_fetch_close(fetch); \
-        }; \
-        emscripten_fetch(&attr, "http://localhost:8000/" shaderFile); \
-        while (!finished) { \
-            emscripten_sleep(10); \
-        } \
-        target = target ## data.c_str(); \
-        printf("loaded shader: %s\n", shaderFile); \
+void Renderer::LoadShaderFromFile(std::string file) {
+    if (file.empty()) {
+        for (int i = 0; i < m_shaderLoadingOutput.size(); i++) {
+            auto vert = m_shaderLoadingOutput.front(); m_shaderLoadingOutput.pop_front();
+            auto frag = m_shaderLoadingOutput.front(); m_shaderLoadingOutput.pop_front();
+            auto prog = m_shaderLoadingPrograms.front(); m_shaderLoadingPrograms.pop_front();
+            *prog = std::make_unique<ShaderProgram>(vert.c_str(), frag.c_str());
+        }
+        SetupUniforms();
+        return;
     }
-#endif
+
+    emscripten_fetch_attr_t attr;
+    emscripten_fetch_attr_init(&attr);
+    attr.requestMethod[0] = 'G';
+    attr.requestMethod[1] = 'E';
+    attr.requestMethod[2] = 'T';
+    attr.requestMethod[3] = 0;
+    attr.attributes = EMSCRIPTEN_FETCH_LOAD_TO_MEMORY;
+    attr.userData = this;
+
+    attr.onsuccess = [](emscripten_fetch_t* fetch) {
+        auto renderer = static_cast<Renderer*>(fetch->userData);
+        if (fetch->status == 200) {
+            // save output
+            renderer->m_shaderLoadingOutput.push_back(std::string(fetch->data + 3, fetch->numBytes - 5));
+        } else {
+            printf("Failed to load shader: %s\n", fetch->url);
+        }
+        emscripten_fetch_close(fetch);
+        if (renderer->m_shaderLoadingQueue.empty()) { // compile shaders
+            renderer->LoadShaderFromFile("");
+        } else { // load next
+            std::string next = renderer->m_shaderLoadingQueue.front();
+            renderer->m_shaderLoadingQueue.pop_front();
+            renderer->LoadShaderFromFile(next);
+        }
+    };
+    attr.onerror = [](emscripten_fetch_t* fetch) {
+        printf("Failed to load shader: %s\n", fetch->url);
+        emscripten_fetch_close(fetch);
+    };
+
+    emscripten_fetch(&attr, ("http://localhost:8000/" + std::string(file)).c_str());
+}
+
+void Renderer::ReloadShaders() {
+    m_shadersLoading = true;
+    printf("Loading shaders ...\n");
     // mesh
     {
         #ifdef SHADER_HOT_RELOAD
-            const GLchar* vertexSource;
-            const GLchar* fragmentSource;
-            SHADER_LOAD_FROM_FILE(vertexSource, "shaders/mesh.vs")
-            SHADER_LOAD_FROM_FILE(fragmentSource, "shaders/mesh.fs")
-        #else
+            m_shaderLoadingPrograms.push_back(&m_meshProgram);
+            m_shaderLoadingQueue.push_back("shaders/mesh.vs");
+            m_shaderLoadingQueue.push_back("shaders/mesh.fs");
+        #else        
             const GLchar vertexSource[] = {
                 #include "shaders/mesh.vs"
             };
             const GLchar fragmentSource[] = {
                 #include "shaders/mesh.fs"
             };
+            m_meshProgram = std::make_unique<ShaderProgram>(vertexSource, fragmentSource);
         #endif
-
-        m_meshProgram = std::make_unique<ShaderProgram>(vertexSource, fragmentSource);
     }
-    // // post
-    // {
-    //     const GLchar vertexSource[] = {
-    //     #include "shaders/post.vs"
-    //     };
-    //     const GLchar fragmentSource[] = {
-    //     #include "shaders/post.fs"
-    //     };
-    //     m_postProcessingProgram = std::make_unique<ShaderProgram>(vertexSource, fragmentSource);
-    // }
+    // lighting
+    {
+        #ifdef SHADER_HOT_RELOAD
+            m_shaderLoadingPrograms.push_back(&m_lightingProgram);
+            m_shaderLoadingQueue.push_back("shaders/light.vs");
+            m_shaderLoadingQueue.push_back("shaders/light.fs");
+        #else        
+            const GLchar vertexSource[] = {
+                #include "shaders/light.vs"
+            };
+            const GLchar fragmentSource[] = {
+                #include "shaders/light.fs"
+            };
+            m_lightingProgram = std::make_unique<ShaderProgram>(vertexSource, fragmentSource);
+        #endif
+    }
 
+    #ifdef SHADER_HOT_RELOAD
+        std::string shaderFileToLoad = m_shaderLoadingQueue.front(); m_shaderLoadingQueue.pop_front();
+        LoadShaderFromFile(shaderFileToLoad);
+    #else
+        SetupUniforms();
+    #endif
+}
 
+void Renderer::SetupUniforms() {
     // setup uniforms
+    m_nextUniformBindingIndex = 0;
+
     m_cameraUniform.SetBindingIndex(GetNextUniformBindingIndex());
     m_meshProgram->AddUniformBufferBinding("Camera", m_cameraUniform.GetBindingIndex());
     m_cameraUniform.Bind();
 
-    m_lightingInfoUniform.SetBindingIndex(GetNextUniformBindingIndex());
-    m_meshProgram->AddUniformBufferBinding("LightingInfo", m_lightingInfoUniform.GetBindingIndex());
-    m_lightingInfoUniform.Bind();
-
     m_modelUniform.SetBindingIndex(GetNextUniformBindingIndex());
     m_meshProgram->AddUniformBufferBinding("ModelMatrices", m_modelUniform.GetBindingIndex());
+
+    m_lightingInfoUniform.SetBindingIndex(GetNextUniformBindingIndex());
+    m_lightingProgram->AddUniformBufferBinding("LightingInfo", m_lightingInfoUniform.GetBindingIndex());
+    m_lightingInfoUniform.Bind();
+
+    m_shadersLoading = false;
+    printf("Shaders loaded.\n");
 }
 
 void Renderer::Render(const std::shared_ptr<Scene> &scene) {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    if (m_shadersLoading) return;
 
     // update uniforms
     auto& camera = scene->GetCamera();
     camera->Update(m_viewportWidth, m_viewportHeight);
     m_cameraUniform.Update({
-        .view = camera->GetViewMatrix(),
-        .projection = camera->GetProjectionMatrix()
+        .projxview = camera->GetProjectionMatrix() * camera->GetViewMatrix(),
+        .nearFarPlane = {camera->GetNearPlane(), camera->GetFarPlane()}
     });
     m_lightingInfoUniform.Update({
         .lightPos = scene->sunPosition,
         .cameraPos = camera->position,
+        .viewportSize = glm::vec2(m_viewportWidth, m_viewportHeight)
     });
 
     // render entities
+    glBindFramebuffer(GL_FRAMEBUFFER, m_gbuffer.GetFBO());
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     {
         // get renderable meshes and matrices
         uint32_t matrixCount = 0;
@@ -142,7 +175,7 @@ void Renderer::Render(const std::shared_ptr<Scene> &scene) {
         // batch matrices and get render data
         std::vector<glm::mat4> batchedMatrices; // TODO: possible to avoid copying matrices into this single vector, but more complex
         batchedMatrices.reserve(matrixCount);
-        std::vector<BatchRenderData> batches;
+        std::vector<MeshModelUniform> batches;
         uint32_t currentUboOffset = 0;
         uint32_t currentBatchSize = 0;
         for (auto& [mesh, models] : meshMatrices) {
@@ -153,7 +186,7 @@ void Renderer::Render(const std::shared_ptr<Scene> &scene) {
                 matricesLeft -= matricesInThisBatch;
                 currentBatchSize = (currentBatchSize + matricesInThisBatch) % m_matricesPerUniformBuffer;
 
-                BatchRenderData batchData;
+                MeshModelUniform batchData;
                 batchData.mesh = mesh;
                 batchData.instanceOffset = currentUboOffset;
                 batchData.instanceCount = matricesInThisBatch;
@@ -172,7 +205,6 @@ void Renderer::Render(const std::shared_ptr<Scene> &scene) {
 
         // render
         m_meshProgram->Use();
-        m_cameraUniform.Bind();
         uint32_t currentVao = 0;
         for (auto& batch : batches) {
             auto vao = batch.mesh->GetVAO();
@@ -183,12 +215,18 @@ void Renderer::Render(const std::shared_ptr<Scene> &scene) {
             m_modelUniform.Bind(batch.instanceOffset * sizeof(glm::mat4), m_matricesPerUniformBuffer * sizeof(glm::mat4));
             glDrawArraysInstanced(GL_TRIANGLES, 0, batch.mesh->GetDrawCount(), batch.instanceCount);
         }
-        // printf("draw calls: %zu, instances: %d, vertex count: %zu\n", batches.size(), matrixCount, matrixCount * mesh.GetDrawCount());
-    }
+   }
 
-    // post processing
-    // m_postProcessingProgram->Use();
-    // glDrawArrays(GL_TRIANGLES, 0, 3);
+    
+    // outlines
+
+    // lighting (final)
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    m_lightingProgram->Use();
+    m_lightingProgram->SetTexture("tPosition", 0, m_gbuffer.GetPositionTexture());
+    m_lightingProgram->SetTexture("tColor", 1, m_gbuffer.GetColorTexture());
+    m_lightingProgram->SetTexture("tNormal", 2, m_gbuffer.GetNormalTexture());
+    glDrawArrays(GL_TRIANGLES, 0, 3);
 }
 
 void Renderer::SetViewportSize(int32_t width, int32_t height) {
@@ -196,4 +234,5 @@ void Renderer::SetViewportSize(int32_t width, int32_t height) {
     m_viewportWidth = width;
     m_viewportHeight = height;
     glViewport(0, 0, width, height);
+    m_gbuffer.Resize(width, height);
 }
