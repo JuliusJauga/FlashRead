@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import CustomHyperlink from '../../components/buttons/hyperlink';
-import axios from '../../components/axiosWrapper';
 import CustomButton from "../../components/buttons/customButton.tsx";
 import '../../boards/css/loginPage.css';
 import '../../boards/css/buttons.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { login } from '../../services/authService';
+
 
 const LoginPage: React.FC = () => {
+    const { checkUserAuth, isAuthenticated } = useAuth();
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted:', { email, password });
-        axios.post('/api/Users/Login', { email, password })
-            .then(response => {
-                console.log('Login successful:', response.data);
-            })
-            .catch(error => {
-                console.error('Login failed:', error);
-            });
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/home');
+        }
+    }, [isAuthenticated, navigate]);
+
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await login(email, password);
+            checkUserAuth();
+        } catch (error) {
+            setError('Login failed. Please try again.');
+        }
     };
     return (
         <div className="loginPage">
