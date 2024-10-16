@@ -1,10 +1,14 @@
 using System.Security.Cryptography;
 using server.src;
 using server.src.Task1;
+using server.src.Task2;
 
 namespace server {
     public record TaskRequest {
         public int TaskId { get; set; }
+        public bool? Collision { get; set; }
+        public int? CurrentPoints { get; set; }
+        public string? CollectedWord { get; set; }
         public string? Theme { get; set; }
         public string? Difficulty { get; set; }
     }
@@ -28,6 +32,7 @@ namespace server {
         public static ITask GetTaskFromTaskId(int taskId, FlashDbContext context) {
             return taskId switch {
                 1 => new Task1(context),
+                2 => new Task2(context),
                 _ => throw new System.Exception("Task not found"),// TODO: throw custom exception
             };
         }

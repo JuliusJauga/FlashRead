@@ -1,11 +1,42 @@
 import Canvas from "./canvas";
+import axios from '../../components/axiosWrapper';
 import { vec2, droppingText, GameData } from "./canvas";
 import { useState, useRef } from "react";
+
+
+
+export type Task2Request = {
+    taskId: number; 
+    collectedWord : string;
+    collision: boolean;
+    currentPoints?: number;
+};
+type Task2Response = {
+    session: number;
+    points: number;
+};
+export type Mode2TaskData = {
+    points: number;
+};
 
 // Temporary for presentation
 interface Mode2TaskProps {
     setPoints: (points: number) => void;
 }
+
+const requestTask2Points = async (request: Task2Request) => {
+    try {
+      const axiosResponse = await axios.post('/api/GetTask', request);
+      const response = axiosResponse.data as Task2Response;
+      return {
+        points: response.points
+      } as Mode2TaskData;
+    } catch (err) {
+      console.error('Error posting task text:', err);
+      return { points: 0 } as Mode2TaskData;
+    }
+  };
+
 
 const mode2Task: React.FC <Mode2TaskProps> = ({ setPoints }) => {
     const [canvasSize, setCanvasSize] = useState<vec2>({ x: 1200, y: 600 });
@@ -23,7 +54,6 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ setPoints }) => {
             console.log(offsetX);
             return offsetX;
         }
-        console.log("canvasRef.current is null");
         return 0;
     };
 
@@ -110,17 +140,22 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ setPoints }) => {
 
 
             if (text.pos.y < 0) {
+                requestTask2Points({taskId: 2, collectedWord: textArray[i].text, currentPoints: points, collision: false}).then((data) => {
+                    points = data.points;
+                    console.log(data);
+                });
                 textArray.splice(i, 1);
                 i--;
                 // TODO: lose points 
-                points -= 1;
                 continue;
             }
             if (distance > playerRadius) continue;
             
+            requestTask2Points({taskId: 2, collectedWord: textArray[i].text, currentPoints: points, collision: true}).then((data) => {
+                points = data.points;
+            });
             textArray.splice(i, 1);
             i--;
-            points += 1;
             // TODO: give points
 
             
@@ -145,3 +180,4 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ setPoints }) => {
 };
 
 export default mode2Task;
+export { requestTask2Points };
