@@ -2,6 +2,10 @@
 
 #include <emscripten/html5.h>
 
+#include "../vendor/imgui/imgui.h"
+#include "../vendor/imgui/imgui_impl_sdl2.h"
+#include "../vendor/imgui/imgui_impl_opengl3.h"
+
 RenderTarget::RenderTarget() {
     // get initial size
     if (emscripten_get_canvas_element_size("#canvas", &width, &height) != EMSCRIPTEN_RESULT_SUCCESS) {
@@ -57,9 +61,22 @@ RenderTarget::RenderTarget() {
     });
     Resize(width, height);
 
+    // imgui
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
+    ImGuiIO& io = ImGui::GetIO();
+    io.IniFilename = nullptr;
+    ImGui::StyleColorsDark();
+    ImGui_ImplSDL2_InitForOpenGL(m_window, m_context);
+    ImGui_ImplOpenGL3_Init("#version 300 es");
+
     m_valid = true;
 }
 RenderTarget::~RenderTarget() {
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplSDL2_Shutdown();
+    ImGui::DestroyContext();
+
     emscripten_set_resize_callback(EMSCRIPTEN_EVENT_TARGET_WINDOW, nullptr, true, nullptr);
     if (m_context) SDL_GL_DeleteContext(m_context);
     if (m_window) SDL_DestroyWindow(m_window);

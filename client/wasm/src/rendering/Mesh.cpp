@@ -1,5 +1,7 @@
 #include "Mesh.h"
 
+#include <vector>
+
 MeshImpl::MeshImpl(std::string_view name)
     : m_name(name) {
     glGenVertexArrays(1, &m_vao);
@@ -11,7 +13,17 @@ MeshImpl::~MeshImpl() {
     glDeleteVertexArrays(1, &m_vao);
 }
 
-void MeshImpl::Load(std::size_t vertexCount, const Vertex *vertices) {
+void MeshImpl::Load(std::size_t vertexCount, const Vertex *vertices, const glm::mat4& model) {
+    std::vector<Vertex> verts;
+    if (model != glm::mat4(1)) {
+        verts.resize(vertexCount);
+        for (std::size_t i = 0; i < vertexCount; i++) {
+            verts[i].position = model * glm::vec4(vertices[i].position, 1);
+            verts[i].normal = glm::normalize(glm::transpose(glm::inverse(glm::mat3(model))) * vertices[i].normal);
+        }
+        vertices = verts.data();
+    }
+
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertexCount, vertices, GL_STATIC_DRAW);
     glBindVertexArray(m_vao);

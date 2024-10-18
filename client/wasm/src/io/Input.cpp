@@ -1,5 +1,7 @@
 #include "Input.h"
 
+#include "../vendor/imgui/imgui_impl_sdl2.h"
+
 void Input::Poll(bool resetHeld) {
     // reset state
     for (auto& key : m_keys) {
@@ -18,6 +20,9 @@ void Input::Poll(bool resetHeld) {
     // poll new events
     SDL_Event event;
     while(SDL_PollEvent(&event)) {
+        ImGui_ImplSDL2_ProcessEvent(&event);
+        auto& io = ImGui::GetIO();
+        if (io.WantCaptureMouse || io.WantCaptureKeyboard) continue;
         if (event.key.repeat) continue;
         switch(event.type) {
             case SDL_KEYDOWN: {

@@ -18,7 +18,7 @@ public:
     MeshImpl(const MeshImpl&) = delete;
     MeshImpl& operator=(const MeshImpl&) = delete;
 
-    void Load(std::size_t vertexCount, const Vertex* vertices);
+    void Load(std::size_t vertexCount, const Vertex* vertices, const glm::mat4& model = glm::mat4(1));
     void Unload();
     const std::string& GetName() const { return m_name; }
     GLuint GetVAO() const { return m_vao; }

@@ -8,7 +8,7 @@ public:
     TestScene();
     ~TestScene() = default;
 
-    void Update() override;
+    void Update(TimeDuration dt) override;
 
 private:
     Player m_player;

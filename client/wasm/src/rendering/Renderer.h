@@ -39,6 +39,7 @@ private:
 
     GBuffer m_gbuffer;
 
+    std::unique_ptr<ShaderProgram> m_debugProgram;
     std::unique_ptr<ShaderProgram> m_meshProgram;
     std::unique_ptr<ShaderProgram> m_lightingProgram;
 

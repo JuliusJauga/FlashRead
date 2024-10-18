@@ -44,15 +44,15 @@ void main() {
     float ambient = 0.08;
 
     // vec3 lightDir = normalize(lightPos - position);
-    vec3 lightDir = normalize(vec3(-1000, 2000, -800) - position);
+    vec3 lightDir = normalize(vec3(1000, 2000, -800) - position);
     float diffuse = max(dot(lightDir, normal), 0.0);
-    
+
     vec3 viewDir = normalize(cameraPos - position);
     vec3 reflectDir = reflect(-lightDir, normal);
     vec3 halfwayDir = normalize(lightDir + viewDir);  
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
     spec *= 0.3;
-    spec *= 0.0;
+    // spec *= 0.0;
 
     float strength = ambient + diffuse + spec;
     strength = floor(strength * 5.0) / 6.0 + 0.3;

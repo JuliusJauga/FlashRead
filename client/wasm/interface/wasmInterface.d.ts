@@ -16,8 +16,8 @@ interface WasmModule {
 }
 
 interface EmbindModule {
-  stop(): void;
   start(): boolean;
+  stop(): void;
   setFocused(_0: boolean): void;
 }
 
