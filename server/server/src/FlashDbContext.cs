@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server.src.Task1;
+using server.src.Task2;
 using server.UserNamespace;
 namespace server.src {
     public class FlashDbContext : Microsoft.EntityFrameworkCore.DbContext
@@ -8,6 +9,7 @@ namespace server.src {
         public DbSet<DbTask1Text> Task1Texts { get; set; }
         public DbSet<DbTask1Question> Task1Questions { get; set; }
         public DbSet<DbUser> Users { get; set; }
+        public DbSet<DbTask2Text> Task2Texts { get; set; }
         public FlashDbContext(DbContextOptions<FlashDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -50,6 +52,14 @@ namespace server.src {
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
             });
+            modelBuilder.Entity<DbTask2Text>(entity => {
+                entity.ToTable("texts", "task2");
+                entity.HasKey(e => e.Id).HasName("texts_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Theme).HasColumnName("theme");
+                entity.Property(e => e.Text).HasColumnName("text");
+            });
+            
         }
     }
 }

@@ -1,6 +1,11 @@
 namespace server.src.Task2 {
     public class Task2 : ITask {
         private readonly FlashDbContext _context;
+
+        public enum Theme {
+            Any, History, Technology, Anime, Fillers
+        }
+
         public Task2(FlashDbContext context) {
             _context = context;
         }
