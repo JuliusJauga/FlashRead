@@ -22,6 +22,23 @@ export type GameData = {
     textArray: droppingText[];
 };
 
+//image loading
+let imageLoaded = false;
+let imageLoadedLeft = false;
+const playerImgLeft = new Image();
+const playerImg = new Image();
+playerImgLeft.src = playerLeftImgSource;
+playerImg.src = playerImgSource;
+playerImg.onload = () => {
+    imageLoaded = true;
+    console.log("image loaded");
+};
+playerImgLeft.onload = () => {
+    imageLoadedLeft = true;
+    console.log("image left loaded");
+};
+
+
 const Canvas: React.FC<{
     canvasSize: vec2;
     onMouseMove: (event: MouseEvent) => void;
@@ -33,20 +50,6 @@ const Canvas: React.FC<{
     const lastTimeRef = useRef<number>(); lastTimeRef.current = lastTime;
     const [prevMousePos, setPrevMousePos] = useState<{x: number, y: number } | null>(null);
     const [direction, setDirection] = useState<string | null>(null);
-
-    //image loading
-    let imageLoaded = false;
-    let imageLoadedLeft = false;
-    const playerLeftImg = new Image();
-    const playerImg = new Image();
-    playerLeftImg.src = playerLeftImgSource;
-    playerImg.src = playerImgSource;
-    playerLeftImg.onload = () => {
-        imageLoadedLeft = true;
-    };
-    playerImg.onload = () => {
-        imageLoaded = true;
-    };
 
     const getCanvasOffset = () => {
         const rect = canvasRef.current?.getBoundingClientRect();
@@ -72,8 +75,13 @@ const Canvas: React.FC<{
             // context.arc(player.x, player.y, 0.05 * canvasSize.x, 0, 2 * Math.PI);
         context.stroke();
 
-        if (imageLoaded) {
-            context.drawImage(playerImg, player.x - 0.057 * canvasSize.x, player.y - 0.075 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
+        if (imageLoaded ) { // && imageLoadedLeft
+            context.drawImage(playerImg, player.x - 0.057 * canvasSize.x, player.y - 0.07 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
+            // if (direction === 'right') {
+            //     context.drawImage(playerImg, player.x - 0.057 * canvasSize.x, player.y - 0.07 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
+            // } else if (direction === 'left') {
+            //     context.drawImage(playerImgLeft, player.x - 0.057 * canvasSize.x, player.y - 0.07 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
+            // }
         }
     };
 
@@ -103,7 +111,6 @@ const Canvas: React.FC<{
                 if (prevMousePos) {
                     const newDirection = adjustedEvent.clientX > prevMousePos.x ? 'right' : 'left';
                     setDirection(newDirection);
-                    console.log(newDirection);
                 }
                 setPrevMousePos({ x: adjustedEvent.clientX, y: adjustedEvent.clientY });
 

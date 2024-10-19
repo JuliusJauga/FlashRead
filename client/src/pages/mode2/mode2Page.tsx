@@ -5,22 +5,37 @@ import CustomButton from '../../components/buttons/customButton';
 import '../../boards/css/buttons.css';
 import Mode2Task from './mode2Task';
 import "../../boards/css/mode2.css";
+import ChoiceBox from '../../components/choiceBox';
+
 
 const Mode2Page: React.FC = () => {
     const navigate = useNavigate();
     const [points, setPoints] = React.useState<number>(0);
+    const [mode2Theme, setMode2Theme] = React.useState<string>("Any");
+    const [mode2Difficulty, setMode2Difficulty] = React.useState<string>("Any");
 
     return (
-        <div className='Mode1_content'>
-            <div className="mode2_centerDiv" id="mode1Div">
+        <div className='Mode2_content'>
+            <div className="mode2_upperDiv">
+                <ChoiceBox choices={["History", "Technology", "Anime"]} prompt='Theme:' onSelect={choice => setMode2Theme(choice)} label="Theme:"/>
+                <ChoiceBox choices={["Easy", "Medium", "Hard", "EXTREME"]} prompt='Difficulty:' onSelect={choice => setMode2Difficulty(choice)} label="Difficulty:"/>
+            </div>
+            <div className="mode2_centerDiv" id="mode2Div">
                 <div className="points">
                     <p className="pointsText">Points:</p>
                     <p className="pointsText" id="points">{points}</p>
                 </div>
-                <div className="w-full h-full">
+                <div className="w-full h-full gamePage">
                     <Mode2Task setPoints={setPoints} />
                 </div>
-                <div className="mode1_lowerDiv" id="buttonDiv">
+            </div>
+            <div className="mode2_lowerDiv" id="buttonDiv">
+                <div className="mode2_lowerUpperDiv">
+                    <CustomButton label="Start" className="wideButton" id="MainBoard_restartButton" onClick={() => {
+                        
+                    }}/>
+                </div>
+                <div>
                     <CustomButton label="Return" className="wideButton" id="MainBoard_returnButton" onClick={() => navigate("/home")}/>
                 </div>
             </div>
