@@ -2,12 +2,12 @@ namespace server.src.Task2 {
     public class Task2 : ITask {
         private readonly FlashDbContext _context;
 
-        public enum Theme {
-            Any, History, Technology, Anime, Fillers
-        }
-
         public Task2(FlashDbContext context) {
             _context = context;
+        }
+
+        public enum Theme {
+            Any, History, Technology, Anime, Fillers
         }
 
         public record TaskResponse : ITaskResponse {
@@ -22,7 +22,11 @@ namespace server.src.Task2 {
 
         public ITaskResponse GetResponse(TaskRequest request)
         {   
+            Theme theme = request.Theme.ToEnum(Theme.Any);
+
             int points = request.CurrentPoints ?? 0;
+
+            
             string[] words = ["Hello", "Random", "Text", "Example"];
             bool collision = request.Collision ?? false;
             
@@ -33,7 +37,8 @@ namespace server.src.Task2 {
             return new TaskResponse {
                 Points = points
             };
-        }
+        }        
+
 
         private int CalculatePoints(string? collectedWord, string[] words, bool collision)
         {

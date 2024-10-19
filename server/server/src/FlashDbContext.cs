@@ -52,6 +52,7 @@ namespace server.src {
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
             });
+            modelBuilder.HasPostgresEnum<Task2.Task2.Theme>(schema: "task2", name: "theme");
             modelBuilder.Entity<DbTask2Text>(entity => {
                 entity.ToTable("texts", "task2");
                 entity.HasKey(e => e.Id).HasName("texts_pkey");
