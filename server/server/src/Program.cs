@@ -1,6 +1,7 @@
 using server.src;
 using Microsoft.EntityFrameworkCore;
 using server.src.Task1;
+using server.src.Task2;
 using Npgsql;
 using server.UserNamespace;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -34,6 +35,7 @@ namespace server
                 {
                     var dataSourceBuilder = new NpgsqlDataSourceBuilder(ConnectionStringBuilder.BuildConnectionString());
                     dataSourceBuilder.MapEnum<Task1.Theme>();
+                    dataSourceBuilder.MapEnum<Task2Data.Theme>();
                     var dataSource = dataSourceBuilder.Build();
                     builder.Services.AddDbContext<FlashDbContext>(options => options.UseNpgsql(dataSource));
                     
