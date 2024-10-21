@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server.src.Task1;
 using server.UserNamespace;
+using server.src.Settings;
 namespace server.src {
     public class FlashDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
@@ -36,6 +37,7 @@ namespace server.src {
                 entity.Property(e => e.Password).HasColumnName("password");
                 entity.Property(e => e.HistoryIds).HasColumnName("history_ids");
                 entity.Property(e => e.ContributionsIds).HasColumnName("contributions_ids");
+                entity.Property(e => e.SettingsId).HasColumnName("settings_id");
             });
             modelBuilder.Entity<DbTask1History>(entity => {
                 entity.ToTable("history", "users");
@@ -49,6 +51,23 @@ namespace server.src {
                 entity.HasKey(e => e.Id).HasName("contributions_pkey");
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
+            });
+            modelBuilder.Entity<DbUserSettings>(entity => {
+                entity.ToTable("settings", "users");
+                entity.HasKey(e => e.Id).HasName("settings_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Theme).HasColumnName("theme");
+            });
+            modelBuilder.Entity<DbSettingsTheme>(entity => {
+                entity.ToTable("theme", "settings");
+                entity.HasKey(e => e.Theme).HasName("theme_pkey");
+                entity.Property(e => e.Theme).HasColumnName("theme");
+                entity.Property(e => e.MainBackground).HasColumnName("main_background");
+                entity.Property(e => e.SecondaryBackground).HasColumnName("secondary_background");
+                entity.Property(e => e.PrimaryColor).HasColumnName("primary_color");
+                entity.Property(e => e.AccentColor).HasColumnName("accent_color");
+                entity.Property(e => e.TextColor).HasColumnName("text_color");
+                entity.Property(e => e.BorderColor).HasColumnName("border_color");
             });
         }
     }
