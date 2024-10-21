@@ -16,12 +16,11 @@ namespace server.Controller {
         }
         // TO DO When settings added
 
-        private static Settings _settings = new Settings { Theme = "Olive", Font = "Poppins" };
+        
 
         [HttpPost("GetSettings")]
         public ActionResult<Settings> GetSettings() {
-            Console.WriteLine($"Theme: {_settings.Theme}, Font: {_settings.Font}");
-            return Ok(_settings);
+            return Ok("");
         }
 
         [HttpPost("UpdateSettings")]

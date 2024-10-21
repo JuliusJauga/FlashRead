@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Net.NetworkInformation;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using server.src.Settings;
 namespace server
 {
     public class Program
@@ -70,6 +71,7 @@ namespace server
             builder.Services.AddSingleton<TokenProvider>();
 
             builder.Services.AddScoped<UserHandler>();
+            builder.Services.AddScoped<Settings>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGenWithAuth();

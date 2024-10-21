@@ -104,5 +104,13 @@ namespace server.UserNamespace {
         {
             return (DbUser)user;
         }
+        public async Task<string?> GetSettingsIdByEmailAsync(string email) {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+            return null;
+            }
+            return dbUser.SettingsId;
+        }
     }
 }
