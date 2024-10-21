@@ -1,6 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
 import { changeFont, changeTheme } from '../components/utils/visualSettingsUtils.ts';
+import { useAuth } from './AuthContext';
 
 interface VisualSettings {
   theme: string;
@@ -21,19 +22,25 @@ const VisualSettingsContext = createContext<VisualSettingsContextProps | undefin
 
 export const VisualSettingsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [visualSettings, setVisualSettings] = useState<VisualSettings>(defaultSettings);
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
-    const settingsJson = Cookies.get('visualSettings');
-    if (settingsJson) {
-      const settings = JSON.parse(settingsJson);
-      setVisualSettings(settings);
-      changeTheme(settings.theme);
-      changeFont(settings.font);
+    if (!isAuthenticated) {
+      const settingsJson = Cookies.get('visualSettings');
+      if (settingsJson) {
+        const settings = JSON.parse(settingsJson);
+        setVisualSettings(settings);
+        changeTheme(settings.theme);
+        changeFont(settings.font);
+      } else {
+        changeTheme(defaultSettings.theme);
+        changeFont(defaultSettings.font);
+      }
     } else {
       changeTheme(defaultSettings.theme);
       changeFont(defaultSettings.font);
     }
-  }, []);
+  }, [isAuthenticated]);
 
   return (
     <VisualSettingsContext.Provider value={{ visualSettings, setVisualSettings }}>
