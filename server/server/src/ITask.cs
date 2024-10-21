@@ -33,6 +33,7 @@ namespace server {
             return taskId switch {
                 1 => new Task1(context),
                 2 => new Task2(context),
+                3 => new Task2Data(context),
                 _ => throw new System.Exception("Task not found"),// TODO: throw custom exception
             };
         }

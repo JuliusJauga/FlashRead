@@ -7,22 +7,47 @@ import { useState, useRef } from "react";
 
 export type Task2Request = {
     taskId: number; 
+    wordArray : string[];
     collectedWord : string;
     collision: boolean;
     currentPoints?: number;
+};
+export type Task2DBRequest = {
+    taskId: number;
+    theme: string;
 };
 type Task2Response = {
     session: number;
     points: number;
 };
+type Task2DataResponse = {
+    session: number;
+    wordArray: string[];
+}
 export type Mode2TaskData = {
     points: number;
 };
-
+type Mode2WordData = {
+    wordArray : string[];
+}
 // Temporary for presentation
 interface Mode2TaskProps {
+    gameStarted: boolean;
     setPoints: (points: number) => void;
 }
+
+const requestTask2Data = async (request: Task2DBRequest) => {
+    try {
+      const axiosResponse = await axios.post('/api/GetTask', request);
+      const response = axiosResponse.data as Task2DataResponse;
+      return {
+        wordArray: response.wordArray
+      } as Mode2WordData;
+    } catch (err) {
+      console.error('Error posting task text:', err);
+      return { wordArray : {} } as Mode2WordData;
+    }
+};
 
 const requestTask2Points = async (request: Task2Request) => {
     try {
@@ -35,17 +60,18 @@ const requestTask2Points = async (request: Task2Request) => {
       console.error('Error posting task text:', err);
       return { points: 0 } as Mode2TaskData;
     }
-  };
+};
 
 
-const mode2Task: React.FC <Mode2TaskProps> = ({ setPoints }) => {
+const mode2Task: React.FC <Mode2TaskProps> = ({ gameStarted, setPoints }) => {
     const [canvasSize, setCanvasSize] = useState<vec2>({ x: 1200, y: 600 });
     const [playerPos, setPlayerPos] = useState<vec2>({ x: 0, y: 0.1});
     const [textArray, setTextArray] = useState<droppingText[]>([]);
     const playerPosRef = useRef<vec2>(); playerPosRef.current = playerPos;
     const textArrayRef = useRef<droppingText[]>(); textArrayRef.current = textArray;
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
-
+    let points = 0;
+    let wordArray = [""]; 
 
     const getCanvasOffset = () => {
         if (canvasRef.current) {
@@ -62,9 +88,14 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ setPoints }) => {
         const pos = { x: e.clientX / canvasSize.x - getCanvasOffset(), y: 0.1 };
         setPlayerPos(pos);
     };
-    let points = 0;
+
+    requestTask2Data({taskId: 3, theme: "Anime" }).then((data => {
+        wordArray = data.wordArray;
+        console.log(data.wordArray);
+    }))
     
     const onTick = (context: CanvasRenderingContext2D, dt: number) => {
+        console.log(gameStarted);
         if (playerPosRef === undefined || playerPosRef.current === undefined) return undefined;
         if (textArrayRef === undefined || textArrayRef.current === undefined) return undefined;
         
@@ -140,25 +171,21 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ setPoints }) => {
 
 
             if (text.pos.y < 0) {
-                requestTask2Points({taskId: 2, collectedWord: textArray[i].text, currentPoints: points, collision: false}).then((data) => {
+                requestTask2Points({taskId: 2, wordArray: wordArray, collectedWord: textArray[i].text, currentPoints: points, collision: false}).then((data) => {
                     points = data.points;
                     console.log(data);
                 });
                 textArray.splice(i, 1);
                 i--;
-                // TODO: lose points 
                 continue;
             }
             if (distance > playerRadius) continue;
             
-            requestTask2Points({taskId: 2, collectedWord: textArray[i].text, currentPoints: points, collision: true}).then((data) => {
+            requestTask2Points({taskId: 2, wordArray: wordArray, collectedWord: textArray[i].text, currentPoints: points, collision: true}).then((data) => {
                 points = data.points;
             });
             textArray.splice(i, 1);
             i--;
-            // TODO: give points
-
-            
         }
 
 

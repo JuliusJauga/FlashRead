@@ -13,6 +13,7 @@ const Mode2Page: React.FC = () => {
     const [points, setPoints] = React.useState<number>(0);
     const [mode2Theme, setMode2Theme] = React.useState<string>("Any");
     const [mode2Difficulty, setMode2Difficulty] = React.useState<string>("Any");
+    const [gameStarted, setGameStarted] = React.useState<boolean>(false);
 
     return (
         <div className='Mode2_content'>
@@ -26,13 +27,13 @@ const Mode2Page: React.FC = () => {
                     <p className="pointsText" id="points">{points}</p>
                 </div>
                 <div className="w-full h-full gamePage">
-                    <Mode2Task setPoints={setPoints} />
+                    <Mode2Task gameStarted={gameStarted} setPoints={setPoints} />
                 </div>
             </div>
             <div className="mode2_lowerDiv" id="buttonDiv">
                 <div className="mode2_lowerUpperDiv">
                     <CustomButton label="Start" className="wideButton" id="MainBoard_restartButton" onClick={() => {
-                        
+                       setGameStarted(true); 
                     }}/>
                 </div>
                 <div>
