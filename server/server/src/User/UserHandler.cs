@@ -144,5 +144,25 @@ namespace server.UserNamespace {
             }
             return userSettings.Theme;
         }
+        public async Task SaveTaskResult(string email, uint sessionId, int taskId, int[] selectedVariants) {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                return;
+            }
+            DbTaskHistory userTaskHistory = new DbTaskHistory
+            {
+                Id = Guid.NewGuid().ToString(),
+                SessionId = sessionId,
+                TaskId = taskId,
+                Answers = selectedVariants,
+                TimePlayed = DateTime.UtcNow
+            };
+            _context.UserTaskHistories.Add(userTaskHistory);
+            await _context.SaveChangesAsync();
+            dbUser.HistoryIds.Append(userTaskHistory.Id);
+            _context.Users.Update(dbUser);
+            await _context.SaveChangesAsync();
+        }
     }
 }
