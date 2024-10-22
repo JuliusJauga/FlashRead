@@ -162,5 +162,23 @@ namespace server.UserNamespace {
             _context.Entry(dbUser).Property(u => u.HistoryIds).IsModified = true;
             await _context.SaveChangesAsync();
         }
+        public async Task<IEnumerable<DbTaskHistory>> GetTaskHistoryByEmail(string email)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                return new List<DbTaskHistory>();
+            }
+            List<DbTaskHistory> taskHistories = new List<DbTaskHistory>();
+            foreach (var historyId in dbUser.HistoryIds)
+            {
+                var taskHistory = await _context.UserTaskHistories.FirstOrDefaultAsync(h => h.Id == historyId);
+                if (taskHistory != null)
+                {
+                    taskHistories.Add(taskHistory);
+                }
+            }
+            return taskHistories;
+        }
     }
 }
