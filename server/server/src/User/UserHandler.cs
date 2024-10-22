@@ -150,7 +150,7 @@ namespace server.UserNamespace {
             return userSettings.Theme;
         }
 
-                public async Task<string?> GetSettingsFontById(string id)
+        public async Task<string?> GetSettingsFontById(string id)
         {
             var userSettings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == id);
             if (userSettings == null)
