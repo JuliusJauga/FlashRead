@@ -3,5 +3,6 @@ namespace server.UserNamespace {
     {
         public int Id { get; set; }
         public int QuestionsId { get; set; }
+        public DateTime TimeContributed { get; set; } = DateTime.UtcNow;
     }
 }

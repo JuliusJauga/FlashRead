@@ -13,6 +13,8 @@ namespace server.src {
         public DbSet<DbTask1Contribution> UserTask1Contributions { get; set; }
         public DbSet<DbUserSettings> UserSettings { get; set; } 
         public DbSet<DbSettingsTheme> SettingsThemes { get; set; }
+        public DbSet<DbUserSessions> UserSessions { get; set; }
+        public DbSet<DbUserSingleSession> UserSingleSessions { get; set; }
         public FlashDbContext(DbContextOptions<FlashDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -42,6 +44,21 @@ namespace server.src {
                 entity.Property(e => e.HistoryIds).HasColumnName("history_ids");
                 entity.Property(e => e.ContributionsIds).HasColumnName("contributions_ids");
                 entity.Property(e => e.SettingsId).HasColumnName("settings_id");
+                entity.Property(e => e.JoinedAt).HasColumnName("joined_at");
+                entity.Property(e => e.SessionsId).HasColumnName("sessions_id");
+            });
+            modelBuilder.Entity<DbUserSessions>(entity => {
+                entity.ToTable("user_sessions", "users");
+                entity.HasKey(e => e.Id).HasName("user_sessions_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.SessionIds).HasColumnName("session_ids");
+            });
+            modelBuilder.Entity<DbUserSingleSession>(entity => {
+                entity.ToTable("single_session", "users");
+                entity.HasKey(e => e.Id).HasName("single_session_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.TimeStarted).HasColumnName("time_started");
+                entity.Property(e => e.TimeEnded).HasColumnName("time_ended");
             });
             modelBuilder.Entity<DbTask1History>(entity => {
                 entity.ToTable("history", "users");
@@ -49,12 +66,14 @@ namespace server.src {
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
                 entity.Property(e => e.Answers).HasColumnName("answers");
+                entity.Property(e => e.TimePlayed).HasColumnName("time_played");
             });
             modelBuilder.Entity<DbTask1Contribution>(entity => {
                 entity.ToTable("contributions", "users");
                 entity.HasKey(e => e.Id).HasName("contributions_pkey");
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
+                entity.Property(e => e.TimeContributed).HasColumnName("time_contributed");
             });
             modelBuilder.Entity<DbUserSettings>(entity => {
                 entity.ToTable("settings", "users");
