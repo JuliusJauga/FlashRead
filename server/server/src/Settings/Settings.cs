@@ -17,5 +17,14 @@ namespace server.src.Settings {
             var themes = await _context.SettingsThemes.Select(s => s.Theme).ToArrayAsync();
             return themes;
         }
+
+        public async Task UpdateSelectedTheme(string userId, string newTheme) {
+            var userSettings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == userId);
+            if (userSettings == null) {
+                throw new Exception("User settings not found");
+            }
+            userSettings.Theme = newTheme;
+            await _context.SaveChangesAsync();
+        }
     }    
 }
