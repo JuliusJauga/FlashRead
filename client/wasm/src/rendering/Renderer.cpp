@@ -69,7 +69,7 @@ void Renderer::LoadShaderFromFile(std::string file) {
         printf("Failed to load shader: %s\n", fetch->url);
         emscripten_fetch_close(fetch);
     };
-    emscripten_fetch(&attr, ("http://localhost:8000/" + std::string(file)).c_str());
+    emscripten_fetch(&attr, ("http://localhost:8000/rendering/" + std::string(file)).c_str());
 }
 
 void Renderer::ReloadShaders() {

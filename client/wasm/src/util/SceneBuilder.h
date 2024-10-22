@@ -5,6 +5,7 @@
 #include <string>
 #include <string_view>
 #include <glm/glm.hpp>
+#include <stdint.h>
 
 #include "../core/PhysicsWorld.h"
 
@@ -14,13 +15,8 @@ public:
 
     void AddModel(std::string_view name);
     void Update();
-private:
-    void Save();
-    void CreateEntity();
-    entt::registry& m_registry;
-    PhysicsWorld& m_physicsWorld;
+
     struct State {
-        entt::entity entity = entt::null;
         glm::vec3 position{0, 0, 0};
         glm::vec3 rotation{0, 0, 0};
         glm::vec3 scale{1, 1, 1};
@@ -32,7 +28,21 @@ private:
         
         int selectedCollider = -1;
         glm::vec3 boxColliderSize{1, 1, 1};
-    } m_state;
+    };
+    void Load(uint32_t stateCount, const State* states, bool saveable = false);
+
+private:
+    void Load();
+    void Save();
+    void Reset();
+    void CreateEntity();
+    entt::registry& m_registry;
+    PhysicsWorld& m_physicsWorld;
+    entt::entity m_entity = entt::null;
+    std::string m_saveName;
+    State m_state;
     std::vector<std::string> m_models;
     std::vector<std::string> m_colliders;
+
+    std::vector<State> m_savedStates;
 };

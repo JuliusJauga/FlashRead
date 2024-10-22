@@ -8,6 +8,9 @@
 #include "../meshes/teapot.h"
 #include "../meshes/sponza.h"
 #include "../meshes/bookshelf.h"
+#include "../meshes/table.h"
+
+#include "../scenes/testscene.h" 
 
 TestScene::TestScene() {
     SetCamera(m_player.GetCamera());
@@ -21,11 +24,18 @@ TestScene::TestScene() {
     mesh->Load(teapot_vertexCount, reinterpret_cast<const Vertex*>(teapot_vertices));
     mesh = MeshRegistry::Create("bookshelf");
     mesh->Load(bookshelf_vertexCount, reinterpret_cast<const Vertex*>(bookshelf_vertices));
+    mesh = MeshRegistry::Create("table");
+    mesh->Load(table_vertexCount, reinterpret_cast<const Vertex*>(table_vertices));
 
     m_sceneBuilder.AddModel("bunny");
     m_sceneBuilder.AddModel("sponza");
     m_sceneBuilder.AddModel("teapot");
     m_sceneBuilder.AddModel("bookshelf");
+    m_sceneBuilder.AddModel("table");
+
+#ifndef SHADER_HOT_RELOAD
+    m_sceneBuilder.Load(testscene_stateCount, testscene_states);
+#endif
 
     mesh = MeshRegistry::Get("sponza");
     auto sponza = registry.create();
