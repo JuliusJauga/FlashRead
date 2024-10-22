@@ -47,11 +47,12 @@ export const VisualSettingsProvider: React.FC<{ children: React.ReactNode }> = (
           changeTheme(settings.theme);
           changeFont(settings.font);
         } else {
+          console.log("Loading default theme");
           changeTheme(defaultSettings.theme);
           changeFont(defaultSettings.font);
         }        
-        getSettingsFromCookie();
       }
+      getSettingsFromCookie();
     }
   }, [isAuthenticated]);
 
