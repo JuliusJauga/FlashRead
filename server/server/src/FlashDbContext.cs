@@ -13,6 +13,7 @@ namespace server.src {
         public DbSet<DbTask1Contribution> UserTask1Contributions { get; set; }
         public DbSet<DbUserSettings> UserSettings { get; set; } 
         public DbSet<DbSettingsTheme> SettingsThemes { get; set; }
+        public DbSet<DbSettingsFont> SettingsFonts { get; set; }
         public DbSet<DbUserSessions> UserSessions { get; set; }
         public DbSet<DbUserSingleSession> UserSingleSessions { get; set; }
         public FlashDbContext(DbContextOptions<FlashDbContext> options) : base(options) { }
@@ -81,6 +82,7 @@ namespace server.src {
                 entity.HasKey(e => e.Id).HasName("settings_pkey");
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.Theme).HasColumnName("theme");
+                entity.Property(e => e.Font).HasColumnName("font");
             });
             modelBuilder.Entity<DbSettingsTheme>(entity => {
                 entity.ToTable("theme", "settings");
@@ -92,6 +94,12 @@ namespace server.src {
                 entity.Property(e => e.AccentColor).HasColumnName("accent_color");
                 entity.Property(e => e.TextColor).HasColumnName("text_color");
                 entity.Property(e => e.BorderColor).HasColumnName("border_color");
+            });
+            modelBuilder.Entity<DbSettingsFont>(entity => {
+                entity.ToTable("font", "settings");
+                entity.HasKey(e => e.Font).HasName("font_pkey");
+                entity.Property(e => e.Font).HasColumnName("font");
+                entity.Property(e => e.FontFamily).HasColumnName("font_family");
             });
         }
     }

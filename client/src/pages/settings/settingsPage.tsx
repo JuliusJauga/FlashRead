@@ -20,6 +20,16 @@ const fetchThemes = async (): Promise<string[]> => {
     }
 };
 
+const fetchFonts = async (): Promise<string[]> => {
+    try {
+        const response = await axios.get('/api/Settings/GetAllFonts');
+        return response.data;
+    } catch (err) {
+        console.error('Error fetching themes:', err);
+        return [];
+    }
+};
+
 
 const SettingsPage: React.FC = () => {
     const navigate = useNavigate();
@@ -35,13 +45,22 @@ const SettingsPage: React.FC = () => {
         setThemes(capitalizedThemes);
     };
 
+    const fetchAndSetFonts = async () => {
+        const fetchedFonts = await fetchFonts();
+        const capitalizedFonts = fetchedFonts.map(font => font.charAt(0).toUpperCase() + font.slice(1));
+        setThemes(capitalizedFonts);
+    };
+
     const fetchSettings = async () => {
         console.log("ATTEMPTING TO FETCH SETTINGS");
         try {
             const themeResponse = await axios.get('/api/User/GetThemeSettings');
             const capitalizedTheme = themeResponse.data.theme.charAt(0).toUpperCase() + themeResponse.data.theme.slice(1);
+            const capitalizedFont = themeResponse.data.font.charAt(0).toUpperCase() + themeResponse.data.font.slice(1);
             setTheme(capitalizedTheme);
+            setFont(capitalizedFont);
             console.log("FETCHED THEME: ", capitalizedTheme, " SET THEME TO: ", theme);
+            console.log("FETCHED FONT: ", capitalizedFont, " SET FONT TO: ", font);
         } catch (err) {
             console.error('Error fetching settings:', err);
         }
@@ -49,6 +68,7 @@ const SettingsPage: React.FC = () => {
 
     useEffect(() => {
         fetchAndSetThemes();
+        fetchAndSetFonts();
 
         if (isAuthenticated) {
             console.log("AUTHENTICATED IN USE EFFECT");
