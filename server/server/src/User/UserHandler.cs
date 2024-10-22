@@ -110,7 +110,7 @@ namespace server.UserNamespace {
             var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (dbUser == null)
             {
-            return null;
+                return null;
             }
             return dbUser.SettingsId;
         }

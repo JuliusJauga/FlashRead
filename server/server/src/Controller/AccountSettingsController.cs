@@ -36,10 +36,31 @@ namespace server.Controller {
             var settings = await _settings.GetSettingsByThemeAsync(theme);
             return Ok(settings);
         }
+
         [HttpGet("Settings/GetAllThemes")]
         public async Task<IActionResult> GetAllThemes() {
             var themes = await _settings.GetAllThemesAsync();
             return Ok(themes);
+        }
+
+        [HttpGet("Settings/GetThemeSettingsByTheme")]
+        public async Task<IActionResult> GetThemeSettingsByTheme(string theme) {
+            var settings = await _settings.GetSettingsByThemeAsync(theme);
+            return Ok(settings);
+        }
+
+        [HttpPost("Settings/UpdateTheme")]
+        public async Task<IActionResult> UpdateSelectedTheme(string theme) {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(userEmail)) {
+                return Unauthorized("Invalid token.");
+            }
+            var settingsId = await _userHandler.GetSettingsIdByEmailAsync(userEmail);
+            if (settingsId == null) {
+                return NotFound("Settings not found for update.");
+            }
+            await _settings.UpdateSelectedTheme(settingsId, theme);
+            return Ok("Theme updated successfully.");
         }
     }
 }

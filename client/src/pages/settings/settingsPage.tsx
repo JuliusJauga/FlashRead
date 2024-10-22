@@ -10,48 +10,119 @@ import { useVisualSettings } from '../../context/VisualSettingsContext';
 import Cookies from 'js-cookie';
 import { changeFont, changeTheme } from '../../components/utils/visualSettingsUtils';
 
+const fetchThemes = async (): Promise<string[]> => {
+    try {
+        const response = await axios.get('/api/Settings/GetAllThemes');
+        return response.data;
+    } catch (err) {
+        console.error('Error fetching themes:', err);
+        return [];
+    }
+};
+
+
 const SettingsPage: React.FC = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
     const { visualSettings, setVisualSettings } = useVisualSettings();
+    const [themes, setThemes] = useState<string[]>([]);
     const [theme, setTheme] = useState<string>(visualSettings.theme);
     const [font, setFont] = useState<string>(visualSettings.font);
 
+    const fetchAndSetThemes = async () => {
+        const fetchedThemes = await fetchThemes();
+        const capitalizedThemes = fetchedThemes.map(theme => theme.charAt(0).toUpperCase() + theme.slice(1));
+        setThemes(capitalizedThemes);
+    };
+
+    const fetchSettings = async () => {
+        console.log("ATTEMPTING TO FETCH SETTINGS");
+        try {
+            const themeResponse = await axios.get('/api/User/GetThemeSettings');
+            const capitalizedTheme = themeResponse.data.theme.charAt(0).toUpperCase() + themeResponse.data.theme.slice(1);
+            setTheme(capitalizedTheme);
+            console.log("FETCHED THEME: ", capitalizedTheme, " SET THEME TO: ", theme);
+        } catch (err) {
+            console.error('Error fetching settings:', err);
+        }
+    }
+
     useEffect(() => {
+        fetchAndSetThemes();
+
         if (isAuthenticated) {
-            const fetchSettings = async () => {
-                try {
-                    const response = await axios.get('/api/GetSettings');
-                    const data = response.data;
-                    setTheme(data.theme);
-                    setFont(data.font);
-                    console.log('Received theme:', data.theme);
-                    console.log('Received font:', data.font);
-                    changeTheme(data.theme);
-                    changeFont(data.font);
-                } catch (err) {
-                    console.error('Error fetching settings:', err);
-                }
-            };
-    
+            console.log("AUTHENTICATED IN USE EFFECT");
             fetchSettings();
         } else {
-            const settingsJson = Cookies.get('visualSettings');
-            if (settingsJson) {
-                const settings = JSON.parse(settingsJson);
-                setTheme(settings.theme);
-                setFont(settings.font);
-                console.log('Loaded theme from cookie:', settings.theme);
-                console.log('Loaded font from cookie:', settings.font);
-                changeTheme(settings.theme);
-                changeFont(settings.font);
+            console.log("NOT AUTHENTICATED IN USE EFFECT");
+            const getSettingsFromCookie = async () => {
+                const settingsJson = Cookies.get('visualSettings');
+                if (settingsJson) {
+                    const settings = JSON.parse(settingsJson);
+                    const capitalizedTheme = settings.theme.charAt(0).toUpperCase() + settings.theme.slice(1);
+                    setTheme(capitalizedTheme);
+                    console.log('Loaded theme from cookie:', settings.theme);
+                }
             }
+            getSettingsFromCookie();
         }
-    }, [isAuthenticated]);
 
+        console.log("THEME IN USE EFFECT: ", theme);
+
+        // if (isAuthenticated) {
+        //     console.log("AUTHENTICATED");
+        //     const fetchSettings = async () => {
+        //         try {
+        //             const themeResponse = await axios.get('/api/User/GetThemeSettings');
+        //             const theme = themeResponse.data;
+        //             setTheme(theme.theme);
+        //             // setFont(data.font);
+        //             console.log('Received theme:', theme.theme);
+        //             console.log("FETCH THEME");
+        //             // console.log('Received font:', data.font);
+        //             changeTheme(theme.theme);
+        //             // changeFont(data.font);
+        //         } catch (err) {
+        //             console.error('Error fetching settings:', err);
+        //         }
+        //     };
+    
+        //     fetchSettings();
+        // } else {
+        //     console.log("NOT AUTHENTICATED");
+        //     const getSettingsFromCookie = async () => {
+        //         const settingsJson = Cookies.get('visualSettings');
+        //         if (settingsJson) {
+        //             const settings = JSON.parse(settingsJson);
+        //             setTheme(settings.theme);
+        //             setFont(settings.font);
+        //             console.log('Loaded theme from cookie:', settings.theme);
+        //             console.log('Loaded font from cookie:', settings.font);
+        //             console.log("COOKIE THEME");
+        //             changeTheme(settings.theme);
+        //             changeFont(settings.font);
+        //         }
+        //     }
+        //     getSettingsFromCookie();
+        // }
+    }, []);
+
+    
+    
     const handleFontChange = (font: string) => {
         setFont(font);
         changeFont(font);
+        sendSettingsUpdate(theme);
+    }
+
+    const handleThemeChange = async (theme: string) => {
+        const lowerCaseTheme = theme.toLowerCase();
+        setTheme(theme);
+        changeTheme(lowerCaseTheme);
+        sendSettingsUpdate(lowerCaseTheme);
+    };
+
+    const sendSettingsUpdate = (theme: string) => {
         const newSettings = { theme, font };
         setVisualSettings(newSettings);
         if (isAuthenticated) {
@@ -61,21 +132,15 @@ const SettingsPage: React.FC = () => {
         }
     }
 
-    const handleThemeChange = (theme: string) => {
-        setTheme(theme);
-        changeTheme(theme);
-        const newSettings = { theme, font };
-        setVisualSettings(newSettings);
-        if (isAuthenticated) {
-            updateSettings(newSettings);
-        } else {
-            saveSettingsToCookie(newSettings);
-        }
-    };
-
     const updateSettings = async (settings: { theme: string, font: string }) => {
         try {
-            await axios.post('/api/UpdateSettings', settings);
+            const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+            const token = tokenCookie ? tokenCookie.split('=')[1] : null;
+            console.log("SETTINGS PAGE THEME IN UPDATE: ", settings.theme);
+            await axios.post('/api/Settings/UpdateTheme', null, {
+                params: { theme: settings.theme },
+                headers: { Authorization: `Bearer ${token}` }
+            });
         } catch (err) {
             console.error('Error updating settings:', err);
         }
@@ -93,7 +158,7 @@ const SettingsPage: React.FC = () => {
             </div>
 
             <div className="settingsContent">
-                <SettingsChoiceBox label="Theme" value={theme} options={["Light", "Dark", "Olive"]} onChange={choice => handleThemeChange(choice)}/>
+                <SettingsChoiceBox label="Theme" value={theme} options={themes} onChange={choice => handleThemeChange(choice)}/>
                 <SettingsChoiceBox label="Font" value={font} options={["Poppins", "Merriweather"]} onChange={choice => handleFontChange(choice)}/>
             </div>
 
