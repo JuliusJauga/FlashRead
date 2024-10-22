@@ -59,7 +59,8 @@ const SettingsPage: React.FC = () => {
                 const settingsJson = Cookies.get('visualSettings');
                 if (settingsJson) {
                     const settings = JSON.parse(settingsJson);
-                    setTheme(settings.theme);
+                    const capitalizedTheme = settings.theme.charAt(0).toUpperCase() + settings.theme.slice(1);
+                    setTheme(capitalizedTheme);
                     console.log('Loaded theme from cookie:', settings.theme);
                 }
             }
