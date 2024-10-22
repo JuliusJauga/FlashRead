@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore.Migrations;
+
 namespace server.src.Task2 {
     public class Task2Data : ITask
     {
@@ -11,7 +13,7 @@ namespace server.src.Task2 {
         }
 
         public record TaskResponse : ITaskResponse {
-            public string[]? TextArray {get; set;}
+            public string[]? WordArray {get; set;}
             public uint Session {get; set;}
         }
 
@@ -22,21 +24,22 @@ namespace server.src.Task2 {
 
         public ITaskResponse GetResponse(TaskRequest request)
         {
+            if (request.Theme == "Any") {
+                string[] themes = ["History", "Technology", "Anime"];
+                request.Theme = themes[new Random().Next(0, themes.Length)];
+            }
             Theme theme = request.Theme.ToEnum(Theme.Any);
 
             string[] textArray = [""];
 
-            var availableTexts = theme == Theme.Any
-                ? _context.Task2Texts
-                    .Select(t => t.Id)
-                    .ToArray()
-                : _context.Task2Texts
-                    .Where(t => t.Theme == theme)
-                    .Select(t => t.Id)
-                    .ToArray();
-                    
+            var dbText = _context.Task2Texts
+                    .Where(t => t.Id == (int)theme)
+                    .Select(t => t.Text)
+                    .First();
+                textArray = dbText;
+                
             return new TaskResponse {
-                TextArray = textArray
+                WordArray = textArray
             };
         }
     }

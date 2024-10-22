@@ -22,12 +22,11 @@ namespace server.src.Task2 {
 
         public ITaskResponse GetResponse(TaskRequest request)
         {   
-            Theme theme = request.Theme.ToEnum(Theme.Any);
 
             int points = request.CurrentPoints ?? 0;
 
             
-            string[] words = ["Hello", "Random", "Text", "Example"];
+            string[] words = request.WordArray ?? [""];
             bool collision = request.Collision ?? false;
             
             int pointChange = CalculatePoints(request.CollectedWord, words, collision);

@@ -126,26 +126,24 @@ const Canvas: React.FC<{
 
     useEffect(() => {
         function draw(context: CanvasRenderingContext2D) {
-            if (context && onTick) {
+            if (context && onTick !== undefined) {
                 // draw background
                 context.fillStyle = "gray";
                 context.fillRect(0, 0, canvasSize.x, canvasSize.y);
-                
+
                 const lastTime = lastTimeRef?.current ?? 0;
                 const currentTime = performance.now();
                 const gameData = onTick(context, currentTime - lastTime);
-                if (gameData === undefined) return;
-                setLastTime(currentTime);
-
-                drawText(context, gameData);
-                drawPlayer(context, gameData);
-
+                if (gameData !== undefined) {
+                    setLastTime(currentTime);
+                    drawText(context, gameData);
+                    drawPlayer(context, gameData);
+                }
                 frameRef.current = requestAnimationFrame(() => draw(context));
             }
         }
         if (canvasRef.current) {
             const context = canvasRef.current.getContext("2d");
-
             if (context) {
                 context.canvas.width = canvasSize.x;
                 context.canvas.height = canvasSize.y;
@@ -154,7 +152,7 @@ const Canvas: React.FC<{
             }
         }
         return () => cancelAnimationFrame(frameRef.current);
-    }, [canvasSize]);
+    }, [canvasSize, onTick, canvasRef]);
 
     return <canvas ref={canvasRef} style={{ cursor: 'none'}}/>;
 }

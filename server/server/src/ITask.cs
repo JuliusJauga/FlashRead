@@ -9,6 +9,7 @@ namespace server {
         public bool? Collision { get; set; }
         public int? CurrentPoints { get; set; }
         public string? CollectedWord { get; set; }
+        public string[]? WordArray { get; set; }
         public string? Theme { get; set; }
         public string? Difficulty { get; set; }
     }

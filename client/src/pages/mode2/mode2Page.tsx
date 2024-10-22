@@ -5,6 +5,7 @@ import CustomButton from '../../components/buttons/customButton';
 import '../../boards/css/buttons.css';
 import Mode2Task from './mode2Task';
 import "../../boards/css/mode2.css";
+import * as apiTask from './api';
 import ChoiceBox from '../../components/choiceBox';
 
 
@@ -14,6 +15,8 @@ const Mode2Page: React.FC = () => {
     const [mode2Theme, setMode2Theme] = React.useState<string>("Any");
     const [mode2Difficulty, setMode2Difficulty] = React.useState<string>("Any");
     const [gameStarted, setGameStarted] = React.useState<boolean>(false);
+    const [textArray, setTextArray] = React.useState<string[]>([]);
+    const [fillerArray, setFillerArray] = React.useState<string[]>([]);
 
     return (
         <div className='Mode2_content'>
@@ -27,13 +30,19 @@ const Mode2Page: React.FC = () => {
                     <p className="pointsText" id="points">{points}</p>
                 </div>
                 <div className="w-full h-full gamePage">
-                    <Mode2Task gameStarted={gameStarted} setPoints={setPoints} />
+                    <Mode2Task wordArray = {textArray} fillerArray = {fillerArray} gameStarted={gameStarted} setPoints={setPoints} />
                 </div>
             </div>
             <div className="mode2_lowerDiv" id="buttonDiv">
                 <div className="mode2_lowerUpperDiv">
                     <CustomButton label="Start" className="wideButton" id="MainBoard_restartButton" onClick={() => {
-                       setGameStarted(true); 
+                        apiTask.requestTask2Data({taskId: 3, theme: mode2Theme }).then((data => {
+                            setTextArray(data.wordArray);
+                            setGameStarted(true); 
+                        }))
+                        apiTask.requestTask2Data({taskId: 3, theme: "Fillers" }).then((data => {
+                            setFillerArray(data.wordArray);
+                        }))
                     }}/>
                 </div>
                 <div>
