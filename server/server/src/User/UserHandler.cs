@@ -16,6 +16,7 @@ namespace server.UserNamespace {
             }
             var dbUser = convertUserToDbUser(user);
             dbUser.Password = HashPassword(dbUser.Password);
+            await createSettingsId(dbUser);
             try
             {
                 _context.Users.Add(dbUser);
@@ -111,6 +112,19 @@ namespace server.UserNamespace {
             return null;
             }
             return dbUser.SettingsId;
+        }
+        private async Task createSettingsId(DbUser dbUser)
+        {
+            DbUserSettings userSettings = new DbUserSettings();
+            userSettings.Id = Guid.NewGuid().ToString();
+            _context.UserSettings.Add(userSettings);
+            var firstTheme = await _context.SettingsThemes.FirstOrDefaultAsync();
+            if (firstTheme != null)
+            {
+                userSettings.Theme = firstTheme.Theme;
+            }
+            dbUser.SettingsId = userSettings.Id;
+            await _context.SaveChangesAsync();
         }
     }
 }

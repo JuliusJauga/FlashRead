@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using server.src;
 using server.UserNamespace;
 using System.Security.Claims;
-using server.Models;
 
 namespace server.Controller {
     [Route("api")]
@@ -15,19 +14,5 @@ namespace server.Controller {
             _userHandler = userHandler;
         }
         // TO DO When settings added
-
-        
-
-        [HttpPost("GetSettings")]
-        public ActionResult<Settings> GetSettings() {
-            return Ok("");
-        }
-
-        [HttpPost("UpdateSettings")]
-        public ActionResult UpdateSettings([FromBody] Settings settings) {
-            _settings.Theme = settings.Theme;
-            _settings.Font = settings.Font;
-            return NoContent();
-        }   
     }
 }
