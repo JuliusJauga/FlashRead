@@ -9,10 +9,11 @@ interface Mode2TaskProps {
     fillerArray: string[];
     gameStarted: boolean;
     setPoints: (points: number) => void;
+    setCombo: (combo: number) => void;
 }
 
 
-const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStarted, setPoints }) => {
+const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStarted, setPoints, setCombo }) => {
     const [canvasSize, setCanvasSize] = useState<vec2>({ x: 1200, y: 600 });
     const [playerPos, setPlayerPos] = useState<vec2>({ x: 0, y: 0.1});
     const [textArray, setTextArray] = useState<droppingText[]>([]);
@@ -21,6 +22,7 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStar
     const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const onTickRef = useRef<((context: CanvasRenderingContext2D, dt: number) => GameData | undefined) | undefined>(undefined);
     let points = 0;
+    let combo = 0;
 
     const getCanvasOffset = () => {
         if (canvasRef.current) {
@@ -65,6 +67,7 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStar
             // collisions
             for (let i = 0; i < textArray.length; i++) {
                 setPoints(points);
+                setCombo(combo);
     
                 const text = textArray[i];
                     if (text === undefined) {
@@ -116,8 +119,9 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStar
     
     
                 if (text.pos.y < 0) {
-                    apiTask.requestTask2Points({taskId: 2, wordArray: wordArray, collectedWord: textArray[i].text, currentPoints: points, collision: false}).then((data) => {
+                    apiTask.requestTask2Points({taskId: 2, wordArray: wordArray, collectedWord: textArray[i].text, currentCombo: combo, currentPoints: points, collision: false}).then((data) => {
                         points = data.points;
+                        combo = data.combo;
                     });
                     textArray.splice(i, 1);
                     i--;
@@ -125,8 +129,9 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStar
                 }
                 if (distance > playerRadius) continue;
                 
-                apiTask.requestTask2Points({taskId: 2, wordArray: wordArray, collectedWord: textArray[i].text, currentPoints: points, collision: true}).then((data) => {
+                apiTask.requestTask2Points({taskId: 2, wordArray: wordArray, collectedWord: textArray[i].text, currentCombo: combo, currentPoints: points, collision: true}).then((data) => {
                     points = data.points;
+                    combo = data.combo;
                 });
                 textArray.splice(i, 1);
                 i--;

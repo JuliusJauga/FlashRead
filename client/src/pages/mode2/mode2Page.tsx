@@ -12,6 +12,7 @@ import ChoiceBox from '../../components/choiceBox';
 const Mode2Page: React.FC = () => {
     const navigate = useNavigate();
     const [points, setPoints] = React.useState<number>(0);
+    const [combo, setCombo] = React.useState<number>(0);
     const [mode2Theme, setMode2Theme] = React.useState<string>("Any");
     const [mode2Difficulty, setMode2Difficulty] = React.useState<string>("Any");
     const [gameStarted, setGameStarted] = React.useState<boolean>(false);
@@ -28,9 +29,11 @@ const Mode2Page: React.FC = () => {
                 <div className="points">
                     <p className="pointsText">Points:</p>
                     <p className="pointsText" id="points">{points}</p>
+                    <p className="pointsText">Combo:</p>
+                    <p className="pointsText" id="combo">{combo}</p>
                 </div>
                 <div className="w-full h-full gamePage">
-                    <Mode2Task wordArray = {textArray} fillerArray = {fillerArray} gameStarted={gameStarted} setPoints={setPoints} />
+                    <Mode2Task wordArray = {textArray} fillerArray = {fillerArray} gameStarted={gameStarted} setPoints={setPoints} setCombo={setCombo} />
                 </div>
             </div>
             <div className="mode2_lowerDiv" id="buttonDiv">

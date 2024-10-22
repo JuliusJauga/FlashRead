@@ -8,6 +8,7 @@ namespace server {
         public int TaskId { get; set; }
         public bool? Collision { get; set; }
         public int? CurrentPoints { get; set; }
+        public int? CurrentCombo { get; set; }
         public string? CollectedWord { get; set; }
         public string[]? WordArray { get; set; }
         public string? Theme { get; set; }
