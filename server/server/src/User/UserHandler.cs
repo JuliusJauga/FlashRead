@@ -126,5 +126,14 @@ namespace server.UserNamespace {
             dbUser.SettingsId = userSettings.Id;
             await _context.SaveChangesAsync();
         }
+        public async Task<string?> GetSettingsThemeById(string id)
+        {
+            var userSettings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == id);
+            if (userSettings == null)
+            {
+                return null;
+            }
+            return userSettings.Theme;
+        }
     }
 }
