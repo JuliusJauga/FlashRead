@@ -1,3 +1,5 @@
+import axios from '../../components/axiosWrapper';
+
 export const changeFont = (font: string) => {
     let fontValue;
     switch (font) {
@@ -14,45 +16,20 @@ export const changeFont = (font: string) => {
     document.documentElement.style.setProperty('--fontStyle', fontValue);
 }
 
-export const changeTheme = (theme: string) => {
-    let mainBackground, secondaryBackground, textColor, primaryColor, accentColor, borderColor;
-    switch (theme) {
-        case 'Light':
-            mainBackground = "#F8F8FA";
-            secondaryBackground = "#F1F1F5";
-            primaryColor = "#FFF";
-            accentColor = "#FFD6DA";
-            textColor = "#383B42";
-            borderColor = "#383B42";
-            break;
-        case 'Dark':
-            mainBackground = "#0F171E";
-            secondaryBackground = "#26272C"; 
-            textColor = "#F8F2F4";
-            primaryColor = "#080709";
-            accentColor = "#111013";
-            borderColor = "#F8F2F4";
-            break;
-        case 'Olive':
-            mainBackground = "#AAB396";
-            secondaryBackground = "#808E67";
-            textColor = "#FFF8E8";
-            primaryColor = "#AAB396";
-            accentColor = "#808E67";
-            borderColor = "#FFF8E8";
-            break;
-        default:
-            mainBackground = "#AAB396";
-            secondaryBackground = "#808E67";
-            textColor = "#FFF8E8";  
-            primaryColor = "#AAB396";
-            accentColor = "#808E67";
-            borderColor = "#FFF8E8"; 
+export const changeTheme = async (theme: string) => {
+    try {
+        const response = await axios.get('/api/Settings/GetThemeSettingsByTheme', {
+            params: { theme: theme.toLowerCase() }
+        });
+        const themeSettings = response.data;
+        console.log('Received theme settings:', themeSettings);
+        document.documentElement.style.setProperty('--backgroundColor', themeSettings.mainBackground);
+        document.documentElement.style.setProperty('--secondaryColor', themeSettings.secondaryBackground);
+        document.documentElement.style.setProperty('--textColor', themeSettings.textColor);
+        document.documentElement.style.setProperty('--primaryColor', themeSettings.primaryColor);
+        document.documentElement.style.setProperty('--accentColor', themeSettings.accentColor);
+        document.documentElement.style.setProperty('--borderColor', themeSettings.borderColor);
+    } catch (err) {
+        console.error('Error fetching theme settings:', err);
     }
-    document.documentElement.style.setProperty('--backgroundColor', mainBackground);
-    document.documentElement.style.setProperty('--secondaryColor', secondaryBackground);
-    document.documentElement.style.setProperty('--textColor', textColor);
-    document.documentElement.style.setProperty('--primaryColor', primaryColor);
-    document.documentElement.style.setProperty('--accentColor', accentColor);
-    document.documentElement.style.setProperty('--borderColor', borderColor);
 }
