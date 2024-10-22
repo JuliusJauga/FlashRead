@@ -9,6 +9,10 @@ namespace server.src {
         public DbSet<DbTask1Text> Task1Texts { get; set; }
         public DbSet<DbTask1Question> Task1Questions { get; set; }
         public DbSet<DbUser> Users { get; set; }
+        public DbSet<DbTask1History> UserTask1Histories { get; set; }
+        public DbSet<DbTask1Contribution> UserTask1Contributions { get; set; }
+        public DbSet<DbUserSettings> UserSettings { get; set; } 
+        public DbSet<DbSettingsTheme> SettingsThemes { get; set; }
         public FlashDbContext(DbContextOptions<FlashDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
