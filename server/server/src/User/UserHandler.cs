@@ -155,13 +155,11 @@ namespace server.UserNamespace {
                 Id = Guid.NewGuid().ToString(),
                 SessionId = sessionId,
                 TaskId = taskId,
-                Answers = selectedVariants,
-                TimePlayed = DateTime.UtcNow
+                Answers = selectedVariants
             };
             _context.UserTaskHistories.Add(userTaskHistory);
-            await _context.SaveChangesAsync();
             dbUser.HistoryIds.Append(userTaskHistory.Id);
-            _context.Users.Update(dbUser);
+            _context.Entry(dbUser).Property(u => u.HistoryIds).IsModified = true;
             await _context.SaveChangesAsync();
         }
     }

@@ -61,7 +61,7 @@ namespace server.src {
                 entity.Property(e => e.TimeEnded).HasColumnName("time_ended");
             });
             modelBuilder.Entity<DbTaskHistory>(entity => {
-                entity.ToTable("history", "users");
+                entity.ToTable("user_history", "users");
                 entity.HasKey(e => e.Id).HasName("history_pkey");
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.SessionId).HasColumnName("session_id");
