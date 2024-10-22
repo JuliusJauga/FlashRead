@@ -120,9 +120,14 @@ namespace server.UserNamespace {
             userSettings.Id = Guid.NewGuid().ToString();
             _context.UserSettings.Add(userSettings);
             var firstTheme = await _context.SettingsThemes.FirstOrDefaultAsync();
+            var firstFont = await _context.SettingsFonts.FirstOrDefaultAsync();
             if (firstTheme != null)
             {
                 userSettings.Theme = firstTheme.Theme;
+            }
+            if (firstFont != null)
+            {
+                userSettings.Font = firstFont.Font;
             }
             dbUser.SettingsId = userSettings.Id;
             await _context.SaveChangesAsync();
@@ -143,6 +148,16 @@ namespace server.UserNamespace {
                 return null;
             }
             return userSettings.Theme;
+        }
+
+                public async Task<string?> GetSettingsFontById(string id)
+        {
+            var userSettings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == id);
+            if (userSettings == null)
+            {
+                return null;
+            }
+            return userSettings.Font;
         }
     }
 }
