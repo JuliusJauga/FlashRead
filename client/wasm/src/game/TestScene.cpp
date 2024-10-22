@@ -22,13 +22,10 @@ TestScene::TestScene() {
     mesh = MeshRegistry::Create("bookshelf");
     mesh->Load(bookshelf_vertexCount, reinterpret_cast<const Vertex*>(bookshelf_vertices));
 
-    for (int i = 0; i < 30; i++) {
-
     m_sceneBuilder.AddModel("bunny");
     m_sceneBuilder.AddModel("sponza");
     m_sceneBuilder.AddModel("teapot");
     m_sceneBuilder.AddModel("bookshelf");
-    }
 
     mesh = MeshRegistry::Get("sponza");
     auto sponza = registry.create();

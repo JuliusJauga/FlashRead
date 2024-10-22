@@ -48,10 +48,7 @@ void PhysicsWorld::Update() {
 void PhysicsWorld::SetTransform(btTransform& transform, const glm::vec3& position, const glm::vec3& rotation) {
 	transform.setOrigin(btVector3(position.x, position.y, position.z));
 
-	glm::quat x = glm::quat(1.f, 0.f, 0.f, glm::radians(rotation.x));
-	glm::quat y = glm::quat(0.f, 1.f, 0.f, glm::radians(rotation.y));
-	glm::quat z = glm::quat(0.f, 0.f, 1.f, glm::radians(rotation.z));
-	glm::quat rot = x * y * z;
+	glm::quat rot = glm::quat(glm::radians(rotation));
 	transform.setRotation(btQuaternion(rot.x, rot.y, rot.z, rot.w));
 }
 

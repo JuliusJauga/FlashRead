@@ -176,14 +176,19 @@ void Renderer::Render(const std::shared_ptr<Scene> &scene) {
         // get renderable meshes and matrices
         uint32_t matrixCount = 0;
         std::unordered_map<Mesh, std::vector<glm::mat4>> meshMatrices;
-        for (auto&& [entity, meshComp, transformComp] : scene->registry.view<MeshComponent, TransformComponent>().each()) {
+        for (auto&& [entity, meshComp, transformComp] : scene->registry.view<MeshComponent, TransformComponent>(entt::exclude<RigidBodyComponent>).each()) {
             // get model matrix
             glm::mat4 model{1};
             model = glm::translate(model, transformComp.position);
-            model = glm::scale(model, transformComp.scale);
-            model = glm::rotate(model, transformComp.rotation.x, glm::vec3(1, 0, 0));
-            model = glm::rotate(model, transformComp.rotation.y, glm::vec3(0, 1, 0));
-            model = glm::rotate(model, transformComp.rotation.z, glm::vec3(0, 0, 1));
+            model = glm::rotate(model, glm::radians(transformComp.rotation.z), glm::vec3(0, 0, 1));
+            model = glm::rotate(model, glm::radians(transformComp.rotation.y), glm::vec3(0, 1, 0));
+            model = glm::rotate(model, glm::radians(transformComp.rotation.x), glm::vec3(1, 0, 0));
+            model = glm::translate(model, meshComp.position);
+            model = glm::rotate(model, glm::radians(meshComp.rotation.x), glm::vec3(1, 0, 0));
+            model = glm::rotate(model, glm::radians(meshComp.rotation.y), glm::vec3(0, 1, 0));
+            model = glm::rotate(model, glm::radians(meshComp.rotation.z), glm::vec3(0, 0, 1));
+            model = glm::scale(model, transformComp.scale * meshComp.scale);
+
 
             // add to map
             meshMatrices[meshComp.mesh].push_back(model);
@@ -192,12 +197,25 @@ void Renderer::Render(const std::shared_ptr<Scene> &scene) {
         for (auto&& [entity, meshComp, rbComp] : scene->registry.view<MeshComponent, RigidBodyComponent>().each()) {
             auto body = rbComp.body;
             // get model matrix
+            glm::mat4 model{1};
             btTransform transform;
             if (body && body->getMotionState()) body->getMotionState()->getWorldTransform(transform);
             else transform = body->getWorldTransform();
-            
-            glm::mat4 model{1};
-            transform.getOpenGLMatrix(glm::value_ptr(model));
+  
+            transform.setOrigin(transform.getOrigin() + btVector3(meshComp.position.x, meshComp.position.y, meshComp.position.z));
+            glm::vec3 euler{};
+            transform.getRotation().getEulerZYX(euler.z, euler.y, euler.x);
+            glm::vec3 objPos = glm::vec3(transform.getOrigin().x(), transform.getOrigin().y(), transform.getOrigin().z());
+
+            model = glm::translate(model, objPos - meshComp.position);
+            model = glm::rotate(model, euler.z, glm::vec3(0, 0, 1));
+            model = glm::rotate(model, euler.y, glm::vec3(0, 1, 0));
+            model = glm::rotate(model, euler.x, glm::vec3(1, 0, 0));
+            model = glm::translate(model, meshComp.position);
+            model = glm::rotate(model, glm::radians(meshComp.rotation.x), glm::vec3(1, 0, 0));
+            model = glm::rotate(model, glm::radians(meshComp.rotation.y), glm::vec3(0, 1, 0));
+            model = glm::rotate(model, glm::radians(meshComp.rotation.z), glm::vec3(0, 0, 1));
+            model = glm::scale(model, meshComp.scale);
 
             // add to map
             meshMatrices[meshComp.mesh].push_back(model);

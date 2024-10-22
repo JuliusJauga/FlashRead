@@ -3,7 +3,7 @@
 #include "Components.h"
 
 Scene::Scene()
-    : m_sceneBuilder(registry) {
+    : m_sceneBuilder(registry, m_physicsWorld) {
     registry.on_destroy<RigidBodyComponent>().connect<&Scene::OnDestroyRigidBody>(*this);
 }
 

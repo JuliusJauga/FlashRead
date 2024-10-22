@@ -35,7 +35,7 @@ private:
     float m_near = 0.1f;
     float m_far = 10000.f;
 
-    glm::vec3 m_front{0, 0, -1};
+    glm::vec3 m_front{1, 0, 0};
     glm::vec3 m_up{0, 1, 0};
 
     glm::mat4 m_projectionMatrix{};
