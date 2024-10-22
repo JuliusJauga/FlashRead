@@ -17,6 +17,7 @@ namespace server.UserNamespace {
             var dbUser = convertUserToDbUser(user);
             dbUser.Password = HashPassword(dbUser.Password);
             await createSettingsId(dbUser);
+            await createSessionsId(dbUser);
             try
             {
                 _context.Users.Add(dbUser);
@@ -84,14 +85,14 @@ namespace server.UserNamespace {
             }
             return (User)dbUser;
         }
-        public async Task<User?> GetUserByEmailAsync(string email)
+        public async Task<DbUser?> GetUserByEmailAsync(string email)
         {
             var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (dbUser == null)
             {
                 return null;
             }
-            return (User)dbUser;
+            return dbUser;
         }
         public string HashPassword(string password)
         {
@@ -124,6 +125,14 @@ namespace server.UserNamespace {
                 userSettings.Theme = firstTheme.Theme;
             }
             dbUser.SettingsId = userSettings.Id;
+            await _context.SaveChangesAsync();
+        }
+        private async Task createSessionsId(DbUser dbUser)
+        {
+            DbUserSessions userSessions = new DbUserSessions();
+            userSessions.Id = Guid.NewGuid().ToString();
+            _context.UserSessions.Add(userSessions);
+            dbUser.SessionsId = userSessions.Id;
             await _context.SaveChangesAsync();
         }
         public async Task<string?> GetSettingsThemeById(string id)

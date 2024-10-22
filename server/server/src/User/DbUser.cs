@@ -6,6 +6,8 @@ namespace server.UserNamespace {
         public string[] HistoryIds { get; set; } = new string[0];
         public string[] ContributionsIds { get; set; } = new string[0];
         public string SettingsId { get; set; } = null!;
+        public DateTime JoinedAt { get; set; } = DateTime.UtcNow;
+        public string SessionsId { get; set; } = null!;
 
         public static explicit operator User(DbUser dbUser)
         {
