@@ -1,0 +1,57 @@
+.editableField-container {
+    display: flex;
+    flex-direction: column; /* Column layout */
+    align-items: flex-start; /* Align items to the start */
+    font-family: var(--fontStyle);
+    color: var(--textColor);
+    width: 60%; /* Ensure the container takes up the full width */
+    margin: 20px auto; /* Add space above and below, center the container horizontally */
+    position: relative; /* For positioning the button */
+}
+
+.editableField-label {
+    font-size: 20px;
+    margin-bottom: 5px; /* Reduce space below the label */
+    font-weight: bold;
+}
+
+.editableField-value {
+    font-size: 20px;
+    margin-bottom: 5px; /* Reduce space below the value */
+}
+
+.editableField-input {
+    font-size: 20px;
+    padding: 5px;
+    border: 4px solid var(--borderColor);
+    border-radius: 12px;
+    background-color: transparent;
+    color: var(--textColor);
+    font-family: var(--fontStyle);
+    box-sizing: border-box;
+    margin-bottom: 10px; /* Add space below the input */
+    width: 65%; /* Adjust width to fit the container */
+}
+
+.editableField-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+    border-radius: 12px;
+    border: 4px solid var(--borderColor);
+    background-color: transparent;
+    color: var(--textColor);
+    font-size: 20px;
+    font-family: var(--fontStyle);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    position: absolute; /* Position the button absolutely */
+    right: 0; /* Align to the right */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust for perfect vertical centering */
+}
+
+.editableField-button:hover {
+    background-color: rgba(255, 248, 232, 0.2); /* Slight hover effect */
+}

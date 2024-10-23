@@ -3,12 +3,15 @@ import axios from '../../components/axiosWrapper';
 import { useNavigate } from 'react-router-dom';
 import '../../boards/css/settings.css';
 import CustomButton from '../../components/buttons/customButton';
+import EditableField from '../../components/editableField';
+// import '../components/css/editableField.css';
 import '../../boards/css/buttons.css';
 import SettingsChoiceBox from '../../components/settingsChoiceBox';
 import { useAuth } from '../../context/AuthContext';
 import { useVisualSettings } from '../../context/VisualSettingsContext';
 import Cookies from 'js-cookie';
 import { changeFont, changeTheme } from '../../components/utils/visualSettingsUtils';
+
 
 const fetchThemes = async (): Promise<string[]> => {
     try {
@@ -37,6 +40,7 @@ const SettingsPage: React.FC = () => {
     const { visualSettings, setVisualSettings } = useVisualSettings();
     const [themes, setThemes] = useState<string[]>([]);
     const [theme, setTheme] = useState<string>(visualSettings.theme);
+    const [fonts, setFonts] = useState<string[]>([]);
     const [font, setFont] = useState<string>(visualSettings.font);
 
     const fetchAndSetThemes = async () => {
@@ -48,7 +52,7 @@ const SettingsPage: React.FC = () => {
     const fetchAndSetFonts = async () => {
         const fetchedFonts = await fetchFonts();
         const capitalizedFonts = fetchedFonts.map(font => font.charAt(0).toUpperCase() + font.slice(1));
-        setThemes(capitalizedFonts);
+        setFonts(capitalizedFonts);
     };
 
     const fetchSettings = async () => {
@@ -171,22 +175,51 @@ const SettingsPage: React.FC = () => {
         Cookies.set('visualSettings', settingsJson, { path: '/', secure: true, sameSite: 'Strict' });
     }
 
-    return (
-        <div className="settingsPage">
-            <div className="settingsHeader">
-                <h1 className="settingsHeaderText">Settings</h1>
+    if(!isAuthenticated) {
+        return (
+            <div className="settingsPage">
+                <div className="settingsHeader">
+                    <h1 className="settingsHeaderText">Settings</h1>
+                </div>
+    
+                <div className="settingsContent">
+                    <SettingsChoiceBox label="Theme" value={theme} options={themes} onChange={choice => handleThemeChange(choice)}/>
+                    <SettingsChoiceBox label="Font" value={font} options={fonts} onChange={choice => handleFontChange(choice)}/>
+                </div>
+    
+                <div className="settingsFooter">
+                    <CustomButton label="Return" className="wideButton" id="settingsReturnButton" onClick={() => navigate("/home")}/>
+                </div>
             </div>
-
-            <div className="settingsContent">
-                <SettingsChoiceBox label="Theme" value={theme} options={themes} onChange={choice => handleThemeChange(choice)}/>
-                <SettingsChoiceBox label="Font" value={font} options={["Poppins", "Merriweather"]} onChange={choice => handleFontChange(choice)}/>
+        );       
+    } else {
+        return (
+            <div className="settingsPage">
+                <div className="settingsHeader">
+                    <h1 className="settingsHeaderText">Settings</h1>
+                </div>
+    
+                <div className="settingsContentAuth">
+                    <div className="settingsColumn">
+                        <SettingsChoiceBox label="Theme" value={theme} options={themes} onChange={choice => handleThemeChange(choice)}/>
+                        <SettingsChoiceBox label="Font" value={font} options={fonts} onChange={choice => handleFontChange(choice)}/>
+                    </div>
+                    <div className="settingsColumn">
+                        <EditableField label="Profile Name" initialValue={"profileName"} onSave={() => {}}  />
+                        <EditableField label="Email" initialValue={"email"} onSave={() => {}} />
+                        <div className="settingsButtonContainer">
+                            <CustomButton label="Change Password" className="wideButton" id="settingsChangePasswordButton" onClick={() => navigate("/changePassword")}/>
+                            <CustomButton label="Delete Account" className="wideButton" id="settingsDeleteAccountButton" onClick={() => navigate("/deleteAccount")}/>
+                        </div>
+                    </div>
+                </div>
+    
+                <div className="settingsFooter">
+                    <CustomButton label="Return" className="wideButton" id="settingsReturnButton" onClick={() => navigate("/home")}/>
+                </div>
             </div>
-
-            <div className="settingsFooter">
-                <CustomButton label="Return" className="wideButton" id="settingsReturnButton" onClick={() => navigate("/home")}/>
-            </div>
-        </div>
-    );
+        );
+    }
 }
 
 export default SettingsPage;
