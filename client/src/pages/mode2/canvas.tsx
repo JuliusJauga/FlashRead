@@ -38,6 +38,10 @@ playerImgLeft.onload = () => {
     console.log("image left loaded");
 };
 
+const getCSSVariable = (variableName: string): string => {
+    return getComputedStyle(document.documentElement).getPropertyValue(variableName).trim();
+};
+
 
 const Canvas: React.FC<{
     canvasSize: vec2;
@@ -85,9 +89,13 @@ const Canvas: React.FC<{
     };
 
     const drawText = (context: CanvasRenderingContext2D, gameData: GameData) => {
+
+
         for (const text of gameData.textArray) {
-            context.font = `${text.size}px Arial`;
-            context.fillStyle = text.color;
+            const textColor = getCSSVariable('--textColor');
+            const fontStyle = getCSSVariable('--fontStyle');
+            context.font = `${text.size}px ${fontStyle}`;
+            context.fillStyle = textColor;
             const pos = toScreenPos(text.pos);
             context.save();
             context.translate(pos.x, pos.y);

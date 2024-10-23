@@ -46,6 +46,15 @@ const RegisterPage: React.FC = () => {
                         value={username}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setUsername(e.target.value)}
                         sx={{
+                            '& .MuiFormLabel-root': {
+                                color: 'var(--textColor)', 
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#1976d2',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: 'var(--textColor)',
+                            },
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
                                     borderWidth: '3px',
@@ -70,6 +79,15 @@ const RegisterPage: React.FC = () => {
                     value={email}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                     sx={{
+                        '& .MuiFormLabel-root': {
+                                color: 'var(--textColor)', 
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#1976d2',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: 'var(--textColor)',
+                            },
                         '& .MuiOutlinedInput-root': {
                             '& fieldset': {
                                 borderWidth: '3px',
@@ -94,6 +112,15 @@ const RegisterPage: React.FC = () => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                     type="password"
                     sx={{
+                        '& .MuiFormLabel-root': {
+                                color: 'var(--textColor)', 
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#1976d2',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: 'var(--textColor)',
+                            },
                         '& .MuiOutlinedInput-root': {
                             '& fieldset': {
                                 borderWidth: '3px',
@@ -118,6 +145,15 @@ const RegisterPage: React.FC = () => {
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setRepeatPassword(e.target.value)}
                     type="password"
                     sx={{
+                        '& .MuiFormLabel-root': {
+                                color: 'var(--textColor)', 
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#1976d2',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: 'var(--textColor)',
+                            },
                         '& .MuiOutlinedInput-root': {
                             '& fieldset': {
                                 borderWidth: '3px',

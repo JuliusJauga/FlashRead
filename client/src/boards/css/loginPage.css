@@ -152,3 +152,11 @@
     text-align: center;
     font-family: var(--fontStyle);   
 }
+
+.smallText {
+    font-size: 16px;
+    font-family: var(--fontStyle);
+    color: var(--textColor);
+    display: inline;
+  }
+

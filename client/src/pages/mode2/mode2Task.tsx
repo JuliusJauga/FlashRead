@@ -51,8 +51,6 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStar
             const textArray = textArrayRef.current;
             // spawn new text
             let difficultyInt = 0.001;
-            
-            console.log(difficulty);
 
             if (difficulty === "Easy") {
                 difficultyInt = 0.005;
@@ -63,7 +61,7 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStar
             } else if (difficulty === "EXTREME") {
                 difficultyInt = 0.02;
             } else {
-                difficultyInt = 0.005;
+                difficultyInt = 0.007;
             }
 
             if (Math.random() < difficultyInt * 2 && textArray.length < difficultyInt * 400) {

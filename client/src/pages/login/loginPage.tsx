@@ -47,6 +47,15 @@ const LoginPage: React.FC = () => {
                         value={email}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                         sx={{
+                            '& .MuiFormLabel-root': {
+                                color: 'var(--textColor)', 
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#1976d2',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: 'var(--textColor)',
+                            },
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
                                     borderWidth: '3px',
@@ -65,26 +74,34 @@ const LoginPage: React.FC = () => {
                             },
                         }}
                     />
-                    <TextField 
+                    <TextField
                         label="Password"
                         value={password}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                         type="password"
                         sx={{
+                            '& .MuiFormLabel-root': {
+                                color: 'var(--textColor)', 
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#1976d2',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: 'var(--textColor)',
+                            },
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
                                     borderWidth: '3px',
-                                    borderColor: 'var(--borderColor)', // Default border color
+                                    borderColor: 'var(--borderColor)',
                                 },
                                 '&:hover fieldset': {
                                     borderWidth: '3px',
-                                    borderColor: 'var(--borderColor)', // Border color on hover
+                                    borderColor: 'var(--borderColor)',
                                 },
                                 '&.Mui-focused fieldset': {
                                     borderWidth: '3px',
-                                    borderColor: '#1976d2', // Border color when focused
+                                    borderColor: '#1976d2',
                                 },
-                        
                                 width: '100%',
                             },
                         }}
