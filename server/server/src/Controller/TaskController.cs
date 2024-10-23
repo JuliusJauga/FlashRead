@@ -25,10 +25,7 @@ namespace server.Controller {
             var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(userEmail) == false)
             {
-                if (req.SelectedVariants != null)
-                {
-                    await _userHandler.SaveTaskResult(userEmail, req.Session, taskId, req.SelectedVariants);
-                }
+                await _userHandler.SaveTaskResult(userEmail, req.Session, taskId, req.SelectedVariants);
             }
             return task.CheckAnswer(req);
         }
