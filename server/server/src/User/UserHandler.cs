@@ -1,17 +1,13 @@
 using System.Threading.Tasks;
 using BCrypt.Net;
+using System.Text.Json;
 using server.src;
 using server.UserNamespace;
 using Microsoft.EntityFrameworkCore;
-
+using server.Services;
 namespace server.UserNamespace {
-    public class UserHandler : IUserHandler
+    public class UserHandler(FlashDbContext _context, TokenProvider tokenProvider, HistoryManager historyManager, SessionManager sessionManager)
     {
-        private readonly FlashDbContext _context;
-        public UserHandler(FlashDbContext context)
-        {
-            _context = context;
-        }
         public async Task<bool> RegisterUserAsync(User user)
         {
             // Check if user already exists
@@ -22,6 +18,8 @@ namespace server.UserNamespace {
             }
             var dbUser = convertUserToDbUser(user);
             dbUser.Password = HashPassword(dbUser.Password);
+            await createSettingsId(dbUser);
+            await createSessionsId(dbUser);
             try
             {
                 _context.Users.Add(dbUser);
@@ -34,14 +32,22 @@ namespace server.UserNamespace {
             }
             return true;
         }
-        public async Task<bool> LoginUserAsync(User user)
+        public async Task<string> LoginUserAsync(User user)
         {
             var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
             if (dbUser == null)
             {
-                return false;
+                throw new Exception("User not found");
             }
-            return VerifyPassword(user.Password, dbUser.Password);
+            
+            if (!VerifyPassword(user.Password, dbUser.Password))
+            {
+                throw new Exception("Invalid password");
+            }
+
+            string token = tokenProvider.Create(user);
+            await sessionManager.AddSessionToDictionary(user.Email);
+            return token;
         }
         public async Task<bool> DeleteUserAsync(User user)
         {
@@ -72,6 +78,24 @@ namespace server.UserNamespace {
             }
             return users;
         }
+        public async Task<User?> GetUserAsync(User user)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == user.Email);
+            if (dbUser == null)
+            {
+                return null;
+            }
+            return (User)dbUser;
+        }
+        public async Task<DbUser?> GetUserByEmailAsync(string email)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                return null;
+            }
+            return dbUser;
+        }
         public string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
@@ -84,13 +108,79 @@ namespace server.UserNamespace {
         {
             return (DbUser)user;
         }
+        public async Task<string?> GetSettingsIdByEmailAsync(string email) {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                return null;
+            }
+            return dbUser.SettingsId;
+        }
+        private async Task createSettingsId(DbUser dbUser)
+        {
+            DbUserSettings userSettings = new DbUserSettings();
+            userSettings.Id = Guid.NewGuid().ToString();
+            _context.UserSettings.Add(userSettings);
+            var firstTheme = await _context.SettingsThemes.FirstOrDefaultAsync();
+            var firstFont = await _context.SettingsFonts.FirstOrDefaultAsync();
+            if (firstTheme != null)
+            {
+                userSettings.Theme = firstTheme.Theme;
+            }
+            if (firstFont != null)
+            {
+                userSettings.Font = firstFont.Font;
+            }
+            dbUser.SettingsId = userSettings.Id;
+            await _context.SaveChangesAsync();
+        }
+        private async Task createSessionsId(DbUser dbUser)
+        {
+            DbUserSessions userSessions = new DbUserSessions();
+            userSessions.Id = Guid.NewGuid().ToString();
+            _context.UserSessions.Add(userSessions);
+            dbUser.SessionsId = userSessions.Id;
+            await _context.SaveChangesAsync();
+        }
+        public async Task<string?> GetSettingsThemeById(string id)
+        {
+            var userSettings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == id);
+            if (userSettings == null)
+            {
+                return null;
+            }
+            return userSettings.Theme;
+        }
+        public async Task SaveTaskResult(string email, uint sessionId, int taskId, int[]? selectedVariants = null) {
+            await historyManager.SaveTaskResult(email, sessionId, taskId, selectedVariants);
+        }
+        public async Task<IEnumerable<DbTaskHistory>> GetTaskHistoryByEmail(string email)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                return new List<DbTaskHistory>();
+            }
+            List<DbTaskHistory> taskHistories = new List<DbTaskHistory>();
+            foreach (var historyId in dbUser.HistoryIds)
+            {
+                var taskHistory = await _context.UserTaskHistories.FirstOrDefaultAsync(h => h.Id == historyId);
+                if (taskHistory != null)
+                {
+                    taskHistories.Add(taskHistory);
+                }
+            }
+            return taskHistories;
+        }
 
-    }
-    public interface IUserHandler
-    {
-        Task<bool> RegisterUserAsync(User user);
-        Task<bool> LoginUserAsync(User user);
-        Task<bool> DeleteUserAsync(User user);
-        Task<IEnumerable<User>> GetAllUsersAsync();
+        public async Task<string?> GetSettingsFontById(string id)
+        {
+            var userSettings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == id);
+            if (userSettings == null)
+            {
+                return null;
+            }
+            return userSettings.Font;
+        }
     }
 }

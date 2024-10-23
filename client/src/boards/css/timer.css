@@ -2,10 +2,10 @@
     display: flex;
     justify-content: space-between; /* Align items in the container */
     align-items: center; /* Center items vertically */
-    font-family: "Poppins", sans-serif;
+    font-family: var(--fontStyle);
     font-size: 20px;
     font-weight: bold;
-    color: #FFF8E8;
+    color: var(--textColor);
     width: 100%; /* Ensure the container takes up the full width */
     padding: 10px; /* Add padding to maintain gap from edges */
     box-sizing: border-box; /* Include padding in the element's total width and height */
@@ -27,11 +27,11 @@
     width: 20%;
     max-height: 100%; /* Ensure the button does not exceed container height */
     background-color: transparent;
-    color: #FFF8E8;
-    border: 4px solid #FFF8E8;
+    color: var(--textColor);
+    border: 4px solid var(--borderColor);
     border-radius: 12px; /* Optional: Add border radius */
     cursor: pointer; /* Optional: Change cursor to pointer */
-    font-family: "Poppins", sans-serif; 
+    font-family: var(--fontStyle); 
     overflow: hidden; /* Hide overflow content */
     white-space: nowrap; /* Prevent text from wrapping */
     box-sizing: border-box; /* Include padding and border in the element's total width and height */

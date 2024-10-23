@@ -1,10 +1,12 @@
 import React, { useState, CSSProperties, useRef, useEffect } from 'react';
-
+import { useAuth } from '../context/AuthContext';
+import { login } from '../services/authService';
 interface DropdownProps {
     onSelect: (item: string) => void;
 }
 
 const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
+    const { checkUserAuth, isAuthenticated } = useAuth();
     const [isOpen, setIsOpen] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
     const [isClicked, setIsClicked] = useState(false);
@@ -33,12 +35,12 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
         transition: 'transform 0.4s ease',
         outline: 'none',
         borderRadius: '12px',
-        border: '4px solid #FFF8E8',
+        border: '4px solid var(--borderColor)',
         backgroundColor: 'transparent',
-        color: '#FFF8E8',
+        color: 'var(--textColor)',
         transform: isHovered ? 'scale(0.95)' : 'scale(1)',
         fontSize: '26px',
-        fontFamily: 'Poppins, sans-serif', 
+        fontFamily: 'var(--fontStyle)', 
         cursor: 'pointer',
         width: `${buttonSize}px`, 
         height: '100%',
@@ -55,7 +57,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
         top: '100%',
         left: 'auto',
         right: '0',  // Align the dropdown with the button's right side
-        border: '4px solid #FFF8E8',
+        border: '4px solid var(--borderColor)',
         backgroundColor: 'transparent',
         
         listStyle: 'none',
@@ -76,9 +78,9 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
     const menuItemStyle: CSSProperties = {
         padding: '10px 20px',
         cursor: 'pointer',
-        color: '#FFF8E8',
+        color: 'var(--textColor)',
         fontSize: '20px',
-        fontFamily: 'Poppins, sans-serif', 
+        fontFamily: 'var(--fontStyle)', 
         whiteSpace: 'nowrap',
     };
 
@@ -103,7 +105,7 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
                 &#8801;
             </button>
             <ul style={dropdownMenuStyle}>
-                {['Profile', 'Settings', 'Login'].map((option, index) => (
+                {['Profile', 'Settings', isAuthenticated ? 'Logout' : 'Login'].map((option, index) => (
                     <li
                         key={index}
                         style={menuItemStyle}

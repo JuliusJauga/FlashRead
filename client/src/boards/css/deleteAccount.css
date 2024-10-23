@@ -1,0 +1,63 @@
+.deleteAccountPage {
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+    width: 100%;
+    background-color: var(--backgroundColor);
+    overflow: hidden;
+}
+
+.accountDeletionHeader {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    font-weight: 600;
+}
+
+.accountDeletionTitle {
+    font-family: var(--fontStyle);
+    font-size: var(--headerFontSize);
+    color: var(--textColor);
+}
+
+.accountDeletionContent {
+    display: flex;
+    flex: 3;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    /* background-color: aqua; */
+}
+
+.confirmationQuestionText {
+    font-family: var(--fontStyle);
+    font-size: 2em;
+    color: var(--textColor);
+    font-weight: bold;
+}
+
+.confirmationClarificationText {
+    font-family: var(--fontStyle);
+    font-size: 1.8em; 
+    color: var(--textColor);
+}
+
+.accountDeletionButtonContainer {
+    display: flex;
+    justify-content: center; 
+    gap: 1em; 
+    width: 50%;
+    margin: 4em auto 0; 
+}
+
+.accountDeletionFooter {
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 3em;
+}

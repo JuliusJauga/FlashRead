@@ -1,8 +1,15 @@
 using server.src;
 using Microsoft.EntityFrameworkCore;
 using server.src.Task1;
+using server.src.Task2;
 using Npgsql;
 using server.UserNamespace;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.Net.NetworkInformation;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using server.src.Settings;
+using server.Services;
 namespace server
 {
     public class Program
@@ -15,15 +22,22 @@ namespace server
             builder.Services.AddCors(options => {
                 options.AddPolicy(
                     name: MyAllowSpecificOrigins, 
-                    policy  => {policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();}
-                );
-            });
+                    policy  => {
+                        policy.WithOrigins("http://localhost:5173")
+                            .AllowAnyMethod()
+                            .AllowAnyHeader()
+                            .AllowCredentials();
+                        }
+                    );
+                }
+            );
 
             while (true) {
                 try
                 {
                     var dataSourceBuilder = new NpgsqlDataSourceBuilder(ConnectionStringBuilder.BuildConnectionString());
                     dataSourceBuilder.MapEnum<Task1.Theme>();
+                    dataSourceBuilder.MapEnum<Task2Data.Theme>();
                     var dataSource = dataSourceBuilder.Build();
                     builder.Services.AddDbContext<FlashDbContext>(options => options.UseNpgsql(dataSource));
                     
@@ -41,11 +55,32 @@ namespace server
                 }
             }
             
-            builder.Services.AddScoped<IUserHandler, UserHandler>();
+            builder.Services.AddAuthorization();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.RequireHttpsMetadata = false;
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Environment.GetEnvironmentVariable("JWT_SECRET") ?? throw new InvalidOperationException("JWT_SECRET environment variable is not set!"))),
+                        ValidIssuer = builder.Configuration["JwtSettings:Issuer"],
+                        ValidAudience = builder.Configuration["JwtSettings:Audience"],
+                        ClockSkew = TimeSpan.Zero
+                    };
+                });
 
+            builder.Services.AddSingleton<TokenProvider>();
+            
+            builder.Services.AddSingleton<DbContextFactory>();
+            builder.Services.AddSingleton<SessionManager>();
+            builder.Services.AddHostedService<SessionBackgroundService>();
+
+            builder.Services.AddScoped<HistoryManager>();
+            builder.Services.AddScoped<UserHandler>();
+            builder.Services.AddScoped<Settings>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGenWithAuth();
 
             var app = builder.Build();
 
@@ -62,6 +97,9 @@ namespace server
 
             app.MapControllers();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+            
             app.Run();
         }
     }

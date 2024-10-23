@@ -28,7 +28,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #AAB396;
+    background-color: var(--backgroundColor);
     position: relative;
     z-index: -1;
 }
@@ -40,7 +40,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background-color: #AAB396;
+    background-color: var(--backgroundColor);
     position: absolute;    
     z-index: -1;
 }
@@ -115,7 +115,7 @@
     margin: 0.6em auto;
     border-radius: 15px;
     padding: 0.5em;
-    font-family: "Poppins", sans-serif;
+    font-family: var(--fontStyle);
 }
 
 .signinInputRepeat.error {
@@ -124,7 +124,7 @@
     margin: 0.6em auto;
     border-radius: 15px;
     padding: 0.5em;
-    font-family: "Poppins", sans-serif;
+    font-family: var(--fontStyle);
     border: 2px solid red;
 }
 
@@ -134,20 +134,29 @@
     margin: 0.6em auto;
     border-radius: 15px;
     padding: 0.5em;
-    font-family: "Poppins", sans-serif;
+    font-family: var(--fontStyle);
 }
+
 .loginPage_noAccountText {
     font-size: 1.5em;
     margin-bottom: 1em;
-    color: white;
+    color: var(--textColor);
     text-align: center;
-    font-family: "Poppins", sans-serif;
+    font-family: var(--fontStyle);
 }
 
 .loginPage_title {
     font-size: 3em;
     margin-bottom: 1em;
-    color: white;
+    color: var(--textColor);
     text-align: center;
-    font-family: "Poppins", sans-serif;   
+    font-family: var(--fontStyle);   
 }
+
+.smallText {
+    font-size: 16px;
+    font-family: var(--fontStyle);
+    color: var(--textColor);
+    display: inline;
+  }
+

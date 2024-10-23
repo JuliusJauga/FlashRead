@@ -1,27 +1,35 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import CustomHyperlink from '../../components/buttons/hyperlink';
-import axios from '../../components/axiosWrapper';
 import CustomButton from "../../components/buttons/customButton.tsx";
 import '../../boards/css/loginPage.css';
 import '../../boards/css/buttons.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { login } from '../../services/authService';
+
 
 const LoginPage: React.FC = () => {
+    const { checkUserAuth, isAuthenticated } = useAuth();
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted:', { email, password });
-        axios.post('/api/Users/Login', { email, password })
-            .then(response => {
-                console.log('Login successful:', response.data);
-            })
-            .catch(error => {
-                console.error('Login failed:', error);
-            });
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/home');
+        }
+    }, [isAuthenticated, navigate]);
+
+
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await login(email, password);
+            checkUserAuth();
+        } catch (error) {
+            setError('Login failed. Please try again.');
+        }
     };
     return (
         <div className="loginPage">
@@ -39,14 +47,23 @@ const LoginPage: React.FC = () => {
                         value={email}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                         sx={{
+                            '& .MuiFormLabel-root': {
+                                color: 'var(--textColor)', 
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#1976d2',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: 'var(--textColor)',
+                            },
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderWidth: '4px',
-                                    borderColor: '#FFF8E8', // Default border color
+                                    borderWidth: '3px',
+                                    borderColor: 'var(--borderColor)', // Default border color
                                 },
                                 '&:hover fieldset': {
                                     borderWidth: '3px',
-                                    borderColor: '#FFF8E8', // Border color on hover
+                                    borderColor: 'var(--borderColor)', // Border color on hover
                                 },
                                 '&.Mui-focused fieldset': {
                                     borderWidth: '3px',
@@ -57,26 +74,34 @@ const LoginPage: React.FC = () => {
                             },
                         }}
                     />
-                    <TextField 
+                    <TextField
                         label="Password"
                         value={password}
                         onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                         type="password"
                         sx={{
+                            '& .MuiFormLabel-root': {
+                                color: 'var(--textColor)', 
+                            },
+                            '& .MuiFormLabel-root.Mui-focused': {
+                                color: '#1976d2',
+                            },
+                            '& .MuiInputBase-input': {
+                                color: 'var(--textColor)',
+                            },
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderWidth: '4px',
-                                    borderColor: '#FFF8E8', // Default border color
+                                    borderWidth: '3px',
+                                    borderColor: 'var(--borderColor)',
                                 },
                                 '&:hover fieldset': {
                                     borderWidth: '3px',
-                                    borderColor: '#FFF8E8', // Border color on hover
+                                    borderColor: 'var(--borderColor)',
                                 },
                                 '&.Mui-focused fieldset': {
                                     borderWidth: '3px',
-                                    borderColor: '#1976d2', // Border color when focused
+                                    borderColor: '#1976d2',
                                 },
-                        
                                 width: '100%',
                             },
                         }}

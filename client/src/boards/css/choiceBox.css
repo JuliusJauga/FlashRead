@@ -6,14 +6,14 @@
   max-width: 300px;
   margin: 0 auto;
   padding: 1rem;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fontStyle);
   border-radius: 8px;
 }
 
 .choice-box-label {
   font-size: 1rem;
   font-weight: bold;
-  color: #FFF8E8;
+  color: var(--textColor);
   transition: 0.3s ease; /* Smooth transition for the label */
   position: flex; /* Position label absolutely */
   align-items: center;
@@ -34,9 +34,9 @@
   padding: 0.5rem;
   font-size: 1rem;
   border-radius: 4px;
-  color: #333;
+  color: var(--textColor);
   cursor: pointer;
-  font-family: "Poppins", sans-serif;
+  font-family: var(--fontStyle);
   height: 55px; /* Adjust the height to control the size */
   position: relative; /* Allow label to position correctly */
 }

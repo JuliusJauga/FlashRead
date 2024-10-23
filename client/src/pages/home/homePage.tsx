@@ -3,10 +3,14 @@ import Dropdown from '../../components/dropdown';
 import CustomButton from '../../components/buttons/customButton';
 import '../../boards/css/main.board.css';
 import '../../boards/css/dropdown.css';
-
+import { useAuth } from '../../context/AuthContext';
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
-
+    const { logOut } = useAuth();
+    const handleLogout = async () => {
+        await logOut();
+        navigate('/login');
+    }
     return (
         <div className="MainBoard_main">
 
@@ -14,6 +18,12 @@ const HomePage: React.FC = () => {
                 <Dropdown onSelect={function (item: string): void {
                 if (item === "Login") {
                     navigate("/login");
+                }
+                else if (item === "Logout") {
+                    handleLogout();
+                }
+                else if (item === "Settings") {
+                    navigate("/settings");
                 }
                 } } />
             </div>
@@ -30,20 +40,12 @@ const HomePage: React.FC = () => {
 
                         <CustomButton label= "Mode 2" className= "squareButton" id="MainBoard_mode2Button" onClick={()=>{
                             console.log("Mode 2 clicked");
-                            const mode2Button = document.getElementById("MainBoard_mode2Button") as HTMLButtonElement;
-                            mode2Button.textContent = "Coming Soon";
-                            setTimeout(() => {
-                            mode2Button.textContent = "Mode 2";
-                            }, 1000);
+                            navigate("/mode2");
                         }}/>
 
                         <CustomButton label= "Mode 3" className= "squareButton" id="MainBoard_mode3Button" onClick={()=>{
                             console.log("Mode 3 clicked");
-                            const mode3Button = document.getElementById("MainBoard_mode3Button") as HTMLButtonElement;
-                            mode3Button.textContent = "Coming Soon";
-                            setTimeout(() => {
-                            mode3Button.textContent = "Mode 3";
-                            }, 1000);
+                            navigate("/mode3");
                         }}/>
 
                     </div>
