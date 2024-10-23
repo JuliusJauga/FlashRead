@@ -78,11 +78,15 @@ namespace server.Services {
                 }
             }
         }
-        public void UpdateSession(string email) {
+        public async Task UpdateSession(string email) {
             if (_sessions.TryGetValue(email, out var session))
             {
                 session.LatestTimeAlive = DateTime.UtcNow;
                 _sessions[email] = session;
+            }
+            else
+            {
+                await AddSessionToDictionary(email);
             }
         }
         public List<string> GetConnectedUsers() {

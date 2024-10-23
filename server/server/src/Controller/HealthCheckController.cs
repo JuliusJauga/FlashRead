@@ -13,13 +13,13 @@ namespace server.Controllers {
             _sessionManager = sessionManager;
         }
         [Authorize]
-        [HttpPost("Session/Update")]
-        public IActionResult StartHealthCheck() {
+        [HttpGet("Session/Update")]
+        public async Task<IActionResult> StartHealthCheck() {
             var email = User.FindFirst(ClaimTypes.Email)?.Value;
             if (string.IsNullOrEmpty(email)) {
                 return Unauthorized("Invalid token.");
             }
-            _sessionManager.UpdateSession(email);
+            await _sessionManager.UpdateSession(email);
             return Ok("Health check passed");
         }
         [HttpGet("Session/GetConnectedUsers")]
