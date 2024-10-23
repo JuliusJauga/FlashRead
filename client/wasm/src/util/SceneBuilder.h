@@ -16,6 +16,7 @@ public:
     void AddModel(std::string_view name);
     void Update();
     void Play();
+    bool IsPlaying() { return m_playing; }
 
     struct State {
         glm::vec3 position{0, 0, 0};

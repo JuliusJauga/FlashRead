@@ -7,10 +7,10 @@ Player::Player() {
     m_camera = std::make_shared<Camera>();
 }
 
-void Player::Update() {
-    UpdateInput();
+void Player::Update(btRigidBody* rigidBody, float dt) {
+    UpdateInput(rigidBody, dt);
 }
-void Player::UpdateInput() {
+void Player::UpdateInput(btRigidBody* rigidBody, float dt) {
     // mouse
     glm::vec2 mousePos = Input::GetMousePosition();
     static glm::vec2 lastMousePos = mousePos;
@@ -32,7 +32,12 @@ void Player::UpdateInput() {
 
     // normalize velocity to avoid faster diagonal movement
     if (glm::length2(velocity) > 0) {
-        velocity = glm::normalize(velocity) * speed;
-        m_camera->position += velocity;
+        velocity = glm::normalize(velocity) * speed * dt;
+        if (rigidBody) {
+            rigidBody->activate(true);
+            rigidBody->applyCentralImpulse({velocity.x, velocity.y, velocity.z});
+        } else {
+            m_camera->position += velocity;
+        }
     }
 }

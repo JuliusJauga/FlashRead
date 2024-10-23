@@ -63,11 +63,27 @@ void TestScene::Update(TimeDuration dt) {
     }
     
     // logic
-    m_player.Update();
+    static btRigidBody* playerRigidBody = m_physicsWorld.CreateRigidBody(m_physicsWorld.GetCapsuleCollider(1, 2), 1.f, {0, 0, 0}, {0, 0, 0});
+    m_player.Update(m_sceneBuilder.IsPlaying() ? playerRigidBody : nullptr, dt.fMilli());
 
     // physics
+    static TimePoint lastPhysicsUpdate; TimePoint now;
+    if (now - lastPhysicsUpdate > 1s) {
+        m_physicsWorld.Update();
+        lastPhysicsUpdate = now;
+    }
     auto& dynamicsWorld = m_physicsWorld.dynamicsWorld;
     dynamicsWorld->stepSimulation(dt.fMilli(), 1);
+
+    // camera
+    if (m_sceneBuilder.IsPlaying()) {
+        auto body = playerRigidBody;
+        btTransform transform;
+        if (body && body->getMotionState()) body->getMotionState()->getWorldTransform(transform);
+        else transform = body->getWorldTransform();
+
+        m_camera->position = {transform.getOrigin().x(), transform.getOrigin().y() + 0.5f, transform.getOrigin().z()};
+    }
 
     // random stuff
     // create entity
