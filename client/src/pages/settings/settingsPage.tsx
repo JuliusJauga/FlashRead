@@ -33,7 +33,6 @@ const fetchFonts = async (): Promise<string[]> => {
     }
 };
 
-
 const SettingsPage: React.FC = () => {
     const navigate = useNavigate();
     const { isAuthenticated } = useAuth();
@@ -42,6 +41,7 @@ const SettingsPage: React.FC = () => {
     const [theme, setTheme] = useState<string>(visualSettings.theme);
     const [fonts, setFonts] = useState<string[]>([]);
     const [font, setFont] = useState<string>(visualSettings.font);
+    const [username, setUsername] = useState<string>('');
 
     const fetchAndSetThemes = async () => {
         const fetchedThemes = await fetchThemes();
@@ -55,30 +55,62 @@ const SettingsPage: React.FC = () => {
         setFonts(capitalizedFonts);
     };
 
-    const fetchSettings = async () => {
-        console.log("ATTEMPTING TO FETCH SETTINGS");
+    const fetchUsername = async () => {
         try {
-            const themeResponse = await axios.get('/api/User/GetThemeSettings');
+            const response = await axios.get('/api/User/GetCurrentUserName');
+            setUsername(response.data.name);
+        } catch (err) {
+            console.error('Error fetching username:', err);
+        }
+    }
+    
+
+    const fetchSettings = async () => {
+        // console.log("ATTEMPTING TO FETCH SETTINGS");
+        try {
+            const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+            const token = tokenCookie ? tokenCookie.split('=')[1] : null;
+
+            if (!token) {
+                throw new Error('No auth token found');
+            }
+    
+            const themeResponse = await axios.get('/api/User/GetThemeSettings', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            const fontResponse = await axios.get('/api/User/GetFontSettings', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            // console.log("THEME RESPONCE ", themeResponse.data);
+            // console.log("FONT RESPONCE ", fontResponse.data);
+
             const capitalizedTheme = themeResponse.data.theme.charAt(0).toUpperCase() + themeResponse.data.theme.slice(1);
-            const capitalizedFont = themeResponse.data.font.charAt(0).toUpperCase() + themeResponse.data.font.slice(1);
+            const capitalizedFont = fontResponse.data.font.charAt(0).toUpperCase() + fontResponse.data.font.slice(1);
             setTheme(capitalizedTheme);
             setFont(capitalizedFont);
-            console.log("FETCHED THEME: ", capitalizedTheme, " SET THEME TO: ", theme);
-            console.log("FETCHED FONT: ", capitalizedFont, " SET FONT TO: ", font);
+            // console.log("FETCHED THEME: ", capitalizedTheme, " SET THEME TO: ", theme);
+            // console.log("FETCHED FONT: ", capitalizedFont, " SET FONT TO: ", font);
         } catch (err) {
             console.error('Error fetching settings:', err);
         }
     }
 
     useEffect(() => {
+        fetchUsername();
         fetchAndSetThemes();
         fetchAndSetFonts();
 
         if (isAuthenticated) {
-            console.log("AUTHENTICATED IN USE EFFECT");
+            // console.log("AUTHENTICATED IN USE EFFECT");
             fetchSettings();
         } else {
-            console.log("NOT AUTHENTICATED IN USE EFFECT");
+            // console.log("NOT AUTHENTICATED IN USE EFFECT");
             const getSettingsFromCookie = async () => {
                 const settingsJson = Cookies.get('visualSettings');
                 if (settingsJson) {
@@ -91,46 +123,12 @@ const SettingsPage: React.FC = () => {
             getSettingsFromCookie();
         }
 
-        console.log("THEME IN USE EFFECT: ", theme);
-
-        // if (isAuthenticated) {
-        //     console.log("AUTHENTICATED");
-        //     const fetchSettings = async () => {
-        //         try {
-        //             const themeResponse = await axios.get('/api/User/GetThemeSettings');
-        //             const theme = themeResponse.data;
-        //             setTheme(theme.theme);
-        //             // setFont(data.font);
-        //             console.log('Received theme:', theme.theme);
-        //             console.log("FETCH THEME");
-        //             // console.log('Received font:', data.font);
-        //             changeTheme(theme.theme);
-        //             // changeFont(data.font);
-        //         } catch (err) {
-        //             console.error('Error fetching settings:', err);
-        //         }
-        //     };
-    
-        //     fetchSettings();
-        // } else {
-        //     console.log("NOT AUTHENTICATED");
-        //     const getSettingsFromCookie = async () => {
-        //         const settingsJson = Cookies.get('visualSettings');
-        //         if (settingsJson) {
-        //             const settings = JSON.parse(settingsJson);
-        //             setTheme(settings.theme);
-        //             setFont(settings.font);
-        //             console.log('Loaded theme from cookie:', settings.theme);
-        //             console.log('Loaded font from cookie:', settings.font);
-        //             console.log("COOKIE THEME");
-        //             changeTheme(settings.theme);
-        //             changeFont(settings.font);
-        //         }
-        //     }
-        //     getSettingsFromCookie();
-        // }
+        // console.log("THEME IN USE EFFECT: ", theme);
     }, []);
 
+    useEffect(() => {
+        console.log("username: ", username);
+    }, [username]);
     
     
     const handleFontChange = (font: string) => {
@@ -205,10 +203,10 @@ const SettingsPage: React.FC = () => {
                         <SettingsChoiceBox label="Font" value={font} options={fonts} onChange={choice => handleFontChange(choice)}/>
                     </div>
                     <div className="settingsColumn">
-                        <EditableField label="Profile Name" initialValue={"profileName"} onSave={() => {}}  />
+                        <EditableField label="Profile Name: " initialValue={username} onSave={() => {}}  />
                         <div className="settingsButtonContainer">
-                            <CustomButton label="Change Password" className="wideButton" id="settingsChangePasswordButton" onClick={() => navigate("/changePassword")}/>
-                            <CustomButton label="Delete Account" className="wideButton" id="settingsDeleteAccountButton" onClick={() => navigate("/deleteAccount")}/>
+                            <CustomButton label="Change Password" className="settingButton" id="settingsChangePasswordButton" onClick={() => navigate("/changePassword")}/>
+                            <CustomButton label="Delete Account" className="settingButton" id="settingsDeleteAccountButton" onClick={() => navigate("/deleteAccount")}/>
                         </div>
                     </div>
                 </div>

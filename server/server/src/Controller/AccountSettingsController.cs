@@ -15,6 +15,22 @@ namespace server.Controller {
             _userHandler = userHandler;
             _settings = settings;
         }
+
+        [Authorize]
+        [HttpGet("User/GetCurrentUserName")]
+        public async Task<IActionResult> GetCurrentUserName() {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(userEmail)) {
+                return Unauthorized("Invalid token.");
+            }
+
+            var user = await _userHandler.GetUserByEmailAsync(userEmail);
+            if (user != null) {
+                return Ok(new { Name = user.Name });
+            }
+            return NotFound("User not found.");
+        }
+
         [Authorize]
         [HttpGet("User/GetThemeSettings")]
         public async Task<IActionResult> GetThemeSettings() {
