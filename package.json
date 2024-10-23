@@ -1,9 +1,11 @@
 {
   "dependencies": {
     "@wixc3/react-board": "^4.3.1",
+    "js-cookie": "^3.0.5",
     "nodejs": "^0.0.0"
   },
   "devDependencies": {
+    "@types/js-cookie": "^3.0.6",
     "@types/node": "^22.6.1",
     "@types/react": "^18.3.8"
   }

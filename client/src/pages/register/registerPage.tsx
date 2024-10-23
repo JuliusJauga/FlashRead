@@ -1,29 +1,34 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
-import axios from '../../components/axiosWrapper';
 import CustomButton from "../../components/buttons/customButton.tsx";
 import CustomHyperlink from '../../components/buttons/hyperlink';
 import '../../boards/css/loginPage.css';
 import '../../boards/css/buttons.css';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { register } from '../../services/authService';
 
 const RegisterPage: React.FC = () => {
+    const { checkUserAuth, isAuthenticated } = useAuth();
+    const [error, setError] = useState('');
     const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [repeatPassword, setRepeatPassword] = useState('');
-    const handleSubmit = (event: React.FormEvent) => {
-        event.preventDefault();
-        // Handle form submission logic here
-        console.log('Form submitted:', { username, email, password });
-        axios.post('/api/Users/Register', { email, password, username })
-            .then(response => {
-                console.log('Registration successful:', response.data);
-            })
-            .catch(error => {
-                console.error('Registration failed:', error);
-            });
+    useEffect(() => {
+        if (isAuthenticated) {
+            navigate('/home');
+        }
+    }, [isAuthenticated, navigate]);
+    const handleSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        try {
+            await register(email, password, username);
+            checkUserAuth();
+        } catch (error) {
+            setError('Register failed. Please try again.');
+        }
     };
     return (
         <div className="registerPage">
@@ -43,12 +48,12 @@ const RegisterPage: React.FC = () => {
                         sx={{
                             '& .MuiOutlinedInput-root': {
                                 '& fieldset': {
-                                    borderWidth: '4px',
-                                    borderColor: '#FFF8E8', // Default border color
+                                    borderWidth: '3px',
+                                    borderColor: 'var(--borderColor)', // Default border color
                                 },
                                 '&:hover fieldset': {
                                     borderWidth: '3px',
-                                    borderColor: '#FFF8E8', // Border color on hover
+                                    borderColor: 'var(--borderColor)', // Border color on hover
                                 },
                                 '&.Mui-focused fieldset': {
                                     borderWidth: '3px',
@@ -67,12 +72,12 @@ const RegisterPage: React.FC = () => {
                     sx={{
                         '& .MuiOutlinedInput-root': {
                             '& fieldset': {
-                                borderWidth: '4px',
-                                borderColor: '#FFF8E8', // Default border color
+                                borderWidth: '3px',
+                                borderColor: 'var(--borderColor)', // Default border color
                             },
                             '&:hover fieldset': {
                                 borderWidth: '3px',
-                                borderColor: '#FFF8E8', // Border color on hover
+                                borderColor: 'var(--borderColor)', // Border color on hover
                             },
                             '&.Mui-focused fieldset': {
                                 borderWidth: '3px',
@@ -91,12 +96,12 @@ const RegisterPage: React.FC = () => {
                     sx={{
                         '& .MuiOutlinedInput-root': {
                             '& fieldset': {
-                                borderWidth: '4px',
-                                borderColor: '#FFF8E8', // Default border color
+                                borderWidth: '3px',
+                                borderColor: 'var(--borderColor)', // Default border color
                             },
                             '&:hover fieldset': {
                                 borderWidth: '3px',
-                                borderColor: '#FFF8E8', // Border color on hover
+                                borderColor: 'var(--borderColor)', // Border color on hover
                             },
                             '&.Mui-focused fieldset': {
                                 borderWidth: '3px',
@@ -115,12 +120,12 @@ const RegisterPage: React.FC = () => {
                     sx={{
                         '& .MuiOutlinedInput-root': {
                             '& fieldset': {
-                                borderWidth: '4px',
-                                borderColor: '#FFF8E8', // Default border color
+                                borderWidth: '3px',
+                                borderColor: 'var(--borderColor)', // Default border color
                             },
                             '&:hover fieldset': {
                                 borderWidth: '3px',
-                                borderColor: '#FFF8E8', // Border color on hover
+                                borderColor: 'var(--borderColor)', // Border color on hover
                             },
                             '&.Mui-focused fieldset': {
                                 borderWidth: '3px',

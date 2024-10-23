@@ -1,0 +1,16 @@
+:root {
+    --backgroundColor: #AAB396;
+    --primaryColor: #AAB396;
+    --secondaryColor: #808E67;
+    --accentColor: #FFF8E8;
+
+    --borderColor: #FFF8E8;
+    --textColor: #FFF8E8;
+    --fontStyle: "Poppins", sans-serif;
+    --headerFontSize: 3em;
+
+    --hyperlinkColor: #0C4480;
+    --hyperlinkHoverColor: white;
+
+    --choiceBoxLabelColor: #333;
+}

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography } from '@mui/material';
 import "../boards/css/mode1.css";
+import "./css/animatedText.css"
 
 interface AnimatedTextProps {
     text: string;
@@ -23,7 +24,7 @@ const AnimatedText: React.FC<AnimatedTextProps> = ({ text }) => {
         }, [text]);
 
         return (
-            <Typography variant="body1" component={'span'} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
+            <Typography variant="body1" className="animatedText" component={'span'} style={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}>
                 {visibleText.split('').map((char, index) => (
                     <span key={index}>{char}</span>
                 ))}

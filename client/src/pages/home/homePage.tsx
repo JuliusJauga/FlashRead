@@ -3,10 +3,14 @@ import Dropdown from '../../components/dropdown';
 import CustomButton from '../../components/buttons/customButton';
 import '../../boards/css/main.board.css';
 import '../../boards/css/dropdown.css';
-
+import { useAuth } from '../../context/AuthContext';
 const HomePage: React.FC = () => {
     const navigate = useNavigate();
-
+    const { logOut } = useAuth();
+    const handleLogout = async () => {
+        await logOut();
+        navigate('/login');
+    }
     return (
         <div className="MainBoard_main">
 
@@ -14,6 +18,12 @@ const HomePage: React.FC = () => {
                 <Dropdown onSelect={function (item: string): void {
                 if (item === "Login") {
                     navigate("/login");
+                }
+                else if (item === "Logout") {
+                    handleLogout();
+                }
+                else if (item === "Settings") {
+                    navigate("/settings");
                 }
                 } } />
             </div>
