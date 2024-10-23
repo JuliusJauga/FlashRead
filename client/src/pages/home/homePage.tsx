@@ -45,11 +45,7 @@ const HomePage: React.FC = () => {
 
                         <CustomButton label= "Mode 3" className= "squareButton" id="MainBoard_mode3Button" onClick={()=>{
                             console.log("Mode 3 clicked");
-                            const mode3Button = document.getElementById("MainBoard_mode3Button") as HTMLButtonElement;
-                            mode3Button.textContent = "Coming Soon";
-                            setTimeout(() => {
-                            mode3Button.textContent = "Mode 3";
-                            }, 1000);
+                            navigate("/mode3");
                         }}/>
 
                     </div>
