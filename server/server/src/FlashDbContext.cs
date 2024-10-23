@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server.src.Task1;
+using server.src.Task2;
 using server.UserNamespace;
 using server.src.Settings;
 namespace server.src {
@@ -9,6 +10,7 @@ namespace server.src {
         public DbSet<DbTask1Text> Task1Texts { get; set; }
         public DbSet<DbTask1Question> Task1Questions { get; set; }
         public DbSet<DbUser> Users { get; set; }
+        public DbSet<DbTask2Text> Task2Texts { get; set; }
         public DbSet<DbTaskHistory> UserTaskHistories { get; set; }
         public DbSet<DbTask1Contribution> UserTask1Contributions { get; set; }
         public DbSet<DbUserSettings> UserSettings { get; set; } 
@@ -75,31 +77,6 @@ namespace server.src {
                 entity.HasKey(e => e.Id).HasName("contributions_pkey");
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
-                entity.Property(e => e.TimeContributed).HasColumnName("time_contributed");
-            });
-            modelBuilder.Entity<DbUserSettings>(entity => {
-                entity.ToTable("settings", "users");
-                entity.HasKey(e => e.Id).HasName("settings_pkey");
-                entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.Theme).HasColumnName("theme");
-                entity.Property(e => e.Font).HasColumnName("font");
-            });
-            modelBuilder.Entity<DbSettingsTheme>(entity => {
-                entity.ToTable("theme", "settings");
-                entity.HasKey(e => e.Theme).HasName("theme_pkey");
-                entity.Property(e => e.Theme).HasColumnName("theme");
-                entity.Property(e => e.MainBackground).HasColumnName("main_background");
-                entity.Property(e => e.SecondaryBackground).HasColumnName("secondary_background");
-                entity.Property(e => e.PrimaryColor).HasColumnName("primary_color");
-                entity.Property(e => e.AccentColor).HasColumnName("accent_color");
-                entity.Property(e => e.TextColor).HasColumnName("text_color");
-                entity.Property(e => e.BorderColor).HasColumnName("border_color");
-            });
-            modelBuilder.Entity<DbSettingsFont>(entity => {
-                entity.ToTable("font", "settings");
-                entity.HasKey(e => e.Font).HasName("font_pkey");
-                entity.Property(e => e.Font).HasColumnName("font");
-                entity.Property(e => e.FontFamily).HasColumnName("font_family");
             });
         }
     }

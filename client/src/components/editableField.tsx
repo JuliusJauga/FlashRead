@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import CustomButton from './buttons/customButton';
 import './css/editableField.css'; // Import the CSS file
 
@@ -11,6 +11,10 @@ interface SettingsButtonProps {
 const EditableField: React.FC<SettingsButtonProps> = ({ label, initialValue, onSave }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [value, setValue] = useState(initialValue);
+
+    useEffect(() => {
+        setValue(initialValue);
+    }, [initialValue]);
 
     const handleEditClick = () => {
         setIsEditing(true);
