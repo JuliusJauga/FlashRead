@@ -4,54 +4,55 @@
 #include "../core/Components.h"
 #include "../rendering/Mesh.h"
 
-#include "../meshes/bunny.h"
-#include "../meshes/teapot.h"
-#include "../meshes/sponza.h"
-#include "../meshes/bookshelf.h"
+#include "../meshes/candle.h"
+#include "../meshes/chair.h"
+#include "../meshes/closedBook.h"
+#include "../meshes/emptyBookshelf.h"
+#include "../meshes/fullBookshelf.h"
+#include "../meshes/lectern.h"
+#include "../meshes/openBook.h"
+#include "../meshes/pencil.h"
 #include "../meshes/table.h"
+
 
 TestScene::TestScene() {
     SetCamera(m_player.GetCamera());
     sunPosition = glm::vec3{1000, 3500, 800} * 1000.f;
 
-    Mesh mesh = MeshRegistry::Create("bunny");
-    mesh->Load(bunny_vertexCount, reinterpret_cast<const Vertex*>(bunny_vertices), glm::scale(glm::mat4(1), glm::vec3(50)));
-    mesh = MeshRegistry::Create("sponza");
-    mesh->Load(sponza_vertexCount, reinterpret_cast<const Vertex*>(sponza_vertices));
-    mesh = MeshRegistry::Create("teapot");
-    mesh->Load(teapot_vertexCount, reinterpret_cast<const Vertex*>(teapot_vertices));
-    mesh = MeshRegistry::Create("bookshelf");
-    mesh->Load(bookshelf_vertexCount, reinterpret_cast<const Vertex*>(bookshelf_vertices));
-    mesh = MeshRegistry::Create("table");
+    
+    Mesh mesh = MeshRegistry::Create("table");
     mesh->Load(table_vertexCount, reinterpret_cast<const Vertex*>(table_vertices));
+    mesh = MeshRegistry::Create("candle");
+    mesh->Load(candle_vertexCount, reinterpret_cast<const Vertex*>(candle_vertices));
+    mesh = MeshRegistry::Create("chair");
+    mesh->Load(chair_vertexCount, reinterpret_cast<const Vertex*>(chair_vertices));
+    mesh = MeshRegistry::Create("closedBook");
+    mesh->Load(closedBook_vertexCount, reinterpret_cast<const Vertex*>(closedBook_vertices));
+    mesh = MeshRegistry::Create("emptyBookshelf");
+    mesh->Load(emptyBookshelf_vertexCount, reinterpret_cast<const Vertex*>(emptyBookshelf_vertices));
+    mesh = MeshRegistry::Create("fullBookshelf");
+    mesh->Load(fullBookshelf_vertexCount, reinterpret_cast<const Vertex*>(fullBookshelf_vertices));
+    mesh = MeshRegistry::Create("lectern");
+    mesh->Load(lectern_vertexCount, reinterpret_cast<const Vertex*>(lectern_vertices));
+    mesh = MeshRegistry::Create("openBook");
+    mesh->Load(openBook_vertexCount, reinterpret_cast<const Vertex*>(openBook_vertices));
+    mesh = MeshRegistry::Create("pencil");
+    mesh->Load(pencil_vertexCount, reinterpret_cast<const Vertex*>(pencil_vertices));
 
-    m_sceneBuilder.AddModel("bunny");
-    m_sceneBuilder.AddModel("sponza");
-    m_sceneBuilder.AddModel("teapot");
-    m_sceneBuilder.AddModel("bookshelf");
+    m_sceneBuilder.AddModel("candle");
+    m_sceneBuilder.AddModel("chair");
+    m_sceneBuilder.AddModel("closedBook");
+    m_sceneBuilder.AddModel("emptyBookshelf");
+    m_sceneBuilder.AddModel("fullBookshelf");
+    m_sceneBuilder.AddModel("lectern");
+    m_sceneBuilder.AddModel("openBook");
+    m_sceneBuilder.AddModel("pencil");
     m_sceneBuilder.AddModel("table");
 
 // #ifndef SHADER_HOT_RELOAD
 //     m_sceneBuilder.Load(testscene_stateCount, testscene_states);
 // #endif
 
-    mesh = MeshRegistry::Get("sponza");
-    auto sponza = registry.create();
-    registry.emplace<MeshComponent>(sponza, MeshComponent{mesh});
-    registry.emplace<TransformComponent>(sponza, TransformComponent{
-        .position = {2000, 2000, 0},
-        .rotation = {0, 0, 0},
-        .scale = {1, 1, 1}
-    });
-
-    // create entity
-    {
-        auto floor = registry.create();
-        // attach rigid body
-        const auto& boxCol = m_physicsWorld.GetBoxCollider({1000, 1, 1000});
-        auto rb = m_physicsWorld.CreateRigidBody(boxCol, 0, {0, -100, 0}, {0, 0, 0});
-        registry.emplace<RigidBodyComponent>(floor, RigidBodyComponent{rb});
-    }
 }
 
 void TestScene::Update(TimeDuration dt) {
@@ -65,7 +66,7 @@ void TestScene::Update(TimeDuration dt) {
     if (Input::IsHeld(SDL_SCANCODE_B)) {
         auto rabbit = registry.create();
         // attach mesh
-        Mesh mesh = MeshRegistry::Get("bunny");
+        Mesh mesh = MeshRegistry::Get("candle");
         registry.emplace<MeshComponent>(rabbit, MeshComponent{mesh});
         // attach rigid body
         const auto& boxCol = m_physicsWorld.GetBoxCollider({2, 2, 2});
