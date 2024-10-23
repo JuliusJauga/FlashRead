@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
 using BCrypt.Net;
+using System.Text.Json;
 using server.src;
 using server.UserNamespace;
 using Microsoft.EntityFrameworkCore;
+using server.Services;
 namespace server.UserNamespace {
-    public class UserHandler(FlashDbContext _context, TokenProvider tokenProvider)
+    public class UserHandler(FlashDbContext _context, TokenProvider tokenProvider, HistoryManager historyManager, SessionManager sessionManager)
     {
         public async Task<bool> RegisterUserAsync(User user)
         {
@@ -16,6 +18,8 @@ namespace server.UserNamespace {
             }
             var dbUser = convertUserToDbUser(user);
             dbUser.Password = HashPassword(dbUser.Password);
+            await createSettingsId(dbUser);
+            await createSessionsId(dbUser);
             try
             {
                 _context.Users.Add(dbUser);
@@ -42,7 +46,7 @@ namespace server.UserNamespace {
             }
 
             string token = tokenProvider.Create(user);
-
+            await sessionManager.AddSessionToDictionary(user.Email);
             return token;
         }
         public async Task<bool> DeleteUserAsync(User user)
@@ -83,14 +87,14 @@ namespace server.UserNamespace {
             }
             return (User)dbUser;
         }
-        public async Task<User?> GetUserByEmailAsync(string email)
+        public async Task<DbUser?> GetUserByEmailAsync(string email)
         {
             var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
             if (dbUser == null)
             {
                 return null;
             }
-            return (User)dbUser;
+            return dbUser;
         }
         public string HashPassword(string password)
         {
@@ -103,6 +107,80 @@ namespace server.UserNamespace {
         private DbUser convertUserToDbUser(User user)
         {
             return (DbUser)user;
+        }
+        public async Task<string?> GetSettingsIdByEmailAsync(string email) {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                return null;
+            }
+            return dbUser.SettingsId;
+        }
+        private async Task createSettingsId(DbUser dbUser)
+        {
+            DbUserSettings userSettings = new DbUserSettings();
+            userSettings.Id = Guid.NewGuid().ToString();
+            _context.UserSettings.Add(userSettings);
+            var firstTheme = await _context.SettingsThemes.FirstOrDefaultAsync();
+            var firstFont = await _context.SettingsFonts.FirstOrDefaultAsync();
+            if (firstTheme != null)
+            {
+                userSettings.Theme = firstTheme.Theme;
+            }
+            if (firstFont != null)
+            {
+                userSettings.Font = firstFont.Font;
+            }
+            dbUser.SettingsId = userSettings.Id;
+            await _context.SaveChangesAsync();
+        }
+        private async Task createSessionsId(DbUser dbUser)
+        {
+            DbUserSessions userSessions = new DbUserSessions();
+            userSessions.Id = Guid.NewGuid().ToString();
+            _context.UserSessions.Add(userSessions);
+            dbUser.SessionsId = userSessions.Id;
+            await _context.SaveChangesAsync();
+        }
+        public async Task<string?> GetSettingsThemeById(string id)
+        {
+            var userSettings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == id);
+            if (userSettings == null)
+            {
+                return null;
+            }
+            return userSettings.Theme;
+        }
+        public async Task SaveTaskResult(string email, uint sessionId, int taskId, int[]? selectedVariants = null) {
+            await historyManager.SaveTaskResult(email, sessionId, taskId, selectedVariants);
+        }
+        public async Task<IEnumerable<DbTaskHistory>> GetTaskHistoryByEmail(string email)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                return new List<DbTaskHistory>();
+            }
+            List<DbTaskHistory> taskHistories = new List<DbTaskHistory>();
+            foreach (var historyId in dbUser.HistoryIds)
+            {
+                var taskHistory = await _context.UserTaskHistories.FirstOrDefaultAsync(h => h.Id == historyId);
+                if (taskHistory != null)
+                {
+                    taskHistories.Add(taskHistory);
+                }
+            }
+            return taskHistories;
+        }
+
+        public async Task<string?> GetSettingsFontById(string id)
+        {
+            var userSettings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == id);
+            if (userSettings == null)
+            {
+                return null;
+            }
+            return userSettings.Font;
         }
     }
 }

@@ -38,5 +38,22 @@ namespace server.Controller {
             }
             return NotFound("User not found.");
         }
+        [HttpGet("Users/GetUserDetails")]
+        public async Task<IActionResult> GetUserDetails([FromQuery] string email) {
+            var user = await _userHandler.GetUserByEmailAsync(email);
+            if (user != null) {
+                return Ok(new { Email = user?.Email, Name = user?.Name, JoinedAt = user?.JoinedAt });
+            }
+            return NotFound("User not found.");
+        }
+        [HttpGet("Users/GetUserHistory")]
+        public async Task<IActionResult> GetUserHistory([FromQuery] string email) {
+            var user = await _userHandler.GetUserByEmailAsync(email);
+            if (user != null) {
+                var history = await _userHandler.GetTaskHistoryByEmail(email);
+                return Ok(history);
+            }
+            return NotFound("User not found.");
+        }
     }
 }

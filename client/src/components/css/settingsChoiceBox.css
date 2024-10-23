@@ -1,19 +1,42 @@
 .settingsChoiceBox {
     display: flex;
-    align-items: center;
-    margin-bottom: 16px;
+    flex-direction: column; 
+    align-items: flex-start;
+    font-family: var(--fontStyle);
+    color: var(--textColor);
+    width: 40%; 
+    margin: 20px auto; 
+    /* background-color: aqua; */
 }
 
 .settingsChoiceBoxLabel {
-    margin-right: 8px;
+    font-size: 20px;
+    margin-bottom: 5px; 
     font-weight: bold;
-    font-family: var(--fontStyle);
-    color: var(--textColor);
 }
 
 .settingsChoiceBoxSelect {
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 16px;
+    font-size: 20px;
+    padding: 5px;
+    border: 3px solid var(--borderColor);
+    border-radius: 12px;
+    background-color: transparent;
+    color: var(--textColor);
+    font-family: var(--fontStyle);
+    box-sizing: border-box;
+    width: 100%;
+    appearance: none; 
+    position: relative; 
+    display: block;
+
 }
+.settingsChoiceBoxSelect:focus {
+    outline: none;
+}
+
+.settingsChoiceBoxSelect option {
+    color: var(--textColor);
+    background-color: var(--backgroundColor);
+}
+
+/* TODO: FIX SELECTION WIDTH FOR FIREFOX */

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using server.src.Task1;
 using server.src.Task2;
 using server.UserNamespace;
+using server.src.Settings;
 namespace server.src {
     public class FlashDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
@@ -10,6 +11,13 @@ namespace server.src {
         public DbSet<DbTask1Question> Task1Questions { get; set; }
         public DbSet<DbUser> Users { get; set; }
         public DbSet<DbTask2Text> Task2Texts { get; set; }
+        public DbSet<DbTaskHistory> UserTaskHistories { get; set; }
+        public DbSet<DbTask1Contribution> UserTask1Contributions { get; set; }
+        public DbSet<DbUserSettings> UserSettings { get; set; } 
+        public DbSet<DbSettingsTheme> SettingsThemes { get; set; }
+        public DbSet<DbSettingsFont> SettingsFonts { get; set; }
+        public DbSet<DbUserSessions> UserSessions { get; set; }
+        public DbSet<DbUserSingleSession> UserSingleSessions { get; set; }
         public FlashDbContext(DbContextOptions<FlashDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder) {
@@ -38,13 +46,31 @@ namespace server.src {
                 entity.Property(e => e.Password).HasColumnName("password");
                 entity.Property(e => e.HistoryIds).HasColumnName("history_ids");
                 entity.Property(e => e.ContributionsIds).HasColumnName("contributions_ids");
+                entity.Property(e => e.SettingsId).HasColumnName("settings_id");
+                entity.Property(e => e.JoinedAt).HasColumnName("joined_at");
+                entity.Property(e => e.SessionsId).HasColumnName("sessions_id");
             });
-            modelBuilder.Entity<DbTask1History>(entity => {
-                entity.ToTable("history", "users");
+            modelBuilder.Entity<DbUserSessions>(entity => {
+                entity.ToTable("user_sessions", "users");
+                entity.HasKey(e => e.Id).HasName("user_sessions_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.SessionIds).HasColumnName("session_ids");
+            });
+            modelBuilder.Entity<DbUserSingleSession>(entity => {
+                entity.ToTable("single_session", "users");
+                entity.HasKey(e => e.Id).HasName("single_session_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.TimeStarted).HasColumnName("time_started");
+                entity.Property(e => e.TimeEnded).HasColumnName("time_ended");
+            });
+            modelBuilder.Entity<DbTaskHistory>(entity => {
+                entity.ToTable("user_history", "users");
                 entity.HasKey(e => e.Id).HasName("history_pkey");
                 entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
+                entity.Property(e => e.SessionId).HasColumnName("session_id");
+                entity.Property(e => e.TaskId).HasColumnName("task_id");
                 entity.Property(e => e.Answers).HasColumnName("answers");
+                entity.Property(e => e.TimePlayed).HasColumnName("time_played");
             });
             modelBuilder.Entity<DbTask1Contribution>(entity => {
                 entity.ToTable("contributions", "users");
@@ -60,7 +86,30 @@ namespace server.src {
                 entity.Property(e => e.Theme).HasColumnName("theme");
                 entity.Property(e => e.Text).HasColumnName("text");
             });
-            
+            modelBuilder.Entity<DbUserSettings>(entity => {
+                entity.ToTable("settings", "users");
+                entity.HasKey(e => e.Id).HasName("settings_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Theme).HasColumnName("theme");
+                entity.Property(e => e.Font).HasColumnName("font");
+            });
+            modelBuilder.Entity<DbSettingsTheme>(entity => {
+                entity.ToTable("theme", "settings");
+                entity.HasKey(e => e.Theme).HasName("theme_pkey");
+                entity.Property(e => e.Theme).HasColumnName("theme");
+                entity.Property(e => e.MainBackground).HasColumnName("main_background");
+                entity.Property(e => e.SecondaryBackground).HasColumnName("secondary_background");
+                entity.Property(e => e.PrimaryColor).HasColumnName("primary_color");
+                entity.Property(e => e.AccentColor).HasColumnName("accent_color");
+                entity.Property(e => e.TextColor).HasColumnName("text_color");
+                entity.Property(e => e.BorderColor).HasColumnName("border_color");
+            });
+            modelBuilder.Entity<DbSettingsFont>(entity => {
+                entity.ToTable("font", "settings");
+                entity.HasKey(e => e.Font).HasName("font_pkey");
+                entity.Property(e => e.Font).HasColumnName("font");
+                entity.Property(e => e.FontFamily).HasColumnName("font_family");
+            });
         }
     }
 }
