@@ -4,7 +4,7 @@
     align-items: flex-start;
     font-family: var(--fontStyle);
     color: var(--textColor);
-    width: 60%; 
+    width: 40%; 
     margin: 20px auto; 
     /* background-color: aqua; */
 }
@@ -24,7 +24,7 @@
     color: var(--textColor);
     font-family: var(--fontStyle);
     box-sizing: border-box;
-    width: 60%;
+    width: 100%;
     appearance: none; 
     position: relative; 
     display: block;
