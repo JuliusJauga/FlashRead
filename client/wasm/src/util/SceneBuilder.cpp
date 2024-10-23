@@ -3,7 +3,6 @@
 #include <format>
 #include <emscripten/fetch.h>
 #include <sstream>
-#include <iostream>
 
 #include "../vendor/imgui/imgui.h"
 #include "../vendor/imgui/imgui_stdlib.h"
@@ -27,7 +26,7 @@ void SceneBuilder::CreateEntity() {
             .mesh = MeshRegistry::Get(m_models[m_state.selectedModel]),
             .position = m_state.modelOffset,
             .rotation = m_state.modelRotation,
-            .scale = m_state.modelScale * (m_state.selectedCollider == -1 ? m_state.scale : glm::vec3{1})
+            .scale = m_state.modelScale * (m_state.selectedCollider != -1 ? m_state.scale : glm::vec3{1})
         });
         if (m_state.selectedCollider == -1) {
             m_registry.emplace<TransformComponent>(m_entity, TransformComponent{
@@ -111,14 +110,15 @@ void SceneBuilder::Update() {
     ImGui::End();
 }
 
-void Reset() {
+void SceneBuilder::Reset() {
     m_savedStates.clear();
     m_state = State();
     m_entity = entt::null;
-    m_register.clear();
+    m_registry.clear();
 }
 
 void SceneBuilder::Load() {
+#ifdef SHADER_HOT_RELOAD
     emscripten_fetch_attr_t attr;
     emscripten_fetch_attr_init(&attr);
     attr.requestMethod[0] = 'G';
@@ -178,6 +178,8 @@ void SceneBuilder::Load() {
                 // collider
                 line >> state.selectedCollider;
                 line.ignore();
+                line >> state.mass;
+                line.ignore();
 
                 // box collider
                 state.boxColliderSize = readvec3(line);
@@ -195,9 +197,12 @@ void SceneBuilder::Load() {
         emscripten_fetch_close(fetch);
     };
     emscripten_fetch(&attr, ("http://localhost:8000/scenes/" + std::string(m_saveName) + ".h").c_str());
+#else
+    printf("Loading from url only available in SHADER_HOT_RELOAD mode.\n");
+#endif
 }
 void SceneBuilder::Load(uint32_t stateCount, const State *states, bool saveable) {
-    m_savedStates.clear();
+    Reset();
     for (uint32_t i = 0; i < stateCount; i++) {
         if (saveable) m_savedStates.push_back(states[i]);
         m_state = states[i];
@@ -217,12 +222,13 @@ void SceneBuilder::Save() {
         saveData += "#pragma once\n\n";
         saveData += "#include <stdint.h>\n";
         saveData += "#include \"../util/SceneBuilder.h\"\n\n";
+        saveData += std::format("constexpr uint32_t {}_stateVersion = {};\n", m_saveName, m_stateVersion);
         saveData += std::format("constexpr uint32_t {}_stateCount = {};\n", m_saveName, m_savedStates.size());
         saveData += std::format("constexpr SceneBuilder::State {}_states[] = {{\n", m_saveName);
         for (const auto& state : m_savedStates) {
             saveData += std::format("   {{{},{},{},", vec3str(state.position), vec3str(state.rotation), vec3str(state.scale));
             saveData += std::format("{},{},{},{},", state.selectedModel, vec3str(state.modelOffset), vec3str(state.modelRotation), vec3str(state.modelScale));
-            saveData += std::format("{},{}}},\n", state.selectedCollider, vec3str(state.boxColliderSize));
+            saveData += std::format("{},{},{}}},\n", state.selectedCollider, state.mass, vec3str(state.boxColliderSize));
         }
         saveData += "};\n";
     }

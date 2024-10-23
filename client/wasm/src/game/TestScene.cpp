@@ -10,8 +10,6 @@
 #include "../meshes/bookshelf.h"
 #include "../meshes/table.h"
 
-#include "../scenes/testscene.h" 
-
 TestScene::TestScene() {
     SetCamera(m_player.GetCamera());
     sunPosition = glm::vec3{1000, 3500, 800} * 1000.f;
@@ -33,9 +31,9 @@ TestScene::TestScene() {
     m_sceneBuilder.AddModel("bookshelf");
     m_sceneBuilder.AddModel("table");
 
-#ifndef SHADER_HOT_RELOAD
-    m_sceneBuilder.Load(testscene_stateCount, testscene_states);
-#endif
+// #ifndef SHADER_HOT_RELOAD
+//     m_sceneBuilder.Load(testscene_stateCount, testscene_states);
+// #endif
 
     mesh = MeshRegistry::Get("sponza");
     auto sponza = registry.create();

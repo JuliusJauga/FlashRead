@@ -27,6 +27,7 @@ public:
         glm::vec3 modelScale{1, 1, 1};
         
         int selectedCollider = -1;
+        float mass = 0;
         glm::vec3 boxColliderSize{1, 1, 1};
     };
     void Load(uint32_t stateCount, const State* states, bool saveable = false);
@@ -41,6 +42,7 @@ private:
     entt::entity m_entity = entt::null;
     std::string m_saveName;
     State m_state;
+    uint32_t m_stateVersion = 0;
     std::vector<std::string> m_models;
     std::vector<std::string> m_colliders;
 
