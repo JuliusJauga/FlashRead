@@ -33,7 +33,7 @@ const Mode2Page: React.FC = () => {
                     <p className="pointsText" id="combo">{combo}</p>
                 </div>
                 <div className="w-full h-full gamePage">
-                    <Mode2Task wordArray = {textArray} fillerArray = {fillerArray} gameStarted={gameStarted} setPoints={setPoints} setCombo={setCombo} />
+                    <Mode2Task wordArray = {textArray} fillerArray = {fillerArray} gameStarted={gameStarted} setPoints={setPoints} setCombo={setCombo} difficulty={mode2Difficulty} />
                 </div>
             </div>
             <div className="mode2_lowerDiv" id="buttonDiv">

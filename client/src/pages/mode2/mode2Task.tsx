@@ -10,10 +10,11 @@ interface Mode2TaskProps {
     gameStarted: boolean;
     setPoints: (points: number) => void;
     setCombo: (combo: number) => void;
+    difficulty: string;
 }
 
 
-const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStarted, setPoints, setCombo }) => {
+const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStarted, setPoints, setCombo, difficulty }) => {
     const [canvasSize, setCanvasSize] = useState<vec2>({ x: 1200, y: 600 });
     const [playerPos, setPlayerPos] = useState<vec2>({ x: 0, y: 0.1});
     const [textArray, setTextArray] = useState<droppingText[]>([]);
@@ -48,18 +49,32 @@ const mode2Task: React.FC <Mode2TaskProps> = ({ wordArray, fillerArray, gameStar
             
             const playerRadius = 0.05;
             const textArray = textArrayRef.current;
-    
             // spawn new text
-            const difficulty = 0.01;
-            if (Math.random() < difficulty * 2 && textArray.length < difficulty * 400) {
+            let difficultyInt = 0.001;
+            
+            console.log(difficulty);
+
+            if (difficulty === "Easy") {
+                difficultyInt = 0.005;
+            } else if (difficulty === "Medium") {
+                difficultyInt = 0.007;
+            } else if (difficulty === "Hard") {
+                difficultyInt = 0.009;
+            } else if (difficulty === "EXTREME") {
+                difficultyInt = 0.02;
+            } else {
+                difficultyInt = 0.005;
+            }
+
+            if (Math.random() < difficultyInt * 2 && textArray.length < difficultyInt * 400) {
                 const texts = fillerArray.concat(wordArray);
                 const text = texts[Math.floor(Math.random() * texts.length)];
                 const angle = 0;
                 const color = "black";
                 const pos = { x: Math.random() * 0.8 + 0.1, y: 1 };
                 const rotSpeed = (Math.random() < 0.5 ? -1 : 1) * 
-                Math.min(Math.max(0.0002, Math.random() * 0.01), difficulty / 4);
-                const fallSpeed = Math.min(Math.max(0.0002,  Math.random() * 0.001), difficulty / 20);
+                Math.min(Math.max(0.0002, Math.random() * 0.01), difficultyInt / 4);
+                const fallSpeed = Math.min(Math.max(0.0002,  Math.random() * 0.001), difficultyInt / 20);
                 const size = Math.floor(Math.random() * 20 + 20);
                 textArray.push({ text, pos, color, angle, rotSpeed, fallSpeed, size });
             }

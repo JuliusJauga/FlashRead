@@ -76,12 +76,11 @@ const Canvas: React.FC<{
         context.stroke();
 
         if (imageLoaded ) { // && imageLoadedLeft
-            context.drawImage(playerImg, player.x - 0.057 * canvasSize.x, player.y - 0.07 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
-            // if (direction === 'right') {
-            //     context.drawImage(playerImg, player.x - 0.057 * canvasSize.x, player.y - 0.07 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
-            // } else if (direction === 'left') {
-            //     context.drawImage(playerImgLeft, player.x - 0.057 * canvasSize.x, player.y - 0.07 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
-            // }
+            if (direction === 'right') {
+                context.drawImage(playerImg, player.x - 0.057 * canvasSize.x, player.y - 0.07 * canvasSize.x, 0.12 * canvasSize.x, 0.12 * canvasSize.x);
+            } else if (direction === 'left') {
+                context.drawImage(playerImg, player.x - 0.057 * canvasSize.x, player.y - 0.07 * canvasSize.x, -0.12 * canvasSize.x, 0.12 * canvasSize.x);
+            }
         }
     };
 
@@ -111,6 +110,7 @@ const Canvas: React.FC<{
                 if (prevMousePos) {
                     const newDirection = adjustedEvent.clientX > prevMousePos.x ? 'right' : 'left';
                     setDirection(newDirection);
+                    // TO DO set direction
                 }
                 setPrevMousePos({ x: adjustedEvent.clientX, y: adjustedEvent.clientY });
 
@@ -128,7 +128,7 @@ const Canvas: React.FC<{
         function draw(context: CanvasRenderingContext2D) {
             if (context && onTick !== undefined) {
                 // draw background
-                context.fillStyle = "gray";
+                context.fillStyle = 'var(--backgroundColor)';
                 context.fillRect(0, 0, canvasSize.x, canvasSize.y);
 
                 const lastTime = lastTimeRef?.current ?? 0;
