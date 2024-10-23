@@ -1,16 +1,17 @@
 .settingsChoiceBox {
     display: flex;
-    flex-direction: column; /* Change to column layout */
-    align-items: flex-start; /* Align items to the start */
+    flex-direction: column; 
+    align-items: flex-start;
     font-family: var(--fontStyle);
     color: var(--textColor);
-    width: 60%; /* Ensure the container takes up the full width */
-    margin: 20px auto; /* Add space above and below, center the container horizontally */
+    width: 60%; 
+    margin: 20px auto; 
+    /* background-color: aqua; */
 }
 
 .settingsChoiceBoxLabel {
     font-size: 20px;
-    margin-bottom: 5px; /* Match the space below the label in EditableField */
+    margin-bottom: 5px; 
     font-weight: bold;
 }
 
@@ -23,10 +24,10 @@
     color: var(--textColor);
     font-family: var(--fontStyle);
     box-sizing: border-box;
-    width: 100%; /* Adjust width to fit the container */
-    appearance: none; /* Remove default styling */
-    position: relative; /* For positioning the pseudo-element */
-    display: block; /* Ensure the select element is a block element */
+    width: 60%;
+    appearance: none; 
+    position: relative; 
+    display: block;
 }
 
 /* TODO: FIX SELECTION WIDTH FOR FIREFOX */

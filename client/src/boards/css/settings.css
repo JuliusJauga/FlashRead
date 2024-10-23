@@ -3,6 +3,7 @@
     position: absolute;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
     height: 100%;
     width: 100%;
     background-color: var(--backgroundColor);
@@ -24,6 +25,7 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    width: 40%;
     /* background-color: blue; */
 }
 
@@ -33,16 +35,17 @@
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    width: 100%;
     /* background-color: blue; */    
 }
 
 .settingsColumn {
-    flex: 1; /* Each column takes up equal space */
+    flex: 1;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 1em; /* Optional: Add padding for spacing */
+    padding: 1em;
 }
 
 .settingsFooter {
@@ -52,7 +55,7 @@
     justify-content: center;
     position: relative;
     padding: 3em;
-    /* background-color: azure; */
+    /* background-color: black; */
 }
 
 .settingsHeaderText {
@@ -63,14 +66,13 @@
 
 .settingsButtonContainer {
     display: flex;
-    flex-direction: row; /* Change to row layout */
-    align-items: center; /* Align items to the center */
-    justify-content: space-between; /* Space between the buttons */
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between; 
     font-family: var(--fontStyle);
     color: var(--textColor);
-    width: 75%; /* Ensure the container takes up the full width */
-    margin: 20px auto; /* Add space above and below, center the container horizontally */
-    position: relative; /* For positioning the button */
-    transform: scale(0.8); /* Scale down the container and its contents */
-    /* background-color: yellow; */
+    width: 75%; 
+    margin: 20px auto;
+    position: relative; 
+    transform: scale(0.8);
 }

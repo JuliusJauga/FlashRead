@@ -206,7 +206,6 @@ const SettingsPage: React.FC = () => {
                     </div>
                     <div className="settingsColumn">
                         <EditableField label="Profile Name" initialValue={"profileName"} onSave={() => {}}  />
-                        <EditableField label="Email" initialValue={"email"} onSave={() => {}} />
                         <div className="settingsButtonContainer">
                             <CustomButton label="Change Password" className="wideButton" id="settingsChangePasswordButton" onClick={() => navigate("/changePassword")}/>
                             <CustomButton label="Delete Account" className="wideButton" id="settingsDeleteAccountButton" onClick={() => navigate("/deleteAccount")}/>
