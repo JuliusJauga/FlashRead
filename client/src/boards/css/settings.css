@@ -27,6 +27,24 @@
     /* background-color: blue; */
 }
 
+.settingsContentAuth {
+    display: flex;
+    flex: 3;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    /* background-color: blue; */    
+}
+
+.settingsColumn {
+    flex: 1; /* Each column takes up equal space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 1em; /* Optional: Add padding for spacing */
+}
+
 .settingsFooter {
     display: flex;
     flex: 1;
@@ -41,4 +59,18 @@
     font-family: var(--fontStyle);
     font-size: var(--headerFontSize);
     color: var(--textColor);
+}
+
+.settingsButtonContainer {
+    display: flex;
+    flex-direction: row; /* Change to row layout */
+    align-items: center; /* Align items to the center */
+    justify-content: space-between; /* Space between the buttons */
+    font-family: var(--fontStyle);
+    color: var(--textColor);
+    width: 75%; /* Ensure the container takes up the full width */
+    margin: 20px auto; /* Add space above and below, center the container horizontally */
+    position: relative; /* For positioning the button */
+    transform: scale(0.8); /* Scale down the container and its contents */
+    /* background-color: yellow; */
 }

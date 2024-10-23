@@ -30,10 +30,22 @@ export const VisualSettingsProvider: React.FC<{ children: React.ReactNode }> = (
       console.log("AUTHENTICATED IN VISUALSETTINGSCONTEXT");
       const getAuthSettings = async () => {
         console.log("Getting theme from db");
-        const themeResponse = await axios.get('/api/User/GetThemeSettings');
-        const theme = themeResponse.data;
-        changeTheme(theme.theme);
-        changeFont(defaultSettings.font);
+        const tokenCookie = document.cookie.split('; ').find(row => row.startsWith('authToken='));
+        const token = tokenCookie ? tokenCookie.split('=')[1] : null;
+        if (token) {
+            try {
+              const themeResponse = await axios.get('/api/User/GetThemeSettings', {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              });
+              const theme = themeResponse.data;
+              changeTheme(theme.theme);
+              changeFont(defaultSettings.font);
+            } catch (error) {
+              console.error("Error fetching theme settings:", error);
+          }
+        }
       }
       getAuthSettings();
     } else {
