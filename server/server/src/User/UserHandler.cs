@@ -1,10 +1,12 @@
 using System.Threading.Tasks;
 using BCrypt.Net;
+using System.Text.Json;
 using server.src;
 using server.UserNamespace;
 using Microsoft.EntityFrameworkCore;
+using server.Services;
 namespace server.UserNamespace {
-    public class UserHandler(FlashDbContext _context, TokenProvider tokenProvider)
+    public class UserHandler(FlashDbContext _context, TokenProvider tokenProvider, HistoryManager historyManager, SessionManager sessionManager)
     {
         public async Task<bool> RegisterUserAsync(User user)
         {
@@ -44,7 +46,7 @@ namespace server.UserNamespace {
             }
 
             string token = tokenProvider.Create(user);
-
+            await sessionManager.AddSessionToDictionary(user.Email);
             return token;
         }
         public async Task<bool> DeleteUserAsync(User user)
@@ -148,6 +150,27 @@ namespace server.UserNamespace {
                 return null;
             }
             return userSettings.Theme;
+        }
+        public async Task SaveTaskResult(string email, uint sessionId, int taskId, int[]? selectedVariants = null) {
+            await historyManager.SaveTaskResult(email, sessionId, taskId, selectedVariants);
+        }
+        public async Task<IEnumerable<DbTaskHistory>> GetTaskHistoryByEmail(string email)
+        {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                return new List<DbTaskHistory>();
+            }
+            List<DbTaskHistory> taskHistories = new List<DbTaskHistory>();
+            foreach (var historyId in dbUser.HistoryIds)
+            {
+                var taskHistory = await _context.UserTaskHistories.FirstOrDefaultAsync(h => h.Id == historyId);
+                if (taskHistory != null)
+                {
+                    taskHistories.Add(taskHistory);
+                }
+            }
+            return taskHistories;
         }
 
         public async Task<string?> GetSettingsFontById(string id)

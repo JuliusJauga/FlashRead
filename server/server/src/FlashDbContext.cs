@@ -9,7 +9,7 @@ namespace server.src {
         public DbSet<DbTask1Text> Task1Texts { get; set; }
         public DbSet<DbTask1Question> Task1Questions { get; set; }
         public DbSet<DbUser> Users { get; set; }
-        public DbSet<DbTask1History> UserTask1Histories { get; set; }
+        public DbSet<DbTaskHistory> UserTaskHistories { get; set; }
         public DbSet<DbTask1Contribution> UserTask1Contributions { get; set; }
         public DbSet<DbUserSettings> UserSettings { get; set; } 
         public DbSet<DbSettingsTheme> SettingsThemes { get; set; }
@@ -61,11 +61,12 @@ namespace server.src {
                 entity.Property(e => e.TimeStarted).HasColumnName("time_started");
                 entity.Property(e => e.TimeEnded).HasColumnName("time_ended");
             });
-            modelBuilder.Entity<DbTask1History>(entity => {
-                entity.ToTable("history", "users");
+            modelBuilder.Entity<DbTaskHistory>(entity => {
+                entity.ToTable("user_history", "users");
                 entity.HasKey(e => e.Id).HasName("history_pkey");
                 entity.Property(e => e.Id).HasColumnName("id");
-                entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
+                entity.Property(e => e.SessionId).HasColumnName("session_id");
+                entity.Property(e => e.TaskId).HasColumnName("task_id");
                 entity.Property(e => e.Answers).HasColumnName("answers");
                 entity.Property(e => e.TimePlayed).HasColumnName("time_played");
             });

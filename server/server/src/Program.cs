@@ -8,6 +8,7 @@ using System.Net.NetworkInformation;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using server.src.Settings;
+using server.Services;
 namespace server
 {
     public class Program
@@ -67,7 +68,12 @@ namespace server
                 });
 
             builder.Services.AddSingleton<TokenProvider>();
+            
+            builder.Services.AddSingleton<DbContextFactory>();
+            builder.Services.AddSingleton<SessionManager>();
+            builder.Services.AddHostedService<SessionBackgroundService>();
 
+            builder.Services.AddScoped<HistoryManager>();
             builder.Services.AddScoped<UserHandler>();
             builder.Services.AddScoped<Settings>();
             builder.Services.AddControllers();
