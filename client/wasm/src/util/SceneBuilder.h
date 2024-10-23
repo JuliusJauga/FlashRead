@@ -30,6 +30,9 @@ public:
         int selectedCollider = -1;
         float mass = 0;
         glm::vec3 boxColliderSize{1, 1, 1};
+        float sphereColliderRadius = 1;
+        float capsuleColliderRadius = 1;
+        float capsuleColliderHeight = 1;
     };
     void Load(uint32_t stateCount, const State* states, bool saveable = false);
 
@@ -43,7 +46,7 @@ private:
     PhysicsWorld& m_physicsWorld;
     uint32_t m_selectedEntity = -1;
     std::string m_saveName;
-    uint32_t m_stateVersion = 0;
+    uint32_t m_stateVersion = 1;
     std::vector<std::string> m_models;
     std::vector<std::string> m_colliders;
 

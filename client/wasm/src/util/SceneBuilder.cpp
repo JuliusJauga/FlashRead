@@ -13,6 +13,8 @@
 SceneBuilder::SceneBuilder(entt::registry &registry, PhysicsWorld &physicsWorld)
     : m_registry(registry), m_physicsWorld(physicsWorld) {
     m_colliders.push_back("Box");
+    m_colliders.push_back("Sphere");
+    m_colliders.push_back("Capsule");
 }
 
 void SceneBuilder::AddModel(std::string_view name) {
@@ -53,7 +55,15 @@ void SceneBuilder::RecreateEntity(bool useMass) {
     }
     if (state.selectedCollider != -1) {
         float mass = useMass ? state.mass : 0;
-        auto col = m_physicsWorld.GetBoxCollider(state.boxColliderSize * state.scale);
+
+        std::shared_ptr<btCollisionShape> col;
+        if (m_colliders[state.selectedCollider] == "Box") {
+            col = m_physicsWorld.GetBoxCollider(state.boxColliderSize * state.scale);
+        } else if (m_colliders[state.selectedCollider] == "Sphere") {
+            col = m_physicsWorld.GetSphereCollider(state.sphereColliderRadius * glm::length(state.scale));
+        } else if (m_colliders[state.selectedCollider] == "Capsule") {
+            col = m_physicsWorld.GetCapsuleCollider(state.capsuleColliderRadius * glm::length(state.scale), state.capsuleColliderHeight * glm::length(state.scale));
+        }
         auto rb = m_physicsWorld.CreateRigidBody(col, mass, state.position, state.rotation);
         m_registry.emplace<RigidBodyComponent>(entity, RigidBodyComponent{rb});
     }
@@ -153,6 +163,11 @@ void SceneBuilder::Update() {
                 ImGui::DragFloat("Mass (0 for static)", &state.mass, 0.025f);
                 if (m_colliders[state.selectedCollider] == "Box") {
                     ImGui::DragFloat3("Box Collider Size", &state.boxColliderSize.x, 0.01f);
+                } else if (m_colliders[state.selectedCollider] == "Sphere") {
+                    ImGui::DragFloat("Sphere Collider Radius", &state.sphereColliderRadius, 0.01f);
+                } else if (m_colliders[state.selectedCollider] == "Capsule") {
+                    ImGui::DragFloat("Capsule Collider Radius", &state.capsuleColliderRadius, 0.01f);
+                    ImGui::DragFloat("Capsule Collider Height", &state.capsuleColliderHeight, 0.01f);
                 }
             }
 
@@ -252,6 +267,16 @@ void SceneBuilder::Load() {
 
                 // box collider
                 state.boxColliderSize = readvec3(line);
+                line.ignore();
+
+                // sphere collider
+                line >> state.sphereColliderRadius;
+                line.ignore();
+
+                // capsule collider
+                line >> state.capsuleColliderRadius;
+                line.ignore();
+                line >> state.capsuleColliderHeight;
 
                 states.push_back(state);
             }
@@ -299,7 +324,8 @@ void SceneBuilder::Save() {
             const State& state = pair.second;
             saveData += std::format("   {{{},{},{},", vec3str(state.position), vec3str(state.rotation), vec3str(state.scale));
             saveData += std::format("{},{},{},{},", state.selectedModel, vec3str(state.modelOffset), vec3str(state.modelRotation), vec3str(state.modelScale));
-            saveData += std::format("{},{},{}}},\n", state.selectedCollider, state.mass, vec3str(state.boxColliderSize));
+            saveData += std::format("{},{},{},", state.selectedCollider, state.mass, vec3str(state.boxColliderSize));
+            saveData += std::format("{},{},{}}},\n", state.sphereColliderRadius, state.capsuleColliderRadius, state.capsuleColliderHeight);
         }
         saveData += "};\n";
     }

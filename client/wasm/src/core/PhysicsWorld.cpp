@@ -33,16 +33,21 @@ PhysicsWorld::~PhysicsWorld() {
 	}
 }
 
-void PhysicsWorld::Update() {
-	std::vector<glm::vec3> objectsToRemove;
-	for (auto& it : m_boxShapes) {
+template <typename T>
+void clearExpiredObjects(std::unordered_map<T, std::weak_ptr<btCollisionShape>>& map) {
+	std::vector<T> objectsToRemove;
+	for (auto& it : map) {
 		if (it.second.expired()) {
 			objectsToRemove.push_back(it.first);
 		}
 	}
-	for (auto& obj : objectsToRemove) {
-		m_boxShapes.erase(obj);
-	}
+	for (auto& obj : objectsToRemove) map.erase(obj);
+}
+
+void PhysicsWorld::Update() {
+	clearExpiredObjects(m_boxShapes);
+	clearExpiredObjects(m_sphereShapes);
+	clearExpiredObjects(m_capsuleShapes);
 }
 
 void PhysicsWorld::SetTransform(btTransform& transform, const glm::vec3& position, const glm::vec3& rotation) {
@@ -53,15 +58,42 @@ void PhysicsWorld::SetTransform(btTransform& transform, const glm::vec3& positio
 }
 
 std::shared_ptr<btCollisionShape> PhysicsWorld::GetBoxCollider(const glm::vec3& halfExtents) {
+	const glm::vec3& key = halfExtents;
 	// check if exists
-	auto it = m_boxShapes.find(halfExtents);
+	auto it = m_boxShapes.find(key);
 	if (it != m_boxShapes.end()) {
 		auto ptr = it->second.lock();
 		if (ptr) return ptr;
 	}
 	// create new
 	auto ptr = std::make_shared<btBoxShape>(btVector3(halfExtents.x, halfExtents.y, halfExtents.z));
-	m_boxShapes[halfExtents] = ptr;
+	m_boxShapes[key] = ptr;
+	return ptr;
+}
+std::shared_ptr<btCollisionShape> PhysicsWorld::GetSphereCollider(float radius) {
+	float key = radius;
+	// check if exists
+	auto it = m_sphereShapes.find(key);
+	if (it != m_sphereShapes.end()) {
+		auto ptr = it->second.lock();
+		if (ptr) return ptr;
+	}
+	// create new
+	auto ptr = std::make_shared<btSphereShape>(radius);
+	m_sphereShapes[key] = ptr;
+	return ptr;
+}
+std::shared_ptr<btCollisionShape> PhysicsWorld::GetCapsuleCollider(float radius, float height) {
+	glm::vec2 key(radius, height);
+	// check if exists
+	auto it = m_capsuleShapes.find(key);
+	if (it != m_capsuleShapes.end()) {
+		auto ptr = it->second.lock();
+		if (ptr) return ptr;
+	}
+	// create new
+	auto ptr = std::make_shared<btCapsuleShape>(radius, height);
+	m_capsuleShapes[key] = ptr;
 	return ptr;
 }
 

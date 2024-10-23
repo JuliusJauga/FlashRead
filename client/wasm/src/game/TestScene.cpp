@@ -56,16 +56,20 @@ TestScene::TestScene() {
 }
 
 void TestScene::Update(TimeDuration dt) {
+    // scene builder
     m_sceneBuilder.Update();
-
     if (Input::JustPressed(SDL_SCANCODE_L)) {
         m_sceneBuilder.Play();
     }
     
+    // logic
     m_player.Update();
+
+    // physics
     auto& dynamicsWorld = m_physicsWorld.dynamicsWorld;
     dynamicsWorld->stepSimulation(dt.fMilli(), 1);
 
+    // random stuff
     // create entity
     if (Input::IsHeld(SDL_SCANCODE_B)) {
         auto rabbit = registry.create();
