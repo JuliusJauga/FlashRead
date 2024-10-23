@@ -1,6 +1,7 @@
 # Some controls:
 P - reload shaders
 O - show collision shapes
+L - exit editor, start game
 
 
 # To create .cpp files from .obj:

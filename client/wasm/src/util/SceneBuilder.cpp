@@ -3,10 +3,12 @@
 #include <format>
 #include <emscripten/fetch.h>
 #include <sstream>
+#include <limits>
 
 #include "../vendor/imgui/imgui.h"
 #include "../vendor/imgui/imgui_stdlib.h"
 #include "../core/Components.h"
+#include "../rendering/Debug.h"
 
 SceneBuilder::SceneBuilder(entt::registry &registry, PhysicsWorld &physicsWorld)
     : m_registry(registry), m_physicsWorld(physicsWorld) {
@@ -17,85 +19,150 @@ void SceneBuilder::AddModel(std::string_view name) {
     m_models.push_back(std::string(name));
 }
 
-void SceneBuilder::CreateEntity() {
-    if (m_entity != entt::null) m_registry.destroy(m_entity);
-    m_entity = m_registry.create();
+void SceneBuilder::Play() {
+    m_playing = !m_playing;
 
-    if (m_state.selectedModel != -1) {
-        m_registry.emplace<MeshComponent>(m_entity, MeshComponent{
-            .mesh = MeshRegistry::Get(m_models[m_state.selectedModel]),
-            .position = m_state.modelOffset,
-            .rotation = m_state.modelRotation,
-            .scale = m_state.modelScale * (m_state.selectedCollider != -1 ? m_state.scale : glm::vec3{1})
+    for (uint32_t i = 0; i < m_savedStates.size(); i++) {
+        m_selectedEntity = i;
+        RecreateEntity(m_playing);
+    }
+    m_selectedEntity = -1;
+}
+
+void SceneBuilder::RecreateEntity(bool useMass) {
+    if (m_selectedEntity == -1) return;
+    entt::entity& entity = m_savedStates[m_selectedEntity].first;
+    State& state = m_savedStates[m_selectedEntity].second;
+    if (entity != entt::null) m_registry.destroy(entity);
+    entity = m_registry.create();
+
+    if (state.selectedModel != -1) {
+        m_registry.emplace<MeshComponent>(entity, MeshComponent{
+            .mesh = MeshRegistry::Get(m_models[state.selectedModel]),
+            .position = state.modelOffset,
+            .rotation = state.modelRotation,
+            .scale = state.modelScale * (state.selectedCollider != -1 ? state.scale : glm::vec3{1})
         });
-        if (m_state.selectedCollider == -1) {
-            m_registry.emplace<TransformComponent>(m_entity, TransformComponent{
-                .position = m_state.position,
-                .rotation = m_state.rotation,
-                .scale = m_state.scale
+        if (state.selectedCollider == -1) {
+            m_registry.emplace<TransformComponent>(entity, TransformComponent{
+                .position = state.position,
+                .rotation = state.rotation,
+                .scale = state.scale
             });
         }
     }
-    if (m_state.selectedCollider != -1) {
-        auto col = m_physicsWorld.GetBoxCollider(m_state.boxColliderSize * m_state.scale);
-        auto rb = m_physicsWorld.CreateRigidBody(col, 0, m_state.position, m_state.rotation);
-        m_registry.emplace<RigidBodyComponent>(m_entity, RigidBodyComponent{rb});
+    if (state.selectedCollider != -1) {
+        float mass = useMass ? state.mass : 0;
+        auto col = m_physicsWorld.GetBoxCollider(state.boxColliderSize * state.scale);
+        auto rb = m_physicsWorld.CreateRigidBody(col, mass, state.position, state.rotation);
+        m_registry.emplace<RigidBodyComponent>(entity, RigidBodyComponent{rb});
     }
 }
 
 void SceneBuilder::Update() {
+    // draw axis
+    int32_t maxInt = 1000000;
+    DebugDraw::DrawLine({-maxInt, 0, 0}, {maxInt, 0, 0}, {1, 0, 0});
+    DebugDraw::DrawLine({0, -maxInt, 0}, {0, maxInt, 0}, {0, 1, 0});
+    DebugDraw::DrawLine({0, 0, -maxInt}, {0, 0, maxInt}, {0, 0, 1});
+    // draw floor
+    for (int i = 0; i < 3000; i++) {
+        int scale = i*2;
+        DebugDraw::DrawLine({-maxInt, 0, scale}, {maxInt, 0, scale}, {0.5, 0.5, 0.5});
+        DebugDraw::DrawLine({-maxInt, 0, -scale}, {maxInt, 0, -scale}, {0.5, 0.5, 0.5});
+        DebugDraw::DrawLine({scale, 0, -maxInt}, {scale, 0, maxInt}, {0.5, 0.5, 0.5});
+        DebugDraw::DrawLine({-scale, 0, -maxInt}, {-scale, 0, maxInt}, {0.5, 0.5, 0.5});
+    }
+
+    if (m_playing) return;
+
+    // tool window
     if (ImGui::Begin("Scene Builder")) {
-        ImGui::DragFloat3("Position", &m_state.position.x, 0.1f);
-        ImGui::DragFloat3("Rotation", &m_state.rotation.x, 0.5f);
-        ImGui::DragFloat3("Scale", &m_state.scale.x, 0.1f);
-        
-        if (ImGui::BeginListBox("Models")) {
-            for (int i = 0; i < m_models.size(); i++) {
+        if (ImGui::BeginListBox("Entities")) {
+            for (int i = 0; i < m_savedStates.size(); i++) {
                 ImGui::PushID(i);
-                bool isSelected = i == m_state.selectedModel;
-                if (ImGui::Selectable(m_models[i].c_str(), isSelected)) {
-                    if (isSelected) m_state.selectedModel = -1;
-                    else m_state.selectedModel = i;
+                bool isSelected = i == m_selectedEntity;
+                if (ImGui::Selectable(std::format("Entity {}", i).c_str(), isSelected)) {
+                    if (isSelected) m_selectedEntity = -1;
+                    else m_selectedEntity = i;
                 }
                 ImGui::PopID();
             }
             ImGui::EndListBox();
         }
-        if (m_state.selectedModel != -1) {
-            ImGui::DragFloat3("Model offset", &m_state.modelOffset.x, 0.1f);
-            ImGui::DragFloat3("Model Rotation", &m_state.modelRotation.x, 0.5f);
-            ImGui::DragFloat3("Model Scale", &m_state.modelScale.x, 0.1f);
-        }
-
-        if (ImGui::BeginListBox("Colliders")) {
-            for (int i = 0; i < m_colliders.size(); i++) {
-                ImGui::PushID(i);
-                bool isSelected = i == m_state.selectedCollider;
-                if (ImGui::Selectable(m_colliders[i].c_str(), isSelected)) {
-                    if (isSelected) m_state.selectedCollider = -1;
-                    else m_state.selectedCollider = i;
-                }
-                ImGui::PopID();
-            }
-            ImGui::EndListBox();
-        }
-        if (m_state.selectedCollider != -1) {
-            if (m_colliders[m_state.selectedCollider] == "Box") {
-                ImGui::DragFloat3("Box Collider Size", &m_state.boxColliderSize.x, 0.01f);
-            }
-        }
-
-        m_state.rotation.x = fmod(m_state.rotation.x, 360);
-        m_state.rotation.y = fmod(m_state.rotation.y, 360);
-        m_state.rotation.z = fmod(m_state.rotation.z, 360);
-        m_state.modelRotation.x = fmod(m_state.modelRotation.x, 360);
-        m_state.modelRotation.y = fmod(m_state.modelRotation.y, 360);
-        m_state.modelRotation.z = fmod(m_state.modelRotation.z, 360);
-
 
         if (ImGui::Button("Create")) {
-            CreateEntity();
-            m_savedStates.push_back(m_state);
+            m_savedStates.push_back({entt::null, State{}});
+            m_selectedEntity = m_savedStates.size() - 1;
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Delete")) {
+            if (m_selectedEntity != -1) {
+                m_registry.destroy(m_savedStates[m_selectedEntity].first);
+                m_savedStates.erase(m_savedStates.begin() + m_selectedEntity);
+                m_selectedEntity = -1;
+            }
+        }
+        ImGui::SameLine();
+        if (ImGui::Button("Clone")) {
+            if (m_selectedEntity != -1) {
+                auto stateCopy = m_savedStates[m_selectedEntity].second;
+                m_selectedEntity++;
+                m_savedStates.insert(m_savedStates.begin() + m_selectedEntity, {entt::null, stateCopy});
+                RecreateEntity();
+            }
+        }
+
+        if (m_selectedEntity != -1) {
+            State& state = m_savedStates[m_selectedEntity].second;
+            ImGui::DragFloat3("Position", &state.position.x, 0.1f);
+            ImGui::DragFloat3("Rotation", &state.rotation.x, 0.5f);
+            ImGui::DragFloat3("Scale", &state.scale.x, 0.1f);
+
+            if (ImGui::BeginListBox("Models")) {
+                for (int i = 0; i < m_models.size(); i++) {
+                    ImGui::PushID(i);
+                    bool isSelected = i == state.selectedModel;
+                    if (ImGui::Selectable(m_models[i].c_str(), isSelected)) {
+                        if (isSelected) state.selectedModel = -1;
+                        else state.selectedModel = i;
+                    }
+                    ImGui::PopID();
+                }
+                ImGui::EndListBox();
+            }
+            if (state.selectedModel != -1) {
+                ImGui::DragFloat3("Model offset", &state.modelOffset.x, 0.1f);
+                ImGui::DragFloat3("Model Rotation", &state.modelRotation.x, 0.5f);
+                ImGui::DragFloat3("Model Scale", &state.modelScale.x, 0.1f);
+            }
+
+            if (ImGui::BeginListBox("Colliders")) {
+                for (int i = 0; i < m_colliders.size(); i++) {
+                    ImGui::PushID(i);
+                    bool isSelected = i == state.selectedCollider;
+                    if (ImGui::Selectable(m_colliders[i].c_str(), isSelected)) {
+                        if (isSelected) state.selectedCollider = -1;
+                        else state.selectedCollider = i;
+                    }
+                    ImGui::PopID();
+                }
+                ImGui::EndListBox();
+            }
+            if (state.selectedCollider != -1) {
+                ImGui::DragFloat("Mass (0 for static)", &state.mass, 0.025f);
+                if (m_colliders[state.selectedCollider] == "Box") {
+                    ImGui::DragFloat3("Box Collider Size", &state.boxColliderSize.x, 0.01f);
+                }
+            }
+
+            state.rotation.x = fmod(state.rotation.x, 360);
+            state.rotation.y = fmod(state.rotation.y, 360);
+            state.rotation.z = fmod(state.rotation.z, 360);
+            state.modelRotation.x = fmod(state.modelRotation.x, 360);
+            state.modelRotation.y = fmod(state.modelRotation.y, 360);
+            state.modelRotation.z = fmod(state.modelRotation.z, 360);
+            RecreateEntity();
         }
 
         ImGui::InputText("##savename", &m_saveName);
@@ -105,15 +172,12 @@ void SceneBuilder::Update() {
         if (ImGui::Button("Load")) Load();
 
         if (ImGui::Button("Reset")) Reset();
-        CreateEntity();
     }
     ImGui::End();
 }
 
 void SceneBuilder::Reset() {
     m_savedStates.clear();
-    m_state = State();
-    m_entity = entt::null;
     m_registry.clear();
 }
 
@@ -140,9 +204,14 @@ void SceneBuilder::Load() {
 
             // helper func
             auto readvec3 = [](std::istringstream& stream) {
-                char dummy;
                 glm::vec3 v;
-                stream >> dummy >> v.x >> dummy >> v.y >> dummy >> v.z >> dummy;
+                stream.ignore();
+                stream >> v.x;
+                stream.ignore();
+                stream >> v.y;
+                stream.ignore();
+                stream >> v.z;
+                stream.ignore();
                 return v;
             };
             
@@ -150,12 +219,12 @@ void SceneBuilder::Load() {
             std::vector<State> states;
             std::string linestr;
             while (std::getline(stream, linestr)) {
+                if (linestr.length() < 15) continue;
                 std::istringstream line(linestr);
                 State state;
 
                 // opening brace
                 line.ignore(256, '{');
-                line.ignore();
 
                 // global stuff
                 state.position = readvec3(line);
@@ -204,11 +273,12 @@ void SceneBuilder::Load() {
 void SceneBuilder::Load(uint32_t stateCount, const State *states, bool saveable) {
     Reset();
     for (uint32_t i = 0; i < stateCount; i++) {
-        if (saveable) m_savedStates.push_back(states[i]);
-        m_state = states[i];
-        CreateEntity();
-        m_entity = entt::null;
+        m_savedStates.push_back({entt::null, states[i]});
+        m_selectedEntity = i;
+        RecreateEntity(!saveable);
     }
+    m_selectedEntity = -1;
+    if (!saveable) m_savedStates.clear();
 }
 void SceneBuilder::Save() {
 #ifdef SHADER_HOT_RELOAD
@@ -225,7 +295,8 @@ void SceneBuilder::Save() {
         saveData += std::format("constexpr uint32_t {}_stateVersion = {};\n", m_saveName, m_stateVersion);
         saveData += std::format("constexpr uint32_t {}_stateCount = {};\n", m_saveName, m_savedStates.size());
         saveData += std::format("constexpr SceneBuilder::State {}_states[] = {{\n", m_saveName);
-        for (const auto& state : m_savedStates) {
+        for (const auto& pair : m_savedStates) {
+            const State& state = pair.second;
             saveData += std::format("   {{{},{},{},", vec3str(state.position), vec3str(state.rotation), vec3str(state.scale));
             saveData += std::format("{},{},{},{},", state.selectedModel, vec3str(state.modelOffset), vec3str(state.modelRotation), vec3str(state.modelScale));
             saveData += std::format("{},{},{}}},\n", state.selectedCollider, state.mass, vec3str(state.boxColliderSize));

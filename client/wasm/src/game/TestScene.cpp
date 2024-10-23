@@ -57,6 +57,10 @@ TestScene::TestScene() {
 
 void TestScene::Update(TimeDuration dt) {
     m_sceneBuilder.Update();
+
+    if (Input::JustPressed(SDL_SCANCODE_L)) {
+        m_sceneBuilder.Play();
+    }
     
     m_player.Update();
     auto& dynamicsWorld = m_physicsWorld.dynamicsWorld;

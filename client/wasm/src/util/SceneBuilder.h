@@ -15,6 +15,7 @@ public:
 
     void AddModel(std::string_view name);
     void Update();
+    void Play();
 
     struct State {
         glm::vec3 position{0, 0, 0};
@@ -36,15 +37,15 @@ private:
     void Load();
     void Save();
     void Reset();
-    void CreateEntity();
+    void RecreateEntity(bool useMass = false);
+    bool m_playing = false;
     entt::registry& m_registry;
     PhysicsWorld& m_physicsWorld;
-    entt::entity m_entity = entt::null;
+    uint32_t m_selectedEntity = -1;
     std::string m_saveName;
-    State m_state;
     uint32_t m_stateVersion = 0;
     std::vector<std::string> m_models;
     std::vector<std::string> m_colliders;
 
-    std::vector<State> m_savedStates;
+    std::vector<std::pair<entt::entity, State>> m_savedStates;
 };
