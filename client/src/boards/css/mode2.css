@@ -5,7 +5,7 @@
 }
 
 .mode2_upperDiv {
-    background-color: #AAB396;
+    background-color: var(--backgroundColor);
     position: relative;
     width: 100%;
     display: flex;
@@ -24,13 +24,13 @@
 }
 .pointsText {
     font-size: 2vh;
-    color: white;
+    color: var(--textColor);
     text-align: center;
-    font-family: "Poppins", sans-serif;
+    font-family: var(--fontStyle);
 }
 
 .mode2_lowerDiv {
-    background-color: #AAB396;
+    background-color: var(--backgroundColor);
     position: relative;
     gap: 2em;
     flex: 1;
@@ -60,7 +60,7 @@
     align-items: center;
     height: 100%;
     width: 100%;
-    background-color: #AAB396;
+    background-color: var(--backgroundColor);
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -72,5 +72,5 @@
 
 .gamePage {
     display: flex;
-    border : 3px solid #FFF8E8;
+    border : 3px solid var(--borderColor);
 }

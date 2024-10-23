@@ -128,8 +128,9 @@ const Canvas: React.FC<{
         function draw(context: CanvasRenderingContext2D) {
             if (context && onTick !== undefined) {
                 // draw background
-                context.fillStyle = 'var(--backgroundColor)';
-                context.fillRect(0, 0, canvasSize.x, canvasSize.y);
+                // context.fillStyle = 'rgba(255, 255, 255, 0)';
+                // context.fillRect(0, 0, canvasSize.x, canvasSize.y);
+                context.clearRect(0, 0, canvasSize.x, canvasSize.y);
 
                 const lastTime = lastTimeRef?.current ?? 0;
                 const currentTime = performance.now();
