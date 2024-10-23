@@ -47,7 +47,7 @@ std::vector<std::filesystem::path> getFiles(const std::string& folderPath) {
 
 void embedVertices(const std::vector<Vertex>& vertices, const std::filesystem::path& file) {
     std::error_code err;
-    if (!CreateDirectoryRecursive(file.parent_path(), err)) {
+    if (!CreateDirectoryRecursive(file.parent_path().string(), err)) {
         // Report the error:
         std::cout << "Failed to create directory for" << file << ": " << err.message() << std::endl;
     }
@@ -78,7 +78,7 @@ std::vector<Vertex> loadModel(const std::filesystem::path& file) {
     // parse file
     std::cout << "File: " << file << std::endl;
     tinyobj::ObjReader reader;
-    if (!reader.ParseFromFile(file)) {
+    if (!reader.ParseFromFile(file.string())) {
         if (!reader.Error().empty()) {
             std::cerr << "  Error: " << reader.Error() << std::endl;
         }
