@@ -78,6 +78,38 @@ namespace server.src {
                 entity.Property(e => e.Id).HasColumnName("id");
                 entity.Property(e => e.QuestionsId).HasColumnName("questions_id");
             });
+            modelBuilder.HasPostgresEnum<Task2.Task2Data.Theme>(schema: "task2", name: "theme");
+            modelBuilder.Entity<DbTask2Text>(entity => {
+                entity.ToTable("texts", "task2");
+                entity.HasKey(e => e.Id).HasName("texts_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Theme).HasColumnName("theme");
+                entity.Property(e => e.Text).HasColumnName("text");
+            });
+            modelBuilder.Entity<DbUserSettings>(entity => {
+                entity.ToTable("settings", "users");
+                entity.HasKey(e => e.Id).HasName("settings_pkey");
+                entity.Property(e => e.Id).HasColumnName("id");
+                entity.Property(e => e.Theme).HasColumnName("theme");
+                entity.Property(e => e.Font).HasColumnName("font");
+            });
+            modelBuilder.Entity<DbSettingsTheme>(entity => {
+                entity.ToTable("theme", "settings");
+                entity.HasKey(e => e.Theme).HasName("theme_pkey");
+                entity.Property(e => e.Theme).HasColumnName("theme");
+                entity.Property(e => e.MainBackground).HasColumnName("main_background");
+                entity.Property(e => e.SecondaryBackground).HasColumnName("secondary_background");
+                entity.Property(e => e.PrimaryColor).HasColumnName("primary_color");
+                entity.Property(e => e.AccentColor).HasColumnName("accent_color");
+                entity.Property(e => e.TextColor).HasColumnName("text_color");
+                entity.Property(e => e.BorderColor).HasColumnName("border_color");
+            });
+            modelBuilder.Entity<DbSettingsFont>(entity => {
+                entity.ToTable("font", "settings");
+                entity.HasKey(e => e.Font).HasName("font_pkey");
+                entity.Property(e => e.Font).HasColumnName("font");
+                entity.Property(e => e.FontFamily).HasColumnName("font_family");
+            });
         }
     }
 }
