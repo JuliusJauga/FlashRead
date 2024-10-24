@@ -16,7 +16,7 @@ PhysicsWorld::PhysicsWorld() {
     dynamicsWorld = std::make_unique<btDiscreteDynamicsWorld>(m_dispatcher.get(), m_broadphase.get(),
 																m_solver.get(), m_collisionConfiguration.get());
 
-	dynamicsWorld->setGravity(btVector3(0, -10, 0));
+	dynamicsWorld->setGravity(btVector3(0, -30, 0));
 }
 
 PhysicsWorld::~PhysicsWorld() {
@@ -109,9 +109,55 @@ btRigidBody* PhysicsWorld::CreateRigidBody(std::shared_ptr<btCollisionShape> col
 	auto motionState = new btDefaultMotionState(transform);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, colShape.get(), localInertia);
 	auto body = new btRigidBody(rbInfo);
-	auto ptr = new std::shared_ptr<btCollisionShape>();
-	*ptr = std::move(colShape);
-	body->setUserPointer(ptr);
 	dynamicsWorld->addRigidBody(body);
+	
+	auto userData = new RigidBodyUserData();
+	userData->collisionShape = std::move(colShape);
+	body->setUserPointer(userData);
+
 	return body;
+}
+void PhysicsWorld::DestroyRigidBody(btRigidBody* rigidBody) {
+	if (!rigidBody) return;
+	dynamicsWorld->removeRigidBody(rigidBody);
+    if (auto motionState = rigidBody->getMotionState()) delete motionState;
+	auto userData = static_cast<RigidBodyUserData*>(rigidBody->getUserPointer());
+    delete userData;
+    delete rigidBody;
+}
+
+
+void PhysicsWorld::CheckObjectsTouchingGround() {
+	// remove old flags
+	for (int i = dynamicsWorld->getNumCollisionObjects() - 1; i >= 0; i--) {
+		btCollisionObject* obj = dynamicsWorld->getCollisionObjectArray()[i];
+		auto userData = static_cast<RigidBodyUserData*>(obj->getUserPointer());
+		if (userData) userData->onGround = false;
+	}
+
+	// get new flags
+	const float threshold = 0.5f;
+    int numManifolds = dynamicsWorld->getDispatcher()->getNumManifolds();
+    for (int i = 0; i < numManifolds; i++) {
+        auto contactManifold = dynamicsWorld->getDispatcher()->getManifoldByIndexInternal(i);
+        auto objA = contactManifold->getBody0();
+        auto objB = contactManifold->getBody1();
+
+		int numContacts = contactManifold->getNumContacts();
+		for (int j = 0; j < numContacts; j++) {
+			btManifoldPoint& point = contactManifold->getContactPoint(j);
+			if (point.getDistance() < 0.05f) {
+				if (point.m_normalWorldOnB.y() > threshold) {
+					auto userData = static_cast<RigidBodyUserData*>(objA->getUserPointer());
+					if (userData) userData->onGround = true;
+					break;
+				}
+				if (point.m_normalWorldOnB.y() < -threshold) {
+					auto userData = static_cast<RigidBodyUserData*>(objB->getUserPointer());
+					if (userData) userData->onGround = true;
+					break;
+				}
+			}
+		}
+    }
 }

@@ -6,6 +6,11 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/hash.hpp>
 
+struct RigidBodyUserData {
+    std::shared_ptr<btCollisionShape> collisionShape;
+    bool onGround;
+};
+
 class PhysicsWorld {
 public:
     PhysicsWorld();
@@ -15,10 +20,13 @@ public:
     std::shared_ptr<btCollisionShape> GetSphereCollider(float radius);
     std::shared_ptr<btCollisionShape> GetCapsuleCollider(float radius, float height);
     btRigidBody* CreateRigidBody(std::shared_ptr<btCollisionShape> colShape, float mass, const glm::vec3& position, const glm::vec3& rotation);
+    void DestroyRigidBody(btRigidBody* body);
 
     // clears out any shapes that are no longer being used.
     // does not need to be called every frame. can be called every couple of seconds or so.
     void Update();
+
+    void CheckObjectsTouchingGround();
 
     std::unique_ptr<btDiscreteDynamicsWorld> dynamicsWorld;
 private:

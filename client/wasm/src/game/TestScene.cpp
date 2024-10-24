@@ -15,7 +15,8 @@
 #include "../meshes/table.h"
 
 
-TestScene::TestScene() {
+TestScene::TestScene()
+    : m_player(m_physicsWorld, {0, 5, 0}) {
     SetCamera(m_player.GetCamera());
     sunPosition = glm::vec3{1000, 3500, 800} * 1000.f;
 
@@ -56,34 +57,39 @@ TestScene::TestScene() {
 }
 
 void TestScene::Update(TimeDuration dt) {
-    // scene builder
-    m_sceneBuilder.Update();
-    if (Input::JustPressed(SDL_SCANCODE_L)) {
-        m_sceneBuilder.Play();
-    }
-    
-    // logic
-    static btRigidBody* playerRigidBody = m_physicsWorld.CreateRigidBody(m_physicsWorld.GetCapsuleCollider(1, 2), 1.f, {0, 0, 0}, {0, 0, 0});
-    m_player.Update(m_sceneBuilder.IsPlaying() ? playerRigidBody : nullptr, dt.fMilli());
-
-    // physics
+    // "garbage collector"
     static TimePoint lastPhysicsUpdate; TimePoint now;
     if (now - lastPhysicsUpdate > 1s) {
         m_physicsWorld.Update();
         lastPhysicsUpdate = now;
     }
+
+    // scene builder
+    m_sceneBuilder.Update();
+    if (Input::JustPressed(SDL_SCANCODE_L)) {
+        m_sceneBuilder.Play();
+        if (m_sceneBuilder.IsPlaying()) {
+            m_player = std::move(Player(m_physicsWorld, {0, 5, 0}));
+            SetCamera(m_player.GetCamera());
+        }
+    }
+    
+    // player movement
+    m_player.fly = !m_sceneBuilder.IsPlaying();
+    m_player.Update(dt.fMilli());
+
+    // dont update if scene is not playing
+    if (!m_sceneBuilder.IsPlaying()) return;
+
+    // logic
+
+    // physics
     auto& dynamicsWorld = m_physicsWorld.dynamicsWorld;
     dynamicsWorld->stepSimulation(dt.fMilli(), 1);
+    m_physicsWorld.CheckObjectsTouchingGround();
 
     // camera
-    if (m_sceneBuilder.IsPlaying()) {
-        auto body = playerRigidBody;
-        btTransform transform;
-        if (body && body->getMotionState()) body->getMotionState()->getWorldTransform(transform);
-        else transform = body->getWorldTransform();
-
-        m_camera->position = {transform.getOrigin().x(), transform.getOrigin().y() + 0.5f, transform.getOrigin().z()};
-    }
+    m_player.UpdateCameraAfterPhysics();
 
     // random stuff
     // create entity
