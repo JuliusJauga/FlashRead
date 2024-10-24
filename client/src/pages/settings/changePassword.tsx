@@ -8,6 +8,7 @@ import '../../boards/css/settings.css'
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { register } from '../../services/authService';
+import axios from '../../components/axiosWrapper'
 
 const ChangePassword: React.FC = () => {
     const { checkUserAuth, isAuthenticated } = useAuth();
@@ -28,8 +29,10 @@ const ChangePassword: React.FC = () => {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            // await register(email, password, username);
-            checkUserAuth();
+            await axios.post('/api/Users/ChangePassword', {
+                oldPassword,
+                newPassword
+            });
         } catch (error) {
             setError('Password change failed. Please try again.');
         }

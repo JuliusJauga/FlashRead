@@ -182,5 +182,60 @@ namespace server.UserNamespace {
             }
             return userSettings.Font;
         }
+        public async Task ChangeUserPasswordAsync(string email, string newPassword) {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                throw new Exception("User not found");
+            }
+            dbUser.Password = HashPassword(newPassword);
+            _context.Users.Update(dbUser);
+            await _context.SaveChangesAsync();
+        }
+        public async Task ChangeUserNameAsync(string email, string newUsername) {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                throw new Exception("User not found");
+            }
+            dbUser.Name = newUsername;
+            _context.Users.Update(dbUser);
+            await _context.SaveChangesAsync();
+        } 
+        public async Task DeleteUserByEmailAsync(string email) {
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+            if (dbUser == null)
+            {
+                throw new Exception("User not found");
+            }
+            var userSessions = await _context.UserSessions.FirstOrDefaultAsync(s => s.Id == dbUser.SessionsId);
+            if (userSessions != null)
+            {
+                foreach (var sessionId in userSessions.SessionIds)
+                {
+                    var singleSession = await _context.UserSingleSessions.FirstOrDefaultAsync(s => s.Id == sessionId);
+                    if (singleSession != null)
+                    {
+                        _context.UserSingleSessions.Remove(singleSession);
+                    }
+                }
+                _context.UserSessions.Remove(userSessions);
+            }
+            var userSettings = await _context.UserSettings.FirstOrDefaultAsync(s => s.Id == dbUser.SettingsId);
+            if (userSettings != null)
+            {
+                _context.UserSettings.Remove(userSettings);
+            }
+            foreach (var historyId in dbUser.HistoryIds)
+            {
+                var taskHistory = await _context.UserTaskHistories.FirstOrDefaultAsync(h => h.Id == historyId);
+                if (taskHistory != null)
+                {
+                    _context.UserTaskHistories.Remove(taskHistory);
+                }
+            }
+            _context.Users.Remove(dbUser);
+            await _context.SaveChangesAsync();
+        }
     }
 }

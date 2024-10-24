@@ -12,7 +12,6 @@ import { useVisualSettings } from '../../context/VisualSettingsContext';
 import Cookies from 'js-cookie';
 import { changeFont, changeTheme } from '../../components/utils/visualSettingsUtils';
 
-
 const fetchThemes = async (): Promise<string[]> => {
     try {
         const response = await axios.get('/api/Settings/GetAllThemes');
@@ -42,6 +41,7 @@ const SettingsPage: React.FC = () => {
     const [fonts, setFonts] = useState<string[]>([]);
     const [font, setFont] = useState<string>(visualSettings.font);
     const [username, setUsername] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
 
     const fetchAndSetThemes = async () => {
         const fetchedThemes = await fetchThemes();
@@ -144,6 +144,16 @@ const SettingsPage: React.FC = () => {
         sendSettingsUpdate(lowerCaseTheme);
     };
 
+    const handleChangeName = async (newName: string) => {
+        try {
+            await axios.post('/api/Users/ChangeUserName', {
+                newName,
+            });
+        } catch (err) {
+            setError('Username change failed. Please try again.');
+        }
+    };
+
     const sendSettingsUpdate = (theme: string) => {
         const newSettings = { theme, font };
         setVisualSettings(newSettings);
@@ -203,7 +213,7 @@ const SettingsPage: React.FC = () => {
                         <SettingsChoiceBox label="Font" value={font} options={fonts} onChange={choice => handleFontChange(choice)}/>
                     </div>
                     <div className="settingsColumn">
-                        <EditableField label="Profile Name: " initialValue={username} onSave={() => {}}  />
+                        <EditableField label="Profile Name: " initialValue={username} onSave={handleChangeName} />
                         <div className="settingsButtonContainer">
                             <CustomButton label="Change Password" className="settingButton" id="settingsChangePasswordButton" onClick={() => navigate("/changePassword")}/>
                             <CustomButton label="Delete Account" className="settingButton" id="settingsDeleteAccountButton" onClick={() => navigate("/deleteAccount")}/>
