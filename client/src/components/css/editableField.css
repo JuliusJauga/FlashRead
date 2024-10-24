@@ -32,6 +32,9 @@
     margin-bottom: 10px; /* Add space below the input */
     width: 65%; /* Adjust width to fit the container */
 }
+.editableField-input:focus {
+    outline: none; 
+}
 
 .editableField-button {
     display: flex;

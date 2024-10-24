@@ -16,10 +16,16 @@ const HomePage: React.FC = () => {
 
             <div className="MainBoard_header" id="headerDiv">
                 <div className="headerLinks">
-                    <span>
-                        <a className="linksText" href="/about">About Us</a>
-                        <a className="linksText" href="/contact"> Contacts</a>
-                    </span>
+                        <div className="outerLinkContainer">
+                            <div className="innerLinkContainer">
+                                <a className="linksText" href="/about">About Us</a>
+                            </div>
+                        </div>
+                        <div className="outerLinkContainer">
+                            <div className="innerLinkContainer">
+                                <a className="linksText" href="/contact"> Contacts</a>
+                            </div>
+                        </div>
                 </div>
                 <Dropdown onSelect={function (item: string): void {
                 if (item === "Login") {
