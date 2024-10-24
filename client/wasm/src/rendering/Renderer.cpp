@@ -269,6 +269,7 @@ void Renderer::Render(const std::shared_ptr<Scene> &scene) {
     // debug
     if (DebugDraw::IsEnabled()) {
         m_debugProgram->Use();
+        DebugDraw::GetDrawer()->setDebugMode(btIDebugDraw::DBG_DrawWireframe | btIDebugDraw::DBG_DrawContactPoints);
         scene->GetPhysicsWorld().dynamicsWorld->setDebugDrawer(DebugDraw::GetDrawer());
         scene->GetPhysicsWorld().dynamicsWorld->debugDrawWorld();
         DebugDraw::Draw();

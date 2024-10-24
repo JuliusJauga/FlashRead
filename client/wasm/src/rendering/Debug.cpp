@@ -8,22 +8,14 @@ GLDebugDrawer::GLDebugDrawer() : m_debugMode(0) {}
 
 GLDebugDrawer::~GLDebugDrawer() {}
 
-void GLDebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& fromColor, const btVector3& toColor) {
-    drawLine(from, to, fromColor);
-}
 void GLDebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color) {
     DebugDraw::DrawLine({from.getX(), from.getY(), from.getZ()}, {to.getX(), to.getY(), to.getZ()}, {color.getX(), color.getY(), color.getZ()});
 }
-void GLDebugDrawer::drawSphere(const btVector3& p, btScalar radius, const btVector3& color) {
-    DebugDraw::DrawSphere({p.getX(), p.getY(), p.getZ()}, radius, {color.getX(), color.getY(), color.getZ()});
+void GLDebugDrawer::drawContactPoint(const btVector3 &PointOnB, const btVector3 &normalOnB, btScalar distance, int lifeTime, const btVector3 &color) {
+    drawSphere(PointOnB, 0.1f, color);
+    drawLine(PointOnB, PointOnB + normalOnB * distance * 10, color);
 }
-void GLDebugDrawer::drawTriangle(const btVector3& a, const btVector3& b, const btVector3& c, const btVector3& color, btScalar alpha) {
-    DebugDraw::DrawTriangle({a.getX(), a.getY(), a.getZ()}, {b.getX(), b.getY(), b.getZ()}, {c.getX(), c.getY(), c.getZ()}, {color.getX(), color.getY(), color.getZ()});
-}
-void GLDebugDrawer::drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color) {
-    DebugDraw::DrawContactPoint({PointOnB.getX(), PointOnB.getY(), PointOnB.getZ()}, {normalOnB.getX(), normalOnB.getY(), normalOnB.getZ()}, distance, {color.getX(), color.getY(), color.getZ()});
-}
-void GLDebugDrawer::reportErrorWarning(const char* warningString) {
+void GLDebugDrawer::reportErrorWarning(const char *warningString) {
     std::cerr << "Bullet warning: " << warningString << std::endl;
 }
 void GLDebugDrawer::draw3dText(const btVector3& location, const char* textString) {}
@@ -60,21 +52,15 @@ void DebugDraw::DrawLine(const glm::vec3& from, const glm::vec3& to, const glm::
 }
 void DebugDraw::DrawSphere(const glm::vec3& p, float radius, const glm::vec3& color) {
     if (!m_enabled) return;
-    // TODO
+    m_debugDrawer.drawSphere({p.x, p.y, p.z}, radius, {color.x, color.y, color.z});
 }
 void DebugDraw::DrawTriangle(const glm::vec3& a, const glm::vec3& b, const glm::vec3& c, const glm::vec3& color) {
     if (!m_enabled) return;
-    m_vertices.push_back({a, color});
-    m_vertices.push_back({b, color});
-    m_vertices.push_back({b, color});
-    m_vertices.push_back({c, color});
-    m_vertices.push_back({c, color});
-    m_vertices.push_back({a, color});
+    m_debugDrawer.drawTriangle({a.x, a.y, a.z}, {b.x, b.y, b.z}, {c.x, c.y, c.z}, {color.x, color.y, color.z}, 0);
 }
 void DebugDraw::DrawContactPoint(const glm::vec3& point, const glm::vec3& normal, float distance, const glm::vec3& color) {
     if (!m_enabled) return;
-    m_vertices.push_back({point, color});
-    m_vertices.push_back({point + normal * distance, color});
+    m_debugDrawer.drawContactPoint({point.x, point.y, point.z}, {normal.x, normal.y, normal.z}, distance, 0, {color.x, color.y, color.z});
 }
 
 void DebugDraw::Enable() {
