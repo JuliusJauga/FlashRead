@@ -1,6 +1,8 @@
 import './index.css';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
+import AboutPage from './pages/about/aboutPage';
+import ContactPage from './pages/contact/contactPage';
 import HomePage from './pages/home/homePage';
 import RegisterPage from './pages/register/registerPage';
 import LoginPage from './pages/login/loginPage';
@@ -50,6 +52,8 @@ const App: React.FC = () => {
               <Route path="/changePassword" element={<ChangePasswordPage/>}/>
               <Route path="/deleteAccount" element={<DeleteAccountPage/>}/>
               <Route path="/mode3" element={<Mode3Page/>}/>
+              <Route path="/about" element={<AboutPage />}/>
+              <Route path="/contact" element={<ContactPage />}/>
           </Routes>
           </BrowserRouter>
         </VisualSettingsProvider>

@@ -21,7 +21,7 @@
   width: 100%;
   height: 5%;
   display: flex;
-  justify-content: right;
+  justify-content: space-between;
   align-items: right;
   right: 0;
   min-height: 16px;
@@ -43,18 +43,6 @@
   margin: auto;
 }
 
-.MainBoard_selection {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  align-content: center;
-  position: absolute;
-  opacity: 1;
-  overflow: visible;
-  height: 100%;
-  z-index: 9;
-}
 
 .MainBoard_grid {
   display: flex;
@@ -97,20 +85,53 @@
   .MainBoard_gridButton {
     flex-basis: 60%;
   }
-
+  
   .MainBoard_gridButton:hover {
     transform: scale(2);
   }
-
+  
 }
 
 .MainBoard_content {
   width: 100%;
   height: 95%;
   position: relative;
+  display: flex;
+  flex-direction: column;
   z-index: 10;
 }
 
+.headerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  width: 100%;
+  flex: 2;
+  color: var(--textColor);
+  font-family: var(--fontStyle);
+  font-weight: bold;
+  font-size: 3.5em;
+}
+
+.MainBoard_selection {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  opacity: 1;
+  overflow: visible;
+  flex: 5;
+  z-index: 9;
+}
+
+.footerContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  flex: 2;
+}
 
 /*
 .mode1_innerDiv:nth-child(1) {
@@ -191,4 +212,18 @@
   font-size: 16px;
   font-family: var(--fontStyle);
   display: inline;
+}
+
+.headerLinks {
+  margin-left: 1.5em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.linksText {
+  font-size: 1em;
+  padding-right: 1.5em;
+  color: var(--textColor);
+  text-align: center;
+  font-family: var(--fontStyle);
 }
