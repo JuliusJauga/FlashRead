@@ -32,23 +32,23 @@ const Dropdown: React.FC<DropdownProps> = ({ onSelect }) => {
 
     const buttonStyle: CSSProperties = {
         opacity: isClicked ? 0.95 : 1,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         transition: 'transform 0.4s ease',
         outline: 'none',
         borderRadius: '12px',
-        border: '4px solid var(--borderColor)',
+        border: '3px solid var(--borderColor)',
         backgroundColor: 'transparent',
         color: 'var(--textColor)',
         transform: isHovered ? 'scale(0.95)' : 'scale(1)',
         fontSize: '26px',
         fontFamily: 'var(--fontStyle)', 
-        cursor: 'pointer',
-        width: `${buttonSize}px`, 
+        cursor: 'pointer', 
         height: '100%',
+        aspectRatio: '1/1',
         zIndex: 99,
         boxSizing: 'border-box', 
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         paddingBottom: '3px'
     };
 

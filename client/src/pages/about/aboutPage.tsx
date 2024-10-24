@@ -15,9 +15,9 @@ const AboutPage: React.FC = () => {
                 </div>
 
                 <div className="content">
-                    <p>Welcome to FlashRead! We are dedicated to providing the best reading experience for our users.</p>
-                    <p>Our mission is to make reading accessible and enjoyable for everyone.</p>
-                    <p>Thank you for choosing FlashRead!</p>
+                    <p className="slideIn">Welcome to FlashRead! We are dedicated to providing the best reading experience for our users.</p>
+                    <p className="slideIn">Our mission is to make reading accessible and enjoyable for everyone.</p>
+                    <p className="slideIn">Thank you for choosing FlashRead!</p>
                 </div>
 
                 <div className="footer">

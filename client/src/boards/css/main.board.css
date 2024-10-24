@@ -109,7 +109,7 @@
   color: var(--textColor);
   font-family: var(--fontStyle);
   font-weight: bold;
-  font-size: 3.5em;
+  font-size: clamp(1.5em, 3vw, 3.5em);
 }
 
 .MainBoard_selection {
@@ -194,7 +194,8 @@
   gap: 1em;
 }
 .linksText {
-  font-size: 1em;
+  font-size: clamp(0.8em, 1vw, 1em);
+  
   color: var(--textColor);
   font-family: var(--fontStyle);
 }
@@ -213,9 +214,6 @@
   align-items: center;
   transition: transform 0.3s ease;
   transform-origin: center;
-  /* background-color: red; */
-  line-height: 1.8em;
-  backface-visibility: hidden;
 }
 .innerLinkContainer:hover {
   transform: scale(0.9);
