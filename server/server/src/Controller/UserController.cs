@@ -34,7 +34,7 @@ namespace server.Controller {
 
             var user = await _userHandler.GetUserByEmailAsync(userEmail);
             if (user != null) {
-                return Ok(new { Email = user?.Email, Name = user?.Name });
+                return Ok(new { Email = user?.Email, Name = user?.Name});
             }
             return NotFound("User not found.");
         }
@@ -55,5 +55,55 @@ namespace server.Controller {
             }
             return NotFound("User not found.");
         }
+        [Authorize]
+        [HttpPost("Users/ChangePassword")]
+        public async Task<IActionResult> ChangeUserPassword([FromBody] ChangePasswordRequest request) {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(userEmail)) {
+                return Unauthorized("Invalid token.");
+            }
+            var dbUser = await _userHandler.GetUserByEmailAsync(userEmail);
+            if (dbUser == null) {
+                return NotFound("User not found.");
+            }
+            if (string.IsNullOrEmpty(request.OldPassword) || !_userHandler.VerifyPassword(request.OldPassword, dbUser.Password)) {
+                return Unauthorized("Invalid password.");
+            }
+            if (string.IsNullOrEmpty(request.NewPassword)) {
+                return BadRequest("New password cannot be null or empty.");
+            }
+            await _userHandler.ChangeUserPasswordAsync(userEmail, request.NewPassword);
+            return Ok("Password changed.");
+        }
+        [Authorize]
+        [HttpPost("Users/ChangeUserName")]
+        public async Task<IActionResult> ChangeUserName([FromBody] ChangeUserNameRequest request) {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(userEmail)) {
+                return Unauthorized("Invalid token.");
+            }
+            if (string.IsNullOrEmpty(request.NewName)) {
+                return BadRequest("New name cannot be null or empty.");
+            }
+            await _userHandler.ChangeUserNameAsync(userEmail, request.NewName);
+            return Ok("Name changed.");
+        }
+        public record ChangePasswordRequest {
+            public string? OldPassword { get; set; }
+            public string? NewPassword { get; set; }
+        }
+        public record ChangeUserNameRequest {
+            public string? NewName { get; set; }
+        }
+        [Authorize]
+        [HttpGet("Users/DeleteUser")]
+        public async Task<IActionResult> DeleteUser() {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+            if (string.IsNullOrEmpty(userEmail)) {
+                return Unauthorized("Invalid token.");
+            }
+            await _userHandler.DeleteUserByEmailAsync(userEmail);
+            return Ok("User deleted.");
+        } 
     }
 }

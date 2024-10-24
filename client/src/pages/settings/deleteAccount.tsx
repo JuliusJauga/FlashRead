@@ -4,7 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import CustomButton from "../../components/buttons/customButton.tsx";
 import '../../boards/css/buttons.css';
 import '../../boards/css/deleteAccount.css';
-
+import axios from '../../components/axiosWrapper';
 const DeleteAccount: React.FC = () => {
     const { isAuthenticated } = useAuth();
     const navigate = useNavigate();
@@ -15,6 +15,16 @@ const DeleteAccount: React.FC = () => {
         }
     }, [isAuthenticated, navigate]);
 
+    const [error, setError] = useState<string | null>(null);
+    
+    const handleAccountDeletion = async () => {
+        try {
+            await axios.get('/api/Users/DeleteUser');
+            navigate('/login');
+        } catch (error) {
+            setError('Account deletion failed. Please try again.');
+        }
+    }
     return (
         <div className="deleteAccountPage">
             <div className="accountDeletionHeader">
@@ -25,7 +35,7 @@ const DeleteAccount: React.FC = () => {
                 <h1 className="confirmationQuestionText">Are you sure you want to delete your account?</h1>
                 <span className="confirmationClarificationText">This action is irreversible</span>
                 <div className="accountDeletionButtonContainer">
-                    <CustomButton label="Confirm" className="wideButton" onClick={() => {}} />
+                    <CustomButton label="Confirm" className="wideButton" onClick={handleAccountDeletion} />
                     <CustomButton label="Return" className="wideButton" onClick={() => navigate("/settings")} />
                 </div>
             </div>
