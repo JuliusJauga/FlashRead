@@ -8,6 +8,7 @@
 #include <stdint.h>
 
 #include "../core/PhysicsWorld.h"
+#include "Timer.h"
 
 class SceneBuilder {
 public:
@@ -38,10 +39,11 @@ public:
     void Load(uint32_t stateCount, const State* states, bool saveable = false);
 
 private:
+    void Blink(int entity, bool clearOthers = false);
     void Load();
     void Save();
     void Reset();
-    void RecreateEntity(bool useMass = false);
+    void RecreateEntity(bool useMass = false, bool invisible = false);
     bool m_playing = false;
     entt::registry& m_registry;
     PhysicsWorld& m_physicsWorld;
@@ -52,4 +54,5 @@ private:
     std::vector<std::string> m_colliders;
 
     std::vector<std::pair<entt::entity, State>> m_savedStates;
+    std::vector<std::pair<uint32_t, TimePoint>> m_blinks;
 };

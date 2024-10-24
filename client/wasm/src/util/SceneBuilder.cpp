@@ -15,6 +15,10 @@ SceneBuilder::SceneBuilder(entt::registry &registry, PhysicsWorld &physicsWorld)
     m_colliders.push_back("Box");
     m_colliders.push_back("Sphere");
     m_colliders.push_back("Capsule");
+
+    // for testing only
+    m_saveName = "test";
+    Load();
 }
 
 void SceneBuilder::AddModel(std::string_view name) {
@@ -31,7 +35,8 @@ void SceneBuilder::Play() {
     m_selectedEntity = -1;
 }
 
-void SceneBuilder::RecreateEntity(bool useMass) {
+void SceneBuilder::RecreateEntity(bool useMass, bool invisible) {
+    float globalScale = invisible ? 0 : 1;
     if (m_selectedEntity == -1) return;
     entt::entity& entity = m_savedStates[m_selectedEntity].first;
     State& state = m_savedStates[m_selectedEntity].second;
@@ -43,13 +48,13 @@ void SceneBuilder::RecreateEntity(bool useMass) {
             .mesh = MeshRegistry::Get(m_models[state.selectedModel]),
             .position = state.modelOffset,
             .rotation = state.modelRotation,
-            .scale = state.modelScale * (state.selectedCollider != -1 ? state.scale : glm::vec3{1})
+            .scale = globalScale * state.modelScale * (state.selectedCollider != -1 ? state.scale : glm::vec3{1})
         });
         if (state.selectedCollider == -1) {
             m_registry.emplace<TransformComponent>(entity, TransformComponent{
                 .position = state.position,
                 .rotation = state.rotation,
-                .scale = state.scale
+                .scale = globalScale * state.scale
             });
         }
     }
@@ -58,14 +63,52 @@ void SceneBuilder::RecreateEntity(bool useMass) {
 
         std::shared_ptr<btCollisionShape> col;
         if (m_colliders[state.selectedCollider] == "Box") {
-            col = m_physicsWorld.GetBoxCollider(state.boxColliderSize * state.scale);
+            col = m_physicsWorld.GetBoxCollider(globalScale * state.boxColliderSize * state.scale);
         } else if (m_colliders[state.selectedCollider] == "Sphere") {
-            col = m_physicsWorld.GetSphereCollider(state.sphereColliderRadius * glm::length(state.scale));
+            col = m_physicsWorld.GetSphereCollider(globalScale * state.sphereColliderRadius * glm::length(state.scale));
         } else if (m_colliders[state.selectedCollider] == "Capsule") {
-            col = m_physicsWorld.GetCapsuleCollider(state.capsuleColliderRadius * glm::length(state.scale), state.capsuleColliderHeight * glm::length(state.scale));
+            col = m_physicsWorld.GetCapsuleCollider(globalScale * state.capsuleColliderRadius * glm::length(state.scale), state.capsuleColliderHeight * glm::length(state.scale));
         }
         auto rb = m_physicsWorld.CreateRigidBody(col, mass, state.position, state.rotation);
         m_registry.emplace<RigidBodyComponent>(entity, RigidBodyComponent{rb});
+    }
+}
+
+void SceneBuilder::Blink(int entity, bool clearOthers) {
+    if (clearOthers) {
+        for (auto&& [index, tp] : m_blinks) {
+            tp -= 1h;
+        }
+    }
+    if (entity < 0) { // blink animation
+        TimePoint now;
+        for (int i = 0; i < m_blinks.size(); i++) {
+            auto&& [index, tp] = m_blinks[i];
+            auto elapsed = now - tp;
+            if (index >= m_savedStates.size()) {
+                m_blinks.erase(m_blinks.begin() + i);
+                i--;
+                continue;
+            }
+            bool show = true;
+            for (TimeDuration t = 0ms; t < elapsed; t += 150ms) {
+                if (t > elapsed) break;
+                show = !show;
+            }
+
+            auto copy = m_selectedEntity;
+            m_selectedEntity = index;
+            if (elapsed > 2000ms) {
+                show = true;
+                m_blinks.erase(m_blinks.begin() + i);
+                i--;
+            }
+            RecreateEntity(false, !show);
+            m_selectedEntity = copy;
+
+        }
+    } else { // add to blinking
+        m_blinks.push_back({entity, TimePoint()});
     }
 }
 
@@ -84,7 +127,10 @@ void SceneBuilder::Update() {
         DebugDraw::DrawLine({-scale, 0, -maxInt}, {-scale, 0, maxInt}, {0.5, 0.5, 0.5});
     }
 
-    if (m_playing) return;
+    if (m_playing) {
+        m_blinks.clear();
+        return;
+    }
 
     // tool window
     if (ImGui::Begin("Scene Builder")) {
@@ -94,7 +140,10 @@ void SceneBuilder::Update() {
                 bool isSelected = i == m_selectedEntity;
                 if (ImGui::Selectable(std::format("Entity {}", i).c_str(), isSelected)) {
                     if (isSelected) m_selectedEntity = -1;
-                    else m_selectedEntity = i;
+                    else  {
+                        m_selectedEntity = i;
+                        Blink(i, true);
+                    }
                 }
                 ImGui::PopID();
             }
@@ -189,6 +238,7 @@ void SceneBuilder::Update() {
         if (ImGui::Button("Reset")) Reset();
     }
     ImGui::End();
+    Blink(-1);
 }
 
 void SceneBuilder::Reset() {
